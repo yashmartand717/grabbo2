@@ -31,7 +31,7 @@ async function fetchWeather() {
       const temp = data.current_weather.temperature;
       const code = data.current_weather.weathercode;
       
-      weatherHeading.innerHTML = `It's ${temp}°C outside`;
+      weatherHeading.textContent = `It's ${temp}°C outside`;
       let message = "";
       let icon = '🌤️';
       let rec1Img = '';
@@ -71,12 +71,12 @@ async function fetchWeather() {
         rec2Txt = 'Comfort Food';
       }
 
-      weatherText.innerHTML = message;
-      iconEl.innerHTML = icon;
+      weatherText.textContent = message;
+      iconEl.textContent = icon;
       img1.src = rec1Img;
-      title1.innerHTML = rec1Txt;
+      title1.textContent = rec1Txt;
       img2.src = rec2Img;
-      title2.innerHTML = rec2Txt;
+      title2.textContent = rec2Txt;
       
       banner.classList.remove('hidden');
       
