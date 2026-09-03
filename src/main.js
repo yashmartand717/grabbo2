@@ -491,11 +491,6 @@ function showAbout(e) {
     
     aboutView.classList.remove('hidden');
     aboutView.classList.add('active');
-    const aboutContainer = aboutView.querySelector('.about-container');
-    if (aboutContainer && !aboutContainer.dataset.tiltApplied) {
-        applyTilt(aboutContainer);
-        aboutContainer.dataset.tiltApplied = "true";
-    }
     
     setTimeout(() => {
       aboutView.style.opacity = '1';
@@ -569,22 +564,4 @@ if (customCursor) {
   });
 }
 
-// --- 3D Tilt Logic ---
-function applyTilt(element) {
-  element.addEventListener('mousemove', (e) => {
-    const rect = element.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -15;
-    const rotateY = ((x - centerX) / centerX) * 15;
-    
-    element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-  });
-  
-  element.addEventListener('mouseleave', () => {
-    element.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-  });
-}
 
