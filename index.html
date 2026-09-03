@@ -25,7 +25,14 @@
       <nav class="navbar">
         <div class="logo-wrapper" id="logo-home-btn" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
           <img src="/logo.png" alt="Grabbo Logo" style="width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 2px 12px rgba(253,224,37,0.25); transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), box-shadow 0.35s ease; object-fit: cover;" onmouseenter="this.style.transform='scale(1.15)';this.style.boxShadow='0 4px 20px rgba(253,224,37,0.45)'" onmouseleave="this.style.transform='scale(1)';this.style.boxShadow='0 2px 12px rgba(253,224,37,0.25)'">
-          <div class="logo" style="margin: 0;">Grabbo</div>
+          <div class="logo" style="margin: 0; display: flex;">
+            <span class="drop-letter" style="--delay: 0.1s">G</span>
+            <span class="drop-letter" style="--delay: 0.15s">r</span>
+            <span class="drop-letter" style="--delay: 0.2s">a</span>
+            <span class="drop-letter" style="--delay: 0.25s">b</span>
+            <span class="drop-letter" style="--delay: 0.3s">b</span>
+            <span class="drop-letter" style="--delay: 0.35s">o</span>
+          </div>
         </div>
         <div class="nav-links">
           <a href="#about">About</a>
@@ -50,7 +57,10 @@
           <div class="weather-info">
             <span class="weather-icon">☁️</span>
             <div>
-              <h2 id="weather-heading">Checking weather...</h2>
+              <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 5px;">
+                <h2 id="weather-heading" style="margin-bottom: 0;">Checking weather...</h2>
+                <span id="weather-time" style="color: var(--primary); font-weight: 600; font-size: 1.1rem; letter-spacing: 1px;"></span>
+              </div>
               <p id="weather-text">Hold on a moment!</p>
             </div>
           </div>

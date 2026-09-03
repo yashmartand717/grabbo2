@@ -71,10 +71,28 @@ body {
 }
 .weather-icon {
   font-size: 4rem;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 10px rgba(253, 224, 37, 0.3));
+  transition: all 0.5s ease;
+  filter: drop-shadow(0 4px 10px rgba(253, 224, 37, 0.3)); /* Default yellow glow */
+}
+
+.weather-icon.color-day {
+  filter: drop-shadow(0 4px 15px rgba(253, 224, 37, 0.5));
+}
+
+.weather-icon.color-night-clear {
+  filter: grayscale(1) brightness(1.5) drop-shadow(0 4px 15px rgba(241, 242, 246, 0.5));
+}
+
+.weather-icon.color-cloudy {
+  filter: drop-shadow(0 4px 15px rgba(116, 125, 140, 0.5));
+}
+
+.weather-icon.color-rain {
+  filter: drop-shadow(0 4px 15px rgba(112, 161, 255, 0.5));
+}
+
+.weather-icon.color-snow {
+  filter: drop-shadow(0 4px 15px rgba(255, 255, 255, 0.5));
 }
 .weather-info h2 {
   font-size: 2.2rem;
@@ -168,6 +186,25 @@ body {
 }
 .logo .highlight {
   color: var(--primary);
+}
+
+.drop-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: dropIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .nav-links {
   display: flex;

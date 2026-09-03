@@ -4,6 +4,101 @@ import * as THREE from 'three';
 
 import anime from 'animejs';
 
+// --- Scroll Sequence Animation ---
+const canvas = document.getElementById('bg-canvas');
+const context = canvas.getContext('2d');
+
+const frameCount = 150;
+const currentFrame = index => (
+  `/scroll_sequence/ezgif-frame-${(index + 1).toString().padStart(3, '0')}.jpg`
+);
+
+const images = [];
+const preloadImages = () => {
+  for (let i = 0; i < frameCount; i++) {
+    images[i] = new Image();
+    images[i].src = currentFrame(i);
+  }
+};
+
+preloadImages();
+
+let canvasWidth = window.innerWidth;
+let canvasHeight = window.innerHeight;
+let scrollProgressIndex = 0;
+
+const renderFrame = (index) => {
+  if (images[index] && images[index].complete) {
+    const img = images[index];
+    
+    // Draw image covering the canvas without zooming on scroll
+    const imgRatio = img.width / img.height;
+    const canvasRatio = canvasWidth / canvasHeight;
+    
+    let drawWidth, drawHeight, offsetX, offsetY;
+    
+    if (canvasRatio > imgRatio) {
+      drawWidth = canvasWidth;
+      drawHeight = canvasWidth / imgRatio;
+      offsetX = 0;
+      offsetY = (canvasHeight - drawHeight) / 2;
+    } else {
+      drawWidth = canvasHeight * imgRatio;
+      drawHeight = canvasHeight;
+      offsetX = (canvasWidth - drawWidth) / 2;
+      offsetY = 0;
+    }
+    
+    // Clear using actual DOM scaled size just in case, or reset transform
+    context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+  }
+};
+
+const resizeCanvas = () => {
+  canvasWidth = window.innerWidth;
+  canvasHeight = window.innerHeight;
+  
+  const dpr = window.devicePixelRatio || 1;
+  
+  canvas.width = canvasWidth * dpr;
+  canvas.height = canvasHeight * dpr;
+  
+  canvas.style.width = `${canvasWidth}px`;
+  canvas.style.height = `${canvasHeight}px`;
+  
+  // Scale the context to match the device pixel ratio
+  context.scale(dpr, dpr);
+  
+  renderFrame(scrollProgressIndex);
+};
+
+window.addEventListener('resize', resizeCanvas);
+
+// Initial render once the first image is loaded
+images[0].onload = () => {
+  resizeCanvas(); // This will trigger a renderFrame(0)
+};
+
+// Listen to scroll to update frame
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  // Calculate max scroll for the page
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  
+  let scrollFraction = maxScroll > 0 ? scrollTop / maxScroll : 0;
+  if (scrollFraction > 1) scrollFraction = 1;
+  if (scrollFraction < 0) scrollFraction = 0;
+  
+  const frameIndex = Math.min(
+    frameCount - 1,
+    Math.floor(scrollFraction * frameCount)
+  );
+  
+  if (scrollProgressIndex !== frameIndex) {
+    scrollProgressIndex = frameIndex;
+    requestAnimationFrame(() => renderFrame(frameIndex));
+  }
+});
 
 
 // --- Weather Logic ---
@@ -11,6 +106,7 @@ import anime from 'animejs';
 async function fetchWeather() {
   const banner = document.getElementById('weather-banner');
   const weatherHeading = document.getElementById('weather-heading');
+  const weatherTime = document.getElementById('weather-time');
   const weatherText = document.getElementById('weather-text');
   const closeBtn = document.getElementById('close-banner');
   const iconEl = document.querySelector('.weather-icon');
@@ -30,10 +126,28 @@ async function fetchWeather() {
     if (data.current_weather) {
       const temp = data.current_weather.temperature;
       const code = data.current_weather.weathercode;
+      const isDay = data.current_weather.is_day === 1;
       
       weatherHeading.textContent = `It's ${temp}°C outside`;
+      
+      let icon = '☁️';
+      let colorType = isDay ? 'day' : 'night-clear';
+      
+      if (code <= 2) {
+         icon = isDay ? '☀️' : '🌙';
+         colorType = isDay ? 'day' : 'night-clear';
+      } else if (code === 3 || (code >= 45 && code <= 48)) {
+         icon = code >= 45 ? '🌫️' : '☁️';
+         colorType = 'cloudy';
+      } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95) {
+         icon = code >= 95 ? '⛈️' : '🌧️';
+         colorType = 'rain';
+      } else if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
+         icon = '❄️';
+         colorType = 'snow';
+      }
+
       let message = "";
-      let icon = '🌤️';
       let rec1Img = '';
       let rec1Txt = '';
       let rec2Img = '';
@@ -41,30 +155,26 @@ async function fetchWeather() {
 
       if (code <= 3) {
         if (temp > 30) {
-          message = "Hot day! Cool down with our refreshing beverages.";
-          icon = '☀️';
+          message = isDay ? "Hot day! Cool down with our refreshing beverages." : "Warm night. Grab a cold drink!";
           rec1Img = '/cold_drink_1788388374768.jpg';
           rec1Txt = 'Iced Cold Drink';
           rec2Img = '/maggi_noodles_1788388364141.jpg';
           rec2Txt = 'Spicy Snack';
         } else {
-          message = "Perfect weather for a campus stroll & a snack.";
-          icon = '⛅';
+          message = isDay ? "Perfect weather for a campus stroll & a snack." : "Perfect night for a late-night bite.";
           rec1Img = '/hot_coffee_1788388353442.jpg';
           rec1Txt = 'Hot Coffee';
           rec2Img = '/maggi_noodles_1788388364141.jpg';
           rec2Txt = 'Masala Maggi';
         }
       } else if (code >= 51 && code <= 67) {
-        message = "It's raining! Come warm up with some hot treats.";
-        icon = '🌧️';
+        message = isDay ? "It's raining! Come warm up with some hot treats." : "Rainy night! Cozy up with our hot food.";
         rec1Img = '/maggi_noodles_1788388364141.jpg';
         rec1Txt = 'Steaming Maggi';
         rec2Img = '/hot_coffee_1788388353442.jpg';
         rec2Txt = 'Hot Brewed Coffee';
       } else {
         message = "Stay cozy! We have all the essentials you need.";
-        icon = '❄️';
         rec1Img = '/hot_coffee_1788388353442.jpg';
         rec1Txt = 'Hot Coffee';
         rec2Img = '/maggi_noodles_1788388364141.jpg';
@@ -73,10 +183,19 @@ async function fetchWeather() {
 
       weatherText.textContent = message;
       iconEl.textContent = icon;
+      iconEl.className = `weather-icon color-${colorType}`;
       img1.src = rec1Img;
       title1.textContent = rec1Txt;
       img2.src = rec2Img;
       title2.textContent = rec2Txt;
+      
+      // Update time dynamically
+      const updateTime = () => {
+        const now = new Date();
+        weatherTime.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      };
+      updateTime();
+      setInterval(updateTime, 1000);
       
       banner.classList.remove('hidden');
       
