@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grabbo @ SNU - Premium Essentials</title>
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <!-- 3D Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Content -->
+    <main class="content-overlay">
+      <nav class="navbar">
+        <div class="logo-wrapper" id="logo-home-btn" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          <img src="/logo.png" alt="Grabbo Logo" style="width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 2px 12px rgba(253,224,37,0.25); transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), box-shadow 0.35s ease; object-fit: cover;" onmouseenter="this.style.transform='scale(1.15)';this.style.boxShadow='0 4px 20px rgba(253,224,37,0.45)'" onmouseleave="this.style.transform='scale(1)';this.style.boxShadow='0 2px 12px rgba(253,224,37,0.25)'">
+          <div class="logo" style="margin: 0;">Grabbo</div>
+        </div>
+        <div class="nav-links">
+          <a href="#about">About</a>
+          <a href="#products">Products</a>
+          <a href="https://www.instagram.com/grabbo_snu" target="_blank" class="btn-primary">Follow Us</a>
+        </div>
+      </nav>
+
+      <!-- HOME VIEW -->
+      <div id="home-view" class="view-section active">
+        <header class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">Your Campus<br><span class="gradient-text">Essentials Hub.</span></h1>
+          <p class="hero-subtitle">Premium snacks, daily needs, and everything in between at the Shopping Arcade.</p>
+          <button class="btn-large explore-btn">Explore Now</button>
+        </div>
+      </header>
+
+      <!-- Weather Recommendation Banner -->
+      <section id="weather-banner" class="weather-hero-banner hidden">
+        <div class="weather-banner-container">
+          <div class="weather-info">
+            <span class="weather-icon">☁️</span>
+            <div>
+              <h2 id="weather-heading">Checking weather...</h2>
+              <p id="weather-text">Hold on a moment!</p>
+            </div>
+          </div>
+          <div class="weather-recommendations">
+            <div class="rec-card" id="rec-card-1">
+              <img id="rec-img-1" src="" alt="Recommendation 1">
+              <div class="rec-details">
+                <h3 id="rec-title-1">Snack</h3>
+                <button class="btn-primary small-btn">Grab it</button>
+              </div>
+            </div>
+            <div class="rec-card" id="rec-card-2">
+              <img id="rec-img-2" src="" alt="Recommendation 2">
+              <div class="rec-details">
+                <h3 id="rec-title-2">Drink</h3>
+                <button class="btn-primary small-btn">Grab it</button>
+              </div>
+            </div>
+          </div>
+          <button id="close-banner" class="close-btn">✕</button>
+        </div>
+      </section>
+
+      <section id="products" class="glass-section">
+        <h2 class="section-title">Popular at Grabbo</h2>
+        <div class="product-grid">
+          <div class="product-card">
+            <h3>Refreshments</h3>
+            <p>Cold drinks, juices, and energy boosters.</p>
+          </div>
+          <div class="product-card">
+            <h3>Quick Bites</h3>
+            <p>Chips, chocolates, noodles and instant meals.</p>
+          </div>
+          <div class="product-card">
+            <h3>Stationery</h3>
+            <p>Pens, notebooks, and last-minute project supplies.</p>
+          </div>
+        </div>
+      </section>
+
+        
+        <!-- Marquee Section -->
+        <div class="marquee-container">
+          <div class="marquee-content">
+            <span>PREMIUM SNACKS</span>
+            <span class="dot">•</span>
+            <span>LATE NIGHT CRAVINGS</span>
+            <span class="dot">•</span>
+            <span>INSTANT ENERGY</span>
+            <span class="dot">•</span>
+            <span>CAMPUS ESSENTIALS</span>
+            <span class="dot">•</span>
+            <span>PREMIUM SNACKS</span>
+            <span class="dot">•</span>
+            <span>LATE NIGHT CRAVINGS</span>
+            <span class="dot">•</span>
+            <span>INSTANT ENERGY</span>
+            <span class="dot">•</span>
+            <span>CAMPUS ESSENTIALS</span>
+            <span class="dot">•</span>
+          </div>
+        </div>
+
+        <footer>
+          <div class="footer-content">
+            <h2>Grabbo @ SNU</h2>
+            <p>Located at Shopping Arcade, Shiv Nadar University</p>
+            <a href="https://www.instagram.com/grabbo_snu" target="_blank">Instagram @grabbo_snu</a>
+          </div>
+        </footer>
+        </div> <!-- End Home View -->
+
+        <!-- ABOUT VIEW -->
+        <div id="about-view" class="view-section hidden">
+          <div class="about-container glass-section" style="max-width: 800px; margin: 40px auto; padding: 40px; border-radius: 24px; text-align: left;">
+            <div class="about-header" style="margin-bottom: 30px;">
+              <h2 class="section-title">About <span class="gradient-text">Grabbo</span></h2>
+            </div>
+            <div class="about-content" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); display: flex; flex-direction: column; gap: 20px;">
+              <p><strong style="color: var(--text-main);">Grabbo SNU</strong> isn't just a store; it's your ultimate campus lifeline. Located right at the heart of the Shopping Arcade in Shiv Nadar University, we exist to keep the campus running.</p>
+              
+              <p>We know student life. We know the 2 AM assignment crunches that demand instant energy, the post-exam celebrations that call for a cold drink, and the sudden cravings for comfort food when you miss home. That's why we've curated a premium, hand-picked selection of your favorite snacks, exotic beverages, imported goodies, and daily essentials.</p>
+              
+              <p>From steaming hot Maggi on a rainy day to the perfect iced coffee before a morning lecture—we constantly listen to the SNU community. At Grabbo, we don't just stock shelves; we deliver exactly what you need to keep your vibe alive, right when you need it most.</p>
+              
+              <div style="margin-top: 20px; display: flex; gap: 15px;">
+                <a href="https://www.instagram.com/grabbo_snu" target="_blank" class="btn-primary" style="display: inline-block; font-size: 0.9rem;">Follow our journey on Insta</a>
+              </div>
+            </div>
+          </div>
+        </div> <!-- End About View -->
+
+      <!-- CATALOG VIEW -->
+      <div id="catalog-view" class="view-section hidden">
+        <div class="catalog-container">
+          <div class="catalog-header">
+            <h2 class="section-title">Our <span class="gradient-text">Collection</span></h2>
+            <button id="back-to-home" class="btn-primary small-btn">← Back to Home</button>
+          </div>
+          
+          <div class="category-tabs">
+            <button class="tab-btn active" data-category="beverages">Beverages & Shakes</button>
+            <button class="tab-btn" data-category="bakery">Bakery & Sweets</button>
+            <button class="tab-btn" data-category="coffee">Coffee & Pantry</button>
+            <button class="tab-btn" data-category="snacks">Snacks & Chips</button>
+          </div>
+
+          <div class="catalog-grid" id="catalog-grid">
+            <!-- Products will be injected here via JS -->
+          </div>
+        </div>
+      </div> <!-- End Catalog View -->
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
