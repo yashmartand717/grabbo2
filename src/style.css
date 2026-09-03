@@ -254,6 +254,7 @@ body {
   font-weight: 800;
   margin-bottom: 20px;
   letter-spacing: -2px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
 }
 .gradient-text {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -262,11 +263,12 @@ body {
 }
 .hero-subtitle {
   font-size: 1.5rem;
-  color: var(--text-muted);
+  color: #ffffff;
   max-width: 500px;
   margin-bottom: 40px;
   line-height: 1.4;
-  font-weight: 300;
+  font-weight: 500;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 1), 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 .btn-large {
   background: rgba(106, 93, 68, 0.2); /* Olive transparent */
