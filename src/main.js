@@ -97,17 +97,7 @@ window.addEventListener('scroll', () => {
   // Dim background canvas dynamically on scroll
   const brightness = 1 - (scrollFraction * 0.8);
   canvas.style.filter = `brightness(${brightness})`;
-  
-  // Respect prefers-reduced-motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) {
-    // Only render the first frame or keep it static
-    if (scrollProgressIndex !== 0) {
-      scrollProgressIndex = 0;
-      requestAnimationFrame(() => renderFrame(0));
-    }
-    return;
-  }
+
   
   if (scrollProgressIndex !== frameIndex) {
     scrollProgressIndex = frameIndex;
@@ -319,7 +309,6 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 
 function showCatalog(e) {
   if(e) e.preventDefault();
-  canvas.classList.add('dimmed-background');
   
   // Fade out home
   homeView.style.opacity = '0';
@@ -365,7 +354,6 @@ function showCatalog(e) {
 
 
 function hideCatalog() {
-  canvas.classList.remove('dimmed-background');
   
   // Fade out catalog
   catalogView.style.opacity = '0';
@@ -419,23 +407,30 @@ function renderCatalog(category) {
 
     
 
-    card.innerHTML = `
-
-      <div class="catalog-card-img">
-
-        <img src="${prod.image}" alt="${prod.name}" class="product-image" loading="lazy" />
-
-      </div>
-
-      <div class="catalog-card-details">
-
-        <h3>${prod.name}</h3>
-
-        <p>${prod.desc}</p>
-
-      </div>
-
-    `;
+    const imgContainer = document.createElement('div');
+    imgContainer.className = 'catalog-card-img';
+    
+    const img = document.createElement('img');
+    img.src = prod.image;
+    img.alt = prod.name;
+    img.className = 'product-image';
+    
+    imgContainer.appendChild(img);
+    
+    const detailsContainer = document.createElement('div');
+    detailsContainer.className = 'catalog-card-details';
+    
+    const title = document.createElement('h3');
+    title.textContent = prod.name;
+    
+    const desc = document.createElement('p');
+    desc.textContent = prod.desc;
+    
+    detailsContainer.appendChild(title);
+    detailsContainer.appendChild(desc);
+    
+    card.appendChild(imgContainer);
+    card.appendChild(detailsContainer);
 
     
 
@@ -471,7 +466,6 @@ function renderCatalog(category) {
 
 function showAbout(e) {
   if(e) e.preventDefault();
-  canvas.classList.add('dimmed-background');
   
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
@@ -531,20 +525,6 @@ if (logoHomeBtn) logoHomeBtn.addEventListener('click', hideCatalog);
 if (aboutBtn) aboutBtn.addEventListener('click', showAbout);
 
 
-
-// Click Outside to Close
-window.addEventListener('click', (e) => {
-  if (catalogView.classList.contains('active')) {
-    if (!e.target.closest('.catalog-container') && !e.target.closest('.explore-btn') && !e.target.closest('a[href="#products"]')) {
-      hideCatalog();
-    }
-  }
-  if (aboutView && aboutView.classList.contains('active')) {
-    if (!e.target.closest('.about-container') && !e.target.closest('a[href="#about"]')) {
-      hideCatalog();
-    }
-  }
-});
 
 
 // --- Custom Cursor ---

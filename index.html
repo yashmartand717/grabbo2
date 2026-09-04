@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.bbassets.com https://*.coolberg.in https://*.schweppesus.com https://*.hersheyland.in https://*.s3.amazonaws.com https://axiomayurveda.com; connect-src 'self' https://api.open-meteo.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.bbassets.com https://*.coolberg.in https://*.schweppesus.com https://*.hersheyland.in https://*.s3.amazonaws.com https://axiomayurveda.com; connect-src 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
   </head>
   <body>
     <!-- Noise Overlay -->
@@ -24,7 +25,7 @@
     <main class="content-overlay">
       <nav class="navbar">
         <div class="logo-wrapper" id="logo-home-btn" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
-          <img src="/logo.png" alt="Grabbo Logo" style="width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 2px 12px rgba(253,224,37,0.25); transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), box-shadow 0.35s ease; object-fit: cover;" onmouseenter="this.style.transform='scale(1.15)';this.style.boxShadow='0 4px 20px rgba(253,224,37,0.45)'" onmouseleave="this.style.transform='scale(1)';this.style.boxShadow='0 2px 12px rgba(253,224,37,0.25)'">
+          <img src="/logo.png" alt="Grabbo Logo" style="width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 2px 12px rgba(253,224,37,0.25); transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), box-shadow 0.35s ease; object-fit: cover;">
           <div class="logo" style="margin: 0; display: flex;">
             <span class="drop-letter" style="--delay: 0.1s">G</span>
             <span class="drop-letter" style="--delay: 0.15s">r</span>
@@ -111,20 +112,9 @@
             <div class="about-content" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); display: flex; flex-direction: column; gap: 20px;">
               <p><strong style="color: var(--text-main);">Grabbo SNU</strong> isn't just a store; it's your ultimate campus lifeline. Located right at the heart of the Shopping Arcade in Shiv Nadar University, we exist to keep the campus running.</p>
               
-              <div class="about-grid">
-                <div class="about-item">
-                  <span class="about-icon">🌙</span>
-                  <p>We know the <span class="highlight">2 AM assignment crunches</span> that demand instant energy.</p>
-                </div>
-                <div class="about-item">
-                  <span class="about-icon">🎉</span>
-                  <p>The <span class="highlight">post-exam celebrations</span> that call for a cold drink.</p>
-                </div>
-                <div class="about-item">
-                  <span class="about-icon">☕</span>
-                  <p>From steaming hot Maggi on a rainy day to the perfect <span class="highlight">iced coffee before a morning lecture</span>.</p>
-                </div>
-              </div>
+              <p>We know the 2 AM assignment crunches that demand instant energy.</p>
+              <p>The post-exam celebrations that call for a cold drink.</p>
+              <p>From steaming hot Maggi on a rainy day to the perfect iced coffee before a morning lecture.</p>
               
               <p>We constantly listen to the SNU community. At Grabbo, we don't just stock shelves; we deliver exactly what you need to keep your vibe alive, right when you need it most.</p>
               
