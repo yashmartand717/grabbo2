@@ -94,6 +94,21 @@ window.addEventListener('scroll', () => {
     Math.floor(scrollFraction * frameCount)
   );
   
+  // Dim background canvas dynamically on scroll
+  const brightness = 1 - (scrollFraction * 0.8);
+  canvas.style.filter = `brightness(${brightness})`;
+  
+  // Respect prefers-reduced-motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    // Only render the first frame or keep it static
+    if (scrollProgressIndex !== 0) {
+      scrollProgressIndex = 0;
+      requestAnimationFrame(() => renderFrame(0));
+    }
+    return;
+  }
+  
   if (scrollProgressIndex !== frameIndex) {
     scrollProgressIndex = frameIndex;
     requestAnimationFrame(() => renderFrame(frameIndex));
@@ -101,149 +116,9 @@ window.addEventListener('scroll', () => {
 });
 
 
-// --- Weather Logic ---
-
-async function fetchWeather() {
-  const banner = document.getElementById('weather-banner');
-  const weatherHeading = document.getElementById('weather-heading');
-  const weatherTime = document.getElementById('weather-time');
-  const weatherText = document.getElementById('weather-text');
-  const closeBtn = document.getElementById('close-banner');
-  const iconEl = document.querySelector('.weather-icon');
-  
-  const img1 = document.getElementById('rec-img-1');
-  const title1 = document.getElementById('rec-title-1');
-  const img2 = document.getElementById('rec-img-2');
-  const title2 = document.getElementById('rec-title-2');
-
-  const lat = 28.5268;
-  const lon = 77.5753;
-  
-  try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-    const data = await res.json();
-    
-    if (data.current_weather) {
-      const temp = data.current_weather.temperature;
-      const code = data.current_weather.weathercode;
-      const isDay = data.current_weather.is_day === 1;
-      
-      weatherHeading.textContent = `It's ${temp}°C outside`;
-      
-      let icon = '☁️';
-      let colorType = isDay ? 'day' : 'night-clear';
-      
-      if (code <= 2) {
-         icon = isDay ? '☀️' : '🌙';
-         colorType = isDay ? 'day' : 'night-clear';
-      } else if (code === 3 || (code >= 45 && code <= 48)) {
-         icon = code >= 45 ? '🌫️' : '☁️';
-         colorType = 'cloudy';
-      } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95) {
-         icon = code >= 95 ? '⛈️' : '🌧️';
-         colorType = 'rain';
-      } else if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
-         icon = '❄️';
-         colorType = 'snow';
-      }
-
-      let message = "";
-      let rec1Img = '';
-      let rec1Txt = '';
-      let rec2Img = '';
-      let rec2Txt = '';
-
-      if (code <= 3) {
-        if (temp > 30) {
-          message = isDay ? "Hot day! Cool down with our refreshing beverages." : "Warm night. Grab a cold drink!";
-          rec1Img = '/cold_drink_1788388374768.jpg';
-          rec1Txt = 'Iced Cold Drink';
-          rec2Img = '/maggi_noodles_1788388364141.jpg';
-          rec2Txt = 'Spicy Snack';
-        } else {
-          message = isDay ? "Perfect weather for a campus stroll & a snack." : "Perfect night for a late-night bite.";
-          rec1Img = '/hot_coffee_1788388353442.jpg';
-          rec1Txt = 'Hot Coffee';
-          rec2Img = '/maggi_noodles_1788388364141.jpg';
-          rec2Txt = 'Masala Maggi';
-        }
-      } else if (code >= 51 && code <= 67) {
-        message = isDay ? "It's raining! Come warm up with some hot treats." : "Rainy night! Cozy up with our hot food.";
-        rec1Img = '/maggi_noodles_1788388364141.jpg';
-        rec1Txt = 'Steaming Maggi';
-        rec2Img = '/hot_coffee_1788388353442.jpg';
-        rec2Txt = 'Hot Brewed Coffee';
-      } else {
-        message = "Stay cozy! We have all the essentials you need.";
-        rec1Img = '/hot_coffee_1788388353442.jpg';
-        rec1Txt = 'Hot Coffee';
-        rec2Img = '/maggi_noodles_1788388364141.jpg';
-        rec2Txt = 'Comfort Food';
-      }
-
-      weatherText.textContent = message;
-      iconEl.textContent = icon;
-      iconEl.className = `weather-icon color-${colorType}`;
-      img1.src = rec1Img;
-      title1.textContent = rec1Txt;
-      img2.src = rec2Img;
-      title2.textContent = rec2Txt;
-      
-      // Update time dynamically
-      const updateTime = () => {
-        const now = new Date();
-        weatherTime.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      };
-      updateTime();
-      setInterval(updateTime, 1000);
-      
-      banner.classList.remove('hidden');
-      
-      anime({
-        targets: banner,
-        scale: [0.9, 1],
-        opacity: [0, 1],
-        translateY: [20, 0],
-        easing: 'easeOutElastic(1, .8)',
-        duration: 1200,
-        delay: 800
-      });
-
-      closeBtn.addEventListener('click', () => {
-        anime({
-          targets: banner,
-          scale: 0.9,
-          opacity: 0,
-          translateY: -20,
-          easing: 'easeInQuad',
-          duration: 300,
-          complete: () => {
-            banner.classList.add('hidden');
-          }
-        });
-      });
-    }
-  } catch (error) {
-    console.error("Failed to fetch weather:", error);
-  }
-}
-
-
-
-
-
-
-
-
-
 // --- Page Load Animations (Anime.js) ---
 
 document.addEventListener('DOMContentLoaded', () => {
-
-  fetchWeather();
-
-
-
   // Initial Hero Animation
 
   anime.timeline({
@@ -370,9 +245,9 @@ const catalogData = {
 
     { name: "Amul Kool Kesar", desc: "Saffron flavored milk.", image: "https://www.bbassets.com/media/uploads/p/l/129237_1-amul-kool-kesar-flavor.jpg" },
 
-    { name: "Coolberg Cranberry", desc: "Non-alcoholic cranberry beer.", image: "https://coolberg.in/cdn/shop/files/PO6_copy_3afd23bb-928a-49c9-bffd-78e58310a99e_1000x.png" },
+    { name: "Coolberg Cranberry", desc: "Non-alcoholic cranberry beer.", image: "https://www.bbassets.com/media/uploads/p/l/40122152_2-coolberg-beer-cranberry-non-alcoholic.jpg" },
 
-    { name: "Coolberg Peach", desc: "Non-alcoholic peach beer.", image: "https://coolberg.in/cdn/shop/files/Peach_Front_600x.jpg" },
+    { name: "Coolberg Peach", desc: "Non-alcoholic peach beer.", image: "https://www.bbassets.com/media/uploads/p/l/40122151_9-coolberg-non-alcoholic-beer-peach.jpg" },
 
     { name: "Schweppes Tonic Water", desc: "Classic Indian Tonic Water.", image: "https://www.schweppesus.com/images/catalog/products/schweppes-tonic-water.png" },
 
@@ -443,15 +318,12 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 
 
 function showCatalog(e) {
-
   if(e) e.preventDefault();
-
+  canvas.classList.add('dimmed-background');
+  
   // Fade out home
-
   homeView.style.opacity = '0';
-
   setTimeout(() => {
-
     homeView.classList.add('hidden');
 
     homeView.classList.remove('active');
@@ -493,14 +365,13 @@ function showCatalog(e) {
 
 
 function hideCatalog() {
-
+  canvas.classList.remove('dimmed-background');
+  
   // Fade out catalog
-
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
-
+  
   setTimeout(() => {
-
     catalogView.classList.add('hidden');
 
     catalogView.classList.remove('active');
@@ -552,7 +423,7 @@ function renderCatalog(category) {
 
       <div class="catalog-card-img">
 
-        <img src="${prod.image}" alt="${prod.name}" class="product-image" />
+        <img src="${prod.image}" alt="${prod.name}" class="product-image" loading="lazy" />
 
       </div>
 
@@ -600,6 +471,8 @@ function renderCatalog(category) {
 
 function showAbout(e) {
   if(e) e.preventDefault();
+  canvas.classList.add('dimmed-background');
+  
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   setTimeout(() => {
@@ -656,6 +529,22 @@ const logoHomeBtn = document.getElementById('logo-home-btn');
 if (logoHomeBtn) logoHomeBtn.addEventListener('click', hideCatalog);
 
 if (aboutBtn) aboutBtn.addEventListener('click', showAbout);
+
+
+
+// Click Outside to Close
+window.addEventListener('click', (e) => {
+  if (catalogView.classList.contains('active')) {
+    if (!e.target.closest('.catalog-container') && !e.target.closest('.explore-btn') && !e.target.closest('a[href="#products"]')) {
+      hideCatalog();
+    }
+  }
+  if (aboutView && aboutView.classList.contains('active')) {
+    if (!e.target.closest('.about-container') && !e.target.closest('a[href="#about"]')) {
+      hideCatalog();
+    }
+  }
+});
 
 
 // --- Custom Cursor ---
