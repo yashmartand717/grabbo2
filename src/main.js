@@ -225,6 +225,18 @@ document.querySelectorAll('.product-card').forEach(card => {
 
 const catalogData = {
 
+  precautions: [
+    { name: "N95 Face Mask", desc: "High filtration efficiency mask for protection against viruses.", image: "/images/precautions/n95_mask.jpg", suggestion: "Protects against Covid & Viruses" },
+    { name: "Dettol Hand Sanitizer", desc: "Kills 99.9% of germs without water.", image: "/images/precautions/sanitizer.jpg", suggestion: "Prevents Viral Infections" },
+    { name: "Lifebuoy Soap", desc: "Total 10 germ protection soap.", image: "/images/precautions/soap.jpg", suggestion: "Washes away germs" },
+    { name: "Odomos Mosquito Repellent", desc: "Cream for protection against Dengue/Malaria mosquitoes.", image: "/images/precautions/repellent.jpg", suggestion: "Helps in Dengue & Malaria" },
+    { name: "Savlon Antiseptic Liquid", desc: "First aid and personal hygiene liquid.", image: "/images/precautions/antiseptic.jpg", suggestion: "First aid & hygiene" },
+    { name: "Crocin Advance Tablet", desc: "Relieves pain and reduces fever effectively.", image: "/images/precautions/crocin.jpg", suggestion: "Relieves Fever & Pain" },
+    { name: "Vicks VapoRub", desc: "Relief from cold, cough, and blocked nose.", image: "/images/precautions/vicks.jpg", suggestion: "Relieves Cold & Cough" },
+    { name: "Electral ORS Powder", desc: "WHO based ORS formula for rehydration.", image: "/images/precautions/electral.jpg", suggestion: "Prevents Dehydration" },
+    { name: "Digital Thermometer", desc: "Fast and accurate fever measurement.", image: "/images/precautions/thermometer.jpg", suggestion: "Checks Fever Accurately" }
+  ],
+
   beverages: [
 
     { name: "Alo Frut Blood Orange Mojito", desc: "Refreshing mocktail with a tangy twist.", image: "https://www.bbassets.com/media/uploads/p/l/40228655_1-axiom-alo-frut-blood-orange-mojito-brewed-naturally-no-artificial-flavours.jpg" },
@@ -331,7 +343,7 @@ function showCatalog(e) {
 
     if (catalogGrid.children.length === 0) {
 
-      renderCatalog('beverages');
+      renderCatalog('precautions');
 
     }
 
@@ -416,6 +428,13 @@ function renderCatalog(category) {
     img.className = 'product-image';
     
     imgContainer.appendChild(img);
+
+    if (prod.suggestion) {
+      const badge = document.createElement('div');
+      badge.className = 'suggestion-badge';
+      badge.innerHTML = `<i class="fa-solid fa-notes-medical"></i> ${prod.suggestion}`;
+      imgContainer.appendChild(badge);
+    }
     
     const detailsContainer = document.createElement('div');
     detailsContainer.className = 'catalog-card-details';
@@ -517,7 +536,76 @@ tabBtns.forEach(btn => {
 
 });
 
+async function fetchHealthNews() {
+  const newsGrid = document.getElementById('dynamic-news-grid');
+  if (!newsGrid) return;
 
+  try {
+    const rssUrl = '/api/news/rss/search?q=disease+OR+fever+OR+dengue+OR+malaria+OR+covid+delhi+ncr&hl=en-IN&gl=IN&ceid=IN:en';
+    const response = await fetch(rssUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const textData = await response.text();
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(textData, "text/xml");
+    const items = xmlDoc.querySelectorAll('item');
+
+    if (items.length > 0) {
+      newsGrid.innerHTML = ''; 
+      
+      const topNews = Array.from(items).slice(0, 3);
+      
+      topNews.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'product-card news-card';
+        card.setAttribute('data-category', 'precautions');
+        card.style.cursor = 'pointer';
+        
+        let title = item.querySelector('title')?.textContent || 'Health Alert';
+        title = title.split(' - ')[0];
+
+        let description = item.querySelector('description')?.textContent || '';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = description;
+        let textContent = tempDiv.textContent || tempDiv.innerText || '';
+        
+        card.innerHTML = `
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px; line-height: 1.3;">${title}</h3>
+          <p style="font-size: 0.9rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; opacity: 0.8;">${textContent}</p>
+        `;
+        
+        card.addEventListener('click', () => {
+          const category = card.getAttribute('data-category');
+          tabBtns.forEach(b => b.classList.remove('active'));
+          const targetTab = Array.from(tabBtns).find(b => b.getAttribute('data-category') === category);
+          if (targetTab) targetTab.classList.add('active');
+          renderCatalog(category);
+          showCatalog();
+        });
+        
+        newsGrid.appendChild(card);
+      });
+      
+      document.querySelectorAll('#dynamic-news-grid .product-card').forEach(card => {
+        card.style.opacity = 0;
+        card.style.transform = 'translateY(20px)';
+        if (typeof observer !== 'undefined') {
+          observer.observe(card);
+        }
+      });
+      return;
+    }
+    throw new Error('No items found');
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    newsGrid.innerHTML = `<div style="color: rgba(255, 255, 255, 0.7); text-align: center; width: 100%; grid-column: 1 / -1; padding: 20px;">Unable to fetch real-time news right now. Error: ${error.message}</div>`;
+  }
+}
+
+fetchHealthNews();
 
 const logoHomeBtn = document.getElementById('logo-home-btn');
 if (logoHomeBtn) logoHomeBtn.addEventListener('click', hideCatalog);
