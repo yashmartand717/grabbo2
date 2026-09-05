@@ -8,10 +8,22 @@ import anime from 'animejs';
 const canvas = document.getElementById('bg-canvas');
 const context = canvas.getContext('2d');
 
-const frameCount = 150;
-const currentFrame = index => (
-  `/scroll_sequence/ezgif-frame-${(index + 1).toString().padStart(3, '0')}.jpg`
-);
+// Toggle this variable to switch animations:
+// false = Original Coffee Animation
+// true = New Animation
+const useNewAnimation = true;
+
+const frameCount = useNewAnimation ? 300 : 150;
+const currentFrame = index => {
+  const frameNumber = (index + 1).toString().padStart(3, '0');
+  
+  if (useNewAnimation) {
+    // Note: Make sure the 'ezgif-409ce6f3040f8cae-jpg' folder is moved inside the 'public' folder!
+    return `/ezgif-409ce6f3040f8cae-jpg/ezgif-frame-${frameNumber}.jpg`;
+  } else {
+    return `/scroll_sequence/ezgif-frame-${frameNumber}.jpg`;
+  }
+};
 
 const images = [];
 const preloadImages = () => {
@@ -68,6 +80,8 @@ const resizeCanvas = () => {
   
   // Scale the context to match the device pixel ratio
   context.scale(dpr, dpr);
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = 'high';
   
   renderFrame(scrollProgressIndex);
 };
