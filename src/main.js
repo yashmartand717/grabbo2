@@ -1,3 +1,4 @@
+// Grabbo Web - Premium Campus Essentials @ SNU Shopping Arcade
 import './style.css';
 
 import * as THREE from 'three';
