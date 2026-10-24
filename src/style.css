@@ -392,6 +392,200 @@ body {
   color: #ffffff;
 }
 
+/* --- Author & Founder Showcase Section --- */
+.author-section {
+  position: relative;
+  padding: 90px 8%;
+  max-width: 1350px;
+  margin: 50px auto 70px;
+  background: radial-gradient(circle at 80% 30%, rgba(253, 224, 37, 0.06) 0%, transparent 60%),
+              radial-gradient(circle at 20% 70%, rgba(212, 185, 19, 0.04) 0%, transparent 50%),
+              rgba(18, 17, 16, 0.78);
+  border: 1px solid rgba(253, 224, 37, 0.14);
+  border-radius: 28px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(253, 224, 37, 0.16);
+  overflow: hidden;
+}
+
+.author-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(253, 224, 37, 0.4), transparent);
+}
+
+.author-container {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 70px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Left Column: The Store & Story */
+.author-story {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.author-badge {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 18px;
+  display: inline-block;
+  text-shadow: 0 2px 8px rgba(253, 224, 37, 0.35);
+}
+
+.author-title {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.4rem, 4vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: #ffffff;
+  margin-bottom: 28px;
+  letter-spacing: -0.015em;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85);
+}
+
+.author-description {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 20px;
+  max-width: 550px;
+  font-weight: 400;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.author-description:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Right Column: The Founder */
+.author-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.founder-image-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.founder-image-circle {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 1px solid rgba(253, 224, 37, 0.4);
+  box-shadow: 0 0 35px rgba(253, 224, 37, 0.08), 
+              inset 0 0 25px rgba(253, 224, 37, 0.05),
+              0 10px 30px rgba(0, 0, 0, 0.6);
+  background: radial-gradient(circle at center, rgba(35, 31, 24, 0.7) 0%, rgba(18, 17, 16, 0.95) 85%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.founder-image-circle:hover {
+  border-color: rgba(253, 224, 37, 0.65);
+  box-shadow: 0 0 45px rgba(253, 224, 37, 0.18), 
+              inset 0 0 30px rgba(253, 224, 37, 0.08),
+              0 14px 35px rgba(0, 0, 0, 0.7);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.founder-placeholder-title {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(253, 224, 37, 0.75);
+  text-transform: uppercase;
+}
+
+.founder-placeholder-sub {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.founder-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 440px;
+}
+
+.founder-name {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
+}
+
+.founder-role {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 18px;
+  display: inline-block;
+  text-shadow: 0 1px 6px rgba(253, 224, 37, 0.3);
+}
+
+.founder-quote {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 992px) {
+  .author-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  .author-story {
+    text-align: center;
+    align-items: center;
+  }
+  .author-description {
+    max-width: 620px;
+  }
+}
+
 /* Footer */
 footer {
   text-align: center;
@@ -442,6 +636,25 @@ footer {
   .catalog-header { margin-bottom: 20px; }
   .catalog-header .section-title { font-size: 2rem; }
   #back-to-home { padding: 8px 18px; font-size: 0.85rem; }
+  .author-section {
+    padding: 60px 6%;
+    margin: 30px 4% 50px;
+    border-radius: 20px;
+  }
+  .author-title {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+  }
+  .founder-image-circle {
+    width: 210px;
+    height: 210px;
+  }
+  .founder-name {
+    font-size: 1.8rem;
+  }
+  .founder-quote {
+    font-size: 0.95rem;
+  }
 }
 
 /* SPA View Transitions */
