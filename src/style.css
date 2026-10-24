@@ -392,6 +392,84 @@ body {
   color: #ffffff;
 }
 
+/* --- News & Precautions Continuous Marquee Carousel --- */
+.news-section-marquee {
+  overflow: hidden;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.news-section-marquee .section-title {
+  padding: 0 5%;
+}
+
+.news-marquee-container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  gap: 28px;
+  padding: 24px 0 35px 0;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.news-marquee-group {
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  gap: 28px;
+  animation: news-marquee-scroll 45s linear infinite;
+  will-change: transform;
+}
+
+.news-marquee-container:hover .news-marquee-group,
+.news-marquee-container:active .news-marquee-group {
+  animation-play-state: paused;
+}
+
+.news-marquee-group .news-card {
+  width: 370px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+@keyframes news-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 28px));
+  }
+}
+
+@media (max-width: 768px) {
+  .news-marquee-container {
+    gap: 18px;
+    padding: 16px 0 25px 0;
+    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  }
+  .news-marquee-group {
+    gap: 18px;
+    animation-duration: 32s;
+  }
+  .news-marquee-group .news-card {
+    width: 300px;
+    padding: 24px 20px;
+  }
+  @keyframes news-marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - 18px));
+    }
+  }
+}
+
 /* --- Author & Founder Showcase Section --- */
 .author-section {
   position: relative;

@@ -609,50 +609,63 @@ async function fetchHealthNews() {
     }
   ];
 
-  function renderNewsCards(cards) {
-    newsGrid.innerHTML = '';
-    cards.forEach((item) => {
-      const card = document.createElement('div');
-      card.className = 'product-card news-card';
-      card.setAttribute('data-category', item.category || 'precautions');
-      card.style.cursor = 'pointer';
-      card.style.opacity = '1';
+  function createCardElement(item) {
+    const card = document.createElement('div');
+    card.className = 'product-card news-card';
+    card.setAttribute('data-category', item.category || 'precautions');
+    card.style.cursor = 'pointer';
 
-      card.innerHTML = `
-        <div class="news-card-badge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-          ${item.badge}
-        </div>
-        <h3 class="news-card-title">${item.title}</h3>
-        <p class="news-card-desc">${item.desc}</p>
-        <div class="news-card-action">
-          <span>${item.action || 'View Essentials & Products'}</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      `;
+    card.innerHTML = `
+      <div class="news-card-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        ${item.badge}
+      </div>
+      <h3 class="news-card-title">${item.title}</h3>
+      <p class="news-card-desc">${item.desc}</p>
+      <div class="news-card-action">
+        <span>${item.action || 'View Essentials & Products'}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    `;
 
-      card.addEventListener('click', () => {
-        const category = card.getAttribute('data-category') || 'precautions';
-        tabBtns.forEach(b => b.classList.remove('active'));
-        const targetTab = Array.from(tabBtns).find(b => b.getAttribute('data-category') === category);
-        if (targetTab) targetTab.classList.add('active');
-        renderCatalog(category);
-        showCatalog();
-      });
-
-      newsGrid.appendChild(card);
+    card.addEventListener('click', () => {
+      const category = card.getAttribute('data-category') || 'precautions';
+      tabBtns.forEach(b => b.classList.remove('active'));
+      const targetTab = Array.from(tabBtns).find(b => b.getAttribute('data-category') === category);
+      if (targetTab) targetTab.classList.add('active');
+      renderCatalog(category);
+      showCatalog();
     });
 
-    if (typeof anime !== 'undefined') {
-      anime({
-        targets: '#dynamic-news-grid .product-card',
-        translateY: [20, 0],
-        opacity: [0, 1],
-        duration: 500,
-        easing: 'easeOutQuad',
-        delay: anime.stagger(100)
-      });
+    return card;
+  }
+
+  function renderNewsCards(cards) {
+    newsGrid.innerHTML = '';
+
+    // Ensure we have enough cards to fill and loop seamlessly
+    let list = [...cards];
+    while (list.length < 6) {
+      list = list.concat(cards);
     }
+
+    // Track 1
+    const group1 = document.createElement('div');
+    group1.className = 'news-marquee-group';
+    list.forEach(item => {
+      group1.appendChild(createCardElement(item));
+    });
+
+    // Track 2 (Clone for infinite seamless loop)
+    const group2 = document.createElement('div');
+    group2.className = 'news-marquee-group';
+    group2.setAttribute('aria-hidden', 'true');
+    list.forEach(item => {
+      group2.appendChild(createCardElement(item));
+    });
+
+    newsGrid.appendChild(group1);
+    newsGrid.appendChild(group2);
   }
 
   try {
@@ -686,7 +699,7 @@ async function fetchHealthNews() {
       const items = xmlDoc.querySelectorAll('item');
 
       if (items.length > 0) {
-        const topNews = Array.from(items).slice(0, 3);
+        const topNews = Array.from(items).slice(0, 8);
         const parsedCards = topNews.map((item) => {
           let title = item.querySelector('title')?.textContent || 'Health Advisory';
           title = title.split(' - ')[0].replace(/[\?]{2,}/g, '"').trim();
