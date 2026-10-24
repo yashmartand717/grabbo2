@@ -473,17 +473,23 @@ body {
 /* --- Author & Founder Showcase Section --- */
 .author-section {
   position: relative;
-  padding: 90px 8%;
-  max-width: 1350px;
-  margin: 50px auto 70px;
-  background: radial-gradient(circle at 80% 30%, rgba(253, 224, 37, 0.06) 0%, transparent 60%),
-              radial-gradient(circle at 20% 70%, rgba(212, 185, 19, 0.04) 0%, transparent 50%),
-              rgba(18, 17, 16, 0.78);
-  border: 1px solid rgba(253, 224, 37, 0.14);
-  border-radius: 28px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(253, 224, 37, 0.16);
+  width: 100%;
+  max-width: 100%;
+  padding: 100px 8%;
+  margin: 60px 0;
+  background: radial-gradient(circle at 85% 30%, rgba(253, 224, 37, 0.08) 0%, transparent 55%),
+              radial-gradient(circle at 15% 70%, rgba(212, 185, 19, 0.05) 0%, transparent 50%),
+              rgba(16, 15, 13, 0.86);
+  border-top: 1px solid rgba(253, 224, 37, 0.2);
+  border-bottom: 1px solid rgba(253, 224, 37, 0.2);
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7),
+              inset 0 1px 0 rgba(253, 224, 37, 0.2),
+              inset 0 -1px 0 rgba(253, 224, 37, 0.1);
   overflow: hidden;
 }
 
@@ -493,11 +499,23 @@ body {
   top: 0;
   left: 0;
   right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, rgba(253, 224, 37, 0.6) 50%, transparent 95%);
+}
+
+.author-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(253, 224, 37, 0.4), transparent);
+  background: linear-gradient(90deg, transparent 10%, rgba(253, 224, 37, 0.3) 50%, transparent 90%);
 }
 
 .author-container {
+  max-width: 1350px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 70px;
@@ -952,8 +970,8 @@ footer.site-footer {
   #back-to-home { padding: 8px 18px; font-size: 0.85rem; }
   .author-section {
     padding: 60px 6%;
-    margin: 30px 4% 50px;
-    border-radius: 20px;
+    margin: 30px 0 50px;
+    border-radius: 0;
   }
   .author-title {
     font-size: 2.2rem;
