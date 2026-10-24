@@ -1369,6 +1369,54 @@ a, button, .catalog-card, .btn-primary {
   transform: scale(1.05);
 }
 
+/* Featured Event Card */
+.featured-event-card {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 36px;
+  align-items: center;
+  padding: 34px;
+  background: rgba(30, 27, 22, 0.88);
+  border: 1px solid rgba(253, 224, 37, 0.32);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(253, 224, 37, 0.12);
+}
+
+.featured-img {
+  height: 380px;
+  position: relative;
+  margin-bottom: 0;
+  border-radius: 18px;
+}
+
+.event-img-overlay-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(18, 17, 16, 0.88);
+  border: 1px solid rgba(253, 224, 37, 0.45);
+  color: var(--primary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+@media (max-width: 900px) {
+  .featured-event-card {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 24px 20px;
+  }
+  .featured-img {
+    height: 250px;
+  }
+}
+
 /* Event Empty State */
 .event-empty-state {
   grid-column: 1 / -1;
