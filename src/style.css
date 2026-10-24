@@ -473,6 +473,11 @@ body {
   margin-bottom: 0;
 }
 
+.author-description strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
 /* Right Column: The Founder */
 .author-profile {
   display: flex;
