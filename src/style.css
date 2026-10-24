@@ -1157,40 +1157,49 @@ a, button, .catalog-card, .btn-primary {
   background: white;
   border-width: 0px;
 }
-/* Marquee Section */
+/* Marquee Section - Continuous Seamless Infinite Loop */
 .marquee-container {
   width: 100%;
   overflow: hidden;
-  background: rgba(30, 28, 25, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding: 20px 0;
-  margin-top: 40px;
+  user-select: none;
+  background: rgba(20, 18, 15, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(253, 224, 37, 0.16);
+  border-bottom: 1px solid rgba(253, 224, 37, 0.16);
+  padding: 18px 0;
+  margin-top: 50px;
   display: flex;
-  white-space: nowrap;
 }
 
-.marquee-content {
+.marquee-group {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  font-size: 1.2rem;
+  justify-content: space-around;
+  flex-shrink: 0;
+  min-width: 100%;
+  gap: 2.2rem;
+  padding-right: 2.2rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--primary);
-  animation: marquee 20s linear infinite;
   text-transform: uppercase;
+  animation: marquee-scroll 24s linear infinite;
 }
 
-.marquee-content .dot {
-  color: var(--text-muted);
+.marquee-group .dot {
+  color: rgba(253, 224, 37, 0.45);
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 /* Add preserve-3d to containers for tilt effect */
