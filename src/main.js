@@ -527,6 +527,36 @@ document.querySelectorAll('.about-explore-btn').forEach(btn => {
   btn.addEventListener('click', showCatalog);
 });
 
+// About Modal 3-Pillar Tab Switching (1. About Store, 2. Our Vision, 3. Our Mission)
+const aboutTabBtns = document.querySelectorAll('.about-tab-btn');
+const aboutPanels = document.querySelectorAll('.about-panel');
+
+function switchAboutTab(targetTab) {
+  aboutTabBtns.forEach(btn => {
+    const isActive = btn.getAttribute('data-tab') === targetTab;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+
+  aboutPanels.forEach(panel => {
+    panel.classList.toggle('active', panel.id === `panel-${targetTab}`);
+  });
+}
+
+aboutTabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetTab = btn.getAttribute('data-tab');
+    if (targetTab) switchAboutTab(targetTab);
+  });
+});
+
+document.querySelectorAll('.switch-panel-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetTab = btn.getAttribute('data-target');
+    if (targetTab) switchAboutTab(targetTab);
+  });
+});
+
 
 
 tabBtns.forEach(btn => {
