@@ -294,6 +294,8 @@ const catalogData = {
 const homeView = document.getElementById('home-view');
 const aboutView = document.getElementById('about-view');
 const aboutBtn = document.querySelector('a[href="#about"]');
+const eventsView = document.getElementById('events-view');
+const eventsBtn = document.querySelector('a[href="#events"]');
 
 const catalogView = document.getElementById('catalog-view');
 
@@ -313,9 +315,10 @@ function showCatalog(e) {
   canvas.style.filter = 'brightness(0.25)';
   window.scrollTo(0, 0);
   
-  // Fade out home and about
+  // Fade out home, about and events
   homeView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
+  if (eventsView) eventsView.style.opacity = '0';
   
   setTimeout(() => {
     homeView.classList.add('hidden');
@@ -323,6 +326,10 @@ function showCatalog(e) {
     if (aboutView) {
       aboutView.classList.add('hidden');
       aboutView.classList.remove('active');
+    }
+    if (eventsView) {
+      eventsView.classList.add('hidden');
+      eventsView.classList.remove('active');
     }
 
     // Fade in catalog
@@ -342,6 +349,7 @@ function showCatalog(e) {
 function hideCatalog() {
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
+  if (eventsView) eventsView.style.opacity = '0';
   window.scrollTo(0, 0);
   
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -355,6 +363,10 @@ function hideCatalog() {
     if (aboutView) { 
       aboutView.classList.add('hidden'); 
       aboutView.classList.remove('active'); 
+    }
+    if (eventsView) {
+      eventsView.classList.add('hidden');
+      eventsView.classList.remove('active');
     }
 
     // Fade in home
@@ -457,11 +469,17 @@ function showAbout(e) {
   
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
+  if (eventsView) eventsView.style.opacity = '0';
+
   setTimeout(() => {
     homeView.classList.add('hidden');
     homeView.classList.remove('active');
     catalogView.classList.add('hidden');
     catalogView.classList.remove('active');
+    if (eventsView) {
+      eventsView.classList.add('hidden');
+      eventsView.classList.remove('active');
+    }
     
     aboutView.classList.remove('hidden');
     aboutView.classList.add('active');
@@ -470,11 +488,38 @@ function showAbout(e) {
   }, 200);
 }
 
+function showEvents(e) {
+  if (e) e.preventDefault();
+  
+  canvas.style.filter = 'brightness(0.3)';
+  window.scrollTo(0, 0);
+  
+  homeView.style.opacity = '0';
+  catalogView.style.opacity = '0';
+  if (aboutView) aboutView.style.opacity = '0';
+
+  setTimeout(() => {
+    homeView.classList.add('hidden');
+    homeView.classList.remove('active');
+    catalogView.classList.add('hidden');
+    catalogView.classList.remove('active');
+    if (aboutView) {
+      aboutView.classList.add('hidden');
+      aboutView.classList.remove('active');
+    }
+    
+    eventsView.classList.remove('hidden');
+    eventsView.classList.add('active');
+    eventsView.style.opacity = '1';
+    window.scrollTo(0, 0);
+  }, 200);
+}
+
 exploreBtns.forEach(btn => {
   btn.addEventListener('click', showCatalog);
 });
 
-document.querySelectorAll('.close-overlay-btn, .about-back-btn, #back-to-home').forEach(btn => {
+document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn, #back-to-home').forEach(btn => {
   btn.addEventListener('click', hideCatalog);
 });
 
@@ -666,6 +711,7 @@ const logoHomeBtn = document.getElementById('logo-home-btn');
 if (logoHomeBtn) logoHomeBtn.addEventListener('click', hideCatalog);
 
 if (aboutBtn) aboutBtn.addEventListener('click', showAbout);
+if (eventsBtn) eventsBtn.addEventListener('click', showEvents);
 
 // Hash routing support for direct links and browser back/forward
 window.addEventListener('hashchange', () => {
@@ -673,6 +719,8 @@ window.addEventListener('hashchange', () => {
     showCatalog();
   } else if (window.location.hash === '#about') {
     showAbout();
+  } else if (window.location.hash === '#events') {
+    showEvents();
   } else if (!window.location.hash || window.location.hash === '#home') {
     hideCatalog();
   }
@@ -682,6 +730,8 @@ if (window.location.hash === '#products') {
   showCatalog();
 } else if (window.location.hash === '#about') {
   showAbout();
+} else if (window.location.hash === '#events') {
+  showEvents();
 }
 
 
@@ -698,7 +748,7 @@ if (customCursor) {
   const addHover = () => customCursor.classList.add('hover');
   const removeHover = () => customCursor.classList.remove('hover');
 
-  document.querySelectorAll('a, button, .catalog-card').forEach(el => {
+  document.querySelectorAll('a, button, .catalog-card, .event-card').forEach(el => {
     el.addEventListener('mouseenter', addHover);
     el.addEventListener('mouseleave', removeHover);
   });
