@@ -4,7 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grabbo @ SNU - Premium Essentials</title>
+    <title>Grabbo @ SNU - Premium Essentials & Experience Center</title>
+    <meta name="description" content="Grabbo @ Shiv Nadar University - In-campus departmental store and experience center offering everyday essentials, fresh café bites, beverages, late-night snacks, and health precautions at Shopping Arcade." />
+    <meta name="theme-color" content="#121110" />
+    <meta property="og:title" content="Grabbo @ SNU - Premium Essentials" />
+    <meta property="og:description" content="Elevating campus convenience at Shiv Nadar University Shopping Arcade. Curated snacks, beverages, bakery, café takeaway, and health care." />
+    <meta property="og:image" content="/logo.png" />
+    <meta property="og:type" content="website" />
     <!-- Modern Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -217,7 +223,7 @@
                 <p class="footer-collab-text">
                   Follow and Subscribe our social media for exclusive releases and Events.
                 </p>
-                <form class="footer-subscribe-form" onsubmit="event.preventDefault(); const email = this.querySelector('input').value; if(email) { alert('Thank you for subscribing to Grabbo updates!'); this.reset(); }">
+                <form class="footer-subscribe-form" id="footer-subscribe-form" action="#">
                   <div class="footer-input-row">
                     <input type="email" placeholder="Email Address" required class="footer-email-input" aria-label="Email Address">
                     <button type="submit" class="footer-join-btn">JOIN</button>

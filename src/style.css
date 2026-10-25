@@ -583,7 +583,7 @@ body {
 /* --- Author & Founder Showcase Section --- */
 .author-section {
   position: relative;
-  scroll-margin-top: 50px;
+  scroll-margin-top: 90px;
   width: 100%;
   max-width: 100%;
   padding: 100px 8%;
@@ -1579,6 +1579,20 @@ a, button, .catalog-card, .btn-primary {
               background 0.3s ease,
               box-shadow 0.3s ease !important;
 }
+
+@media (hover: none) and (pointer: coarse) {
+  body {
+    cursor: auto !important;
+  }
+  a, button, .catalog-card, .btn-primary, input {
+    cursor: pointer !important;
+  }
+  .custom-cursor {
+    display: none !important;
+    pointer-events: none !important;
+  }
+}
+
 /* Marquee Section - Continuous Seamless Infinite Loop */
 .marquee-container {
   width: 100%;

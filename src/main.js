@@ -1,25 +1,17 @@
 // Grabbo Web - Premium Campus Essentials @ SNU Shopping Arcade
 import './style.css';
-
-import * as THREE from 'three';
-
 import anime from 'animejs';
 
 // --- Scroll Sequence Animation ---
 const canvas = document.getElementById('bg-canvas');
 const context = canvas.getContext('2d');
 
-// Toggle this variable to switch animations:
-// false = Original Coffee Animation
-// true = New Animation
+// 300-frame Storefront Interior Sequence
 const useNewAnimation = true;
-
 const frameCount = useNewAnimation ? 300 : 150;
 const currentFrame = index => {
   const frameNumber = (index + 1).toString().padStart(3, '0');
-  
   if (useNewAnimation) {
-    // Note: Make sure the 'ezgif-409ce6f3040f8cae-jpg' folder is moved inside the 'public' folder!
     return `/ezgif-409ce6f3040f8cae-jpg/ezgif-frame-${frameNumber}.jpg`;
   } else {
     return `/scroll_sequence/ezgif-frame-${frameNumber}.jpg`;
@@ -27,21 +19,54 @@ const currentFrame = index => {
 };
 
 const images = [];
-const preloadImages = () => {
-  for (let i = 0; i < frameCount; i++) {
-    images[i] = new Image();
-    images[i].src = currentFrame(i);
+for (let i = 0; i < frameCount; i++) {
+  images[i] = new Image();
+}
+
+// Progressive & On-Demand Frame Loader
+const loadFrame = (index) => {
+  if (index >= 0 && index < frameCount && !images[index].src) {
+    images[index].src = currentFrame(index);
   }
 };
 
-preloadImages();
+// Immediately load initial frame & initial 30 frames for smooth first experience
+loadFrame(0);
+for (let i = 1; i < Math.min(30, frameCount); i++) {
+  loadFrame(i);
+}
+
+// Background idle preload for remaining frames to keep network thread free
+let nextBatchStart = 30;
+const batchSize = 15;
+const preloadRemainingFrames = () => {
+  if (nextBatchStart >= frameCount) return;
+  const batchEnd = Math.min(nextBatchStart + batchSize, frameCount);
+  for (let i = nextBatchStart; i < batchEnd; i++) {
+    loadFrame(i);
+  }
+  nextBatchStart = batchEnd;
+  if (nextBatchStart < frameCount) {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(preloadRemainingFrames, { timeout: 800 });
+    } else {
+      setTimeout(preloadRemainingFrames, 120);
+    }
+  }
+};
 
 let canvasWidth = window.innerWidth;
 let canvasHeight = window.innerHeight;
 let scrollProgressIndex = 0;
 
 const renderFrame = (index) => {
-  if (images[index] && images[index].complete) {
+  // Ensure current and adjacent frames are prioritized immediately
+  loadFrame(index);
+  loadFrame(index + 1);
+  loadFrame(index + 2);
+  loadFrame(index - 1);
+
+  if (images[index] && images[index].complete && images[index].naturalWidth > 0) {
     const img = images[index];
     
     // Draw image covering the canvas without zooming on scroll
@@ -331,8 +356,11 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 
 
 
-function showCatalog(e) {
-  if(e) e.preventDefault();
+function showCatalog(e, updateHistory = true) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (updateHistory && window.location.hash !== '#products') {
+    history.pushState({ view: 'products' }, '', '#products');
+  }
   
   canvas.style.filter = 'brightness(0.25)';
   window.scrollTo(0, 0);
@@ -368,7 +396,12 @@ function showCatalog(e) {
   }, 200);
 }
 
-function hideCatalog() {
+function hideCatalog(e, updateHistory = true) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (updateHistory && window.location.hash && window.location.hash !== '#home') {
+    history.pushState({ view: 'home' }, '', '#home');
+  }
+
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
@@ -484,8 +517,11 @@ function renderCatalog(category) {
 
 // Event Listeners
 
-function showAbout(e) {
-  if(e) e.preventDefault();
+function showAbout(e, updateHistory = true) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (updateHistory && window.location.hash !== '#about') {
+    history.pushState({ view: 'about' }, '', '#about');
+  }
   
   canvas.style.filter = 'brightness(0.3)';
   window.scrollTo(0, 0);
@@ -519,8 +555,11 @@ function showAbout(e) {
   }, 200);
 }
 
-function showEvents(e) {
-  if (e) e.preventDefault();
+function showEvents(e, updateHistory = true) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (updateHistory && window.location.hash !== '#events') {
+    history.pushState({ view: 'events' }, '', '#events');
+  }
   
   canvas.style.filter = 'brightness(0.3)';
   window.scrollTo(0, 0);
@@ -549,17 +588,25 @@ function showEvents(e) {
 // Starting screen "Explore Now" button -> Opens About view
 const heroExploreBtn = document.querySelector('.hero .explore-btn');
 if (heroExploreBtn) {
-  heroExploreBtn.addEventListener('click', showAbout);
+  heroExploreBtn.addEventListener('click', (e) => showAbout(e, true));
 }
 
 // Navbar "Products" link -> Opens Catalog view
 document.querySelectorAll('a[href="#products"]').forEach(btn => {
-  btn.addEventListener('click', showCatalog);
+  btn.addEventListener('click', (e) => showCatalog(e, true));
+});
+
+// Navbar "Events" link -> Opens Events view
+document.querySelectorAll('a[href="#events"]').forEach(btn => {
+  btn.addEventListener('click', (e) => showEvents(e, true));
 });
 
 // Navbar "Story" link -> Scrolls down to the Story section
-function scrollToStory(e) {
-  if (e) e.preventDefault();
+function scrollToStory(e, updateHistory = true) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (updateHistory && window.location.hash !== '#story') {
+    history.pushState({ view: 'story' }, '', '#story');
+  }
   
   const storyTarget = document.getElementById('story') || document.getElementById('author-section');
   if (!storyTarget) return;
@@ -595,21 +642,21 @@ function scrollToStory(e) {
 }
 
 document.querySelectorAll('a[href="#story"], .nav-story-link').forEach(btn => {
-  btn.addEventListener('click', scrollToStory);
+  btn.addEventListener('click', (e) => scrollToStory(e, true));
 });
 
 // Navbar "About" link fallback -> Opens About view
 document.querySelectorAll('a[href="#about"]').forEach(btn => {
-  btn.addEventListener('click', showAbout);
+  btn.addEventListener('click', (e) => showAbout(e, true));
 });
 
 document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn, #back-to-home').forEach(btn => {
-  btn.addEventListener('click', hideCatalog);
+  btn.addEventListener('click', (e) => hideCatalog(e, true));
 });
 
 // Direct redirect button inside About view -> Opens Catalog view
 document.querySelectorAll('.about-explore-btn, .direct-catalog-btn, #about-redirect-catalog-btn').forEach(btn => {
-  btn.addEventListener('click', showCatalog);
+  btn.addEventListener('click', (e) => showCatalog(e, true));
 });
 
 // Storefront Sign (Main Fascia Board) Click -> Open About Section
@@ -990,37 +1037,54 @@ function initTestimonials() {
 
 initTestimonials();
 
+// --- SPA Router: Browser Back/Forward & Direct URL Sync ---
 const logoHomeBtn = document.getElementById('logo-home-btn');
-if (logoHomeBtn) logoHomeBtn.addEventListener('click', hideCatalog);
+if (logoHomeBtn) {
+  logoHomeBtn.addEventListener('click', (e) => hideCatalog(e, true));
+}
 
-if (aboutBtn) aboutBtn.addEventListener('click', showAbout);
-if (eventsBtn) eventsBtn.addEventListener('click', showEvents);
-
-// Hash routing support for direct links and browser back/forward
-window.addEventListener('hashchange', () => {
-  if (window.location.hash === '#products') {
-    showCatalog();
-  } else if (window.location.hash === '#about') {
-    showAbout();
-  } else if (window.location.hash === '#events') {
-    showEvents();
-  } else if (!window.location.hash || window.location.hash === '#home') {
-    hideCatalog();
+// Popstate listener handles browser Back & Forward navigation seamlessly
+window.addEventListener('popstate', (e) => {
+  const hash = window.location.hash;
+  if (hash === '#products') {
+    showCatalog(null, false);
+  } else if (hash === '#about') {
+    showAbout(null, false);
+  } else if (hash === '#events') {
+    showEvents(null, false);
+  } else if (hash === '#story') {
+    scrollToStory(null, false);
+  } else {
+    hideCatalog(null, false);
   }
 });
 
-if (window.location.hash === '#products') {
-  showCatalog();
-} else if (window.location.hash === '#about') {
-  showAbout();
-} else if (window.location.hash === '#events') {
-  showEvents();
+// Initial route inspection on page load
+const initialHash = window.location.hash;
+if (initialHash === '#products') {
+  showCatalog(null, false);
+} else if (initialHash === '#about') {
+  showAbout(null, false);
+} else if (initialHash === '#events') {
+  showEvents(null, false);
+} else if (initialHash === '#story') {
+  setTimeout(() => scrollToStory(null, false), 400);
 }
 
+// --- Footer Newsletter Subscription (CSP-compliant) ---
+const subscribeForm = document.getElementById('footer-subscribe-form');
+if (subscribeForm) {
+  subscribeForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = subscribeForm.querySelector('input[type="email"]');
+    if (emailInput && emailInput.value.trim()) {
+      alert(`Thank you for subscribing (${emailInput.value.trim()})! You'll receive updates on Grabbo releases and campus events.`);
+      subscribeForm.reset();
+    }
+  });
+}
 
-
-
-// --- Custom Cursor ---
+// --- Custom Cursor with Global Event Delegation ---
 const customCursor = document.getElementById('custom-cursor');
 let isHoveringSign = false;
 
@@ -1038,28 +1102,21 @@ if (customCursor) {
     customCursor.style.transform = 'translate(-50%, -50%)';
   });
 
-  const addHover = () => {
-    if (!isHoveringSign) customCursor.classList.add('hover');
-  };
-  const removeHover = () => {
-    if (!isHoveringSign) customCursor.classList.remove('hover');
-  };
-
-  document.querySelectorAll('a, button:not(#storefront-sign-btn), .catalog-card, .event-card').forEach(el => {
-    el.addEventListener('mouseenter', addHover);
-    el.addEventListener('mouseleave', removeHover);
+  // Global delegation ensures all dynamically rendered cards (catalog, news, testimonials) trigger cursor morph
+  document.addEventListener('mouseover', (e) => {
+    if (isHoveringSign) return;
+    const interactive = e.target.closest('a, button:not(#storefront-sign-btn), .catalog-card, .event-card, .news-card, .testimonial-card, .tab-btn, .store-photo-card, .vision-visual-card, .mission-visual-card, input');
+    if (interactive) {
+      customCursor.classList.add('hover');
+    }
   });
 
-  const addTextHover = () => {
-    if (!isHoveringSign) customCursor.classList.add('text-hover');
-  };
-  const removeTextHover = () => {
-    if (!isHoveringSign) customCursor.classList.remove('text-hover');
-  };
-
-  document.querySelectorAll('#about-view p, #about-view h1, #about-view h2, #about-view h3, #about-view span, #about-view li, #about-view .about-content').forEach(el => {
-    el.addEventListener('mouseenter', addTextHover);
-    el.addEventListener('mouseleave', removeTextHover);
+  document.addEventListener('mouseout', (e) => {
+    if (isHoveringSign) return;
+    const interactive = e.target.closest('a, button:not(#storefront-sign-btn), .catalog-card, .event-card, .news-card, .testimonial-card, .tab-btn, .store-photo-card, .vision-visual-card, .mission-visual-card, input');
+    if (interactive) {
+      customCursor.classList.remove('hover');
+    }
   });
 }
 
