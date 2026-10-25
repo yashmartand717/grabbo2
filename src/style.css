@@ -547,6 +547,7 @@ body {
 /* --- Author & Founder Showcase Section --- */
 .author-section {
   position: relative;
+  scroll-margin-top: 50px;
   width: 100%;
   max-width: 100%;
   padding: 100px 8%;

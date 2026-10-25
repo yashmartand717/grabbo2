@@ -557,10 +557,51 @@ document.querySelectorAll('a[href="#products"]').forEach(btn => {
   btn.addEventListener('click', showCatalog);
 });
 
-// Navbar "About" link -> Opens About view
-if (aboutBtn) {
-  aboutBtn.addEventListener('click', showAbout);
+// Navbar "Story" link -> Scrolls down to the Story section
+function scrollToStory(e) {
+  if (e) e.preventDefault();
+  
+  const storyTarget = document.getElementById('story') || document.getElementById('author-section');
+  if (!storyTarget) return;
+
+  const isHomeActive = homeView && homeView.classList.contains('active') && !homeView.classList.contains('hidden');
+  
+  if (!isHomeActive) {
+    catalogView.style.opacity = '0';
+    if (aboutView) aboutView.style.opacity = '0';
+    if (eventsView) eventsView.style.opacity = '0';
+    
+    catalogView.classList.add('hidden');
+    catalogView.classList.remove('active');
+    if (aboutView) {
+      aboutView.classList.add('hidden');
+      aboutView.classList.remove('active');
+    }
+    if (eventsView) {
+      eventsView.classList.add('hidden');
+      eventsView.classList.remove('active');
+    }
+
+    homeView.classList.remove('hidden');
+    homeView.classList.add('active');
+    homeView.style.opacity = '1';
+    
+    setTimeout(() => {
+      storyTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  } else {
+    storyTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
+
+document.querySelectorAll('a[href="#story"], .nav-story-link').forEach(btn => {
+  btn.addEventListener('click', scrollToStory);
+});
+
+// Navbar "About" link fallback -> Opens About view
+document.querySelectorAll('a[href="#about"]').forEach(btn => {
+  btn.addEventListener('click', showAbout);
+});
 
 document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn, #back-to-home').forEach(btn => {
   btn.addEventListener('click', hideCatalog);
