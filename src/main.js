@@ -105,11 +105,11 @@ const updateStorefrontSignPosition = () => {
     offsetY = 0;
   }
 
-  // Exact coordinates of the main storefront fascia board in 2560x1440
-  const signLeft = offsetX + (580 / imgWidth) * drawWidth;
-  const signTop = offsetY + (140 / imgHeight) * drawHeight;
-  const signWidth = ((1780 - 580) / imgWidth) * drawWidth;
-  const signHeight = ((500 - 140) / imgHeight) * drawHeight;
+  // Exact coordinates of the main storefront fascia board in 2560x1440 (tightly framing GRABBO inside banner)
+  const signLeft = offsetX + (630 / imgWidth) * drawWidth;
+  const signTop = offsetY + (240 / imgHeight) * drawHeight;
+  const signWidth = ((1740 - 630) / imgWidth) * drawWidth;
+  const signHeight = ((475 - 240) / imgHeight) * drawHeight;
 
   storefrontSignBtn.style.left = `${Math.round(signLeft)}px`;
   storefrontSignBtn.style.top = `${Math.round(signTop)}px`;
@@ -654,10 +654,10 @@ canvas.addEventListener('click', (e) => {
     offsetY = 0;
   }
 
-  const signLeft = offsetX + (580 / imgWidth) * drawWidth;
-  const signTop = offsetY + (140 / imgHeight) * drawHeight;
-  const signWidth = ((1780 - 580) / imgWidth) * drawWidth;
-  const signHeight = ((500 - 140) / imgHeight) * drawHeight;
+  const signLeft = offsetX + (630 / imgWidth) * drawWidth;
+  const signTop = offsetY + (240 / imgHeight) * drawHeight;
+  const signWidth = ((1740 - 630) / imgWidth) * drawWidth;
+  const signHeight = ((475 - 240) / imgHeight) * drawHeight;
 
   if (
     clickX >= signLeft &&

@@ -1284,10 +1284,10 @@ a, button, .catalog-card, .btn-primary {
 
 /* Custom Cursor Rectangle Morph over GRABBO Sign */
 .custom-cursor.sign-hover {
-  border-radius: 14px !important;
+  border-radius: 8px !important;
   border: 2px solid var(--primary) !important;
-  background: rgba(253, 224, 37, 0.08) !important;
-  box-shadow: 0 0 35px rgba(253, 224, 37, 0.45), inset 0 0 20px rgba(253, 224, 37, 0.15) !important;
+  background: rgba(253, 224, 37, 0.05) !important;
+  box-shadow: 0 0 25px rgba(253, 224, 37, 0.4), inset 0 0 15px rgba(253, 224, 37, 0.1) !important;
   mix-blend-mode: normal !important;
   transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
               height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -1296,33 +1296,6 @@ a, button, .catalog-card, .btn-primary {
               top 0.15s ease-out,
               background 0.3s ease,
               box-shadow 0.3s ease !important;
-}
-
-.custom-cursor::after {
-  content: 'ABOUT GRABBO';
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  background: rgba(18, 17, 15, 0.94);
-  border: 1px solid rgba(253, 224, 37, 0.6);
-  color: #FDE025;
-  font-family: var(--font-display, sans-serif);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  padding: 3px 12px;
-  border-radius: 20px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  white-space: nowrap;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 15px rgba(253, 224, 37, 0.3);
-}
-
-.custom-cursor.sign-hover::after {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 /* Marquee Section - Continuous Seamless Infinite Loop */
 .marquee-container {
