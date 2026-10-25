@@ -762,6 +762,175 @@ body {
   }
 }
 
+/* --- Testimonials Marquee Section --- */
+.testimonials-section-marquee {
+  overflow: hidden;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 60px;
+  padding-bottom: 70px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.testimonials-marquee-container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  gap: 28px;
+  padding: 24px 0 35px 0;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.testimonials-marquee-group {
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  gap: 28px;
+  animation: news-marquee-scroll 48s linear infinite;
+  will-change: transform;
+}
+
+.testimonials-marquee-container:hover .testimonials-marquee-group,
+.testimonials-marquee-container:active .testimonials-marquee-group {
+  animation-play-state: paused;
+}
+
+.testimonial-card {
+  width: 380px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  background: rgba(26, 24, 21, 0.88);
+  border: 1px solid rgba(253, 224, 37, 0.22);
+  border-radius: 20px;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(253, 224, 37, 0.05);
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(253, 224, 37, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(253, 224, 37, 0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(253, 224, 37, 0.2);
+}
+
+.testimonial-card:hover::before {
+  opacity: 1;
+}
+
+.testimonial-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.testimonial-stars {
+  color: var(--primary);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  filter: drop-shadow(0 0 8px rgba(253, 224, 37, 0.5));
+}
+
+.testimonial-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: rgba(253, 224, 37, 0.12);
+  border: 1px solid rgba(253, 224, 37, 0.3);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.testimonial-text {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-style: italic;
+  position: relative;
+}
+
+.testimonial-author-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--bg-dark);
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(253, 224, 37, 0.3);
+}
+
+.testimonial-author-info strong {
+  display: block;
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.testimonial-author-info span {
+  display: block;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 768px) {
+  .testimonials-marquee-container {
+    gap: 18px;
+    padding: 16px 0 25px 0;
+    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  }
+  .testimonials-marquee-group {
+    gap: 18px;
+    animation-duration: 34s;
+  }
+  .testimonial-card {
+    width: 300px;
+    padding: 24px 20px;
+  }
+}
+
 /* --- Premium Footer --- */
 footer.site-footer {
   text-align: left;

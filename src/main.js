@@ -889,6 +889,107 @@ async function fetchHealthNews() {
 
 fetchHealthNews();
 
+// --- Campus Testimonials Marquee ---
+function initTestimonials() {
+  const testimonialsGrid = document.getElementById('dynamic-testimonials-grid');
+  if (!testimonialsGrid) return;
+
+  const testimonials = [
+    {
+      stars: 5,
+      badge: "Late Night Savior",
+      text: "Grabbo is literally the reason I survived mid-sem exams. Having hot Maggi, chilled Red Bull, and stationery available at 2 AM inside the arcade is a blessing for hostelers!",
+      author: "Aarav Sharma",
+      role: "3rd Year B.Tech CSE • SNU Hostel 3",
+      avatar: "AS"
+    },
+    {
+      stars: 5,
+      badge: "Local Vocal Fan",
+      text: "The 'Local Vocal' sessions at Grabbo are unmatched! Performing acoustic sets on open mic nights while enjoying cold hazelnut brew has created my best campus memories.",
+      author: "Sneha Mukherjee",
+      role: "2nd Year B.Des • Campus Culture Club",
+      avatar: "SM"
+    },
+    {
+      stars: 5,
+      badge: "Daily Convenience",
+      text: "As faculty living on campus, having a full-fledged departmental store with fresh bakery, pantry staples, and prompt doorstep delivery makes university life so seamless.",
+      author: "Prof. Rajesh Verma",
+      role: "Faculty Resident • Shiv Nadar University",
+      avatar: "RV"
+    },
+    {
+      stars: 5,
+      badge: "Breeze & Events",
+      text: "JALSA 2.0 collaboration between Breeze and Grabbo was the absolute highlight of the semester! Great music, festive Dandiya energy, and delicious street snacks.",
+      author: "Ananya Gupta",
+      role: "4th Year BMS • Student Council",
+      avatar: "AG"
+    },
+    {
+      stars: 5,
+      badge: "Distant Parent Care",
+      text: "Sending care essentials to our son from Bengaluru used to worry us until we found Grabbo’s parent support desk. They ensure timely deliveries and warm care for our ward!",
+      author: "Meenakshi & Suresh Iyer",
+      role: "Parents from Bengaluru • Grabbo Connect",
+      avatar: "MI"
+    },
+    {
+      stars: 5,
+      badge: "Energy & Refreshments",
+      text: "For all our sports tournaments and late practice matches, Grabbo supplied energy drinks, electrolytes, and wholesome snacks without any delay. Highly dependable!",
+      author: "Rohan Mehta",
+      role: "Club President • SNU Sports Society",
+      avatar: "RM"
+    }
+  ];
+
+  function createTestimonialCard(item) {
+    const card = document.createElement('div');
+    card.className = 'testimonial-card';
+
+    card.innerHTML = `
+      <div>
+        <div class="testimonial-top-row">
+          <div class="testimonial-stars" aria-label="5 stars">★★★★★</div>
+          <span class="testimonial-badge">${item.badge}</span>
+        </div>
+        <p class="testimonial-text">“${item.text}”</p>
+      </div>
+      <div class="testimonial-author-row">
+        <div class="testimonial-avatar">${item.avatar}</div>
+        <div class="testimonial-author-info">
+          <strong>${item.author}</strong>
+          <span>${item.role}</span>
+        </div>
+      </div>
+    `;
+
+    return card;
+  }
+
+  // Create two identical groups for seamless infinite loop (just like health news)
+  const group1 = document.createElement('div');
+  group1.className = 'testimonials-marquee-group';
+  testimonials.forEach(item => {
+    group1.appendChild(createTestimonialCard(item));
+  });
+
+  const group2 = document.createElement('div');
+  group2.className = 'testimonials-marquee-group';
+  group2.setAttribute('aria-hidden', 'true');
+  testimonials.forEach(item => {
+    group2.appendChild(createTestimonialCard(item));
+  });
+
+  testimonialsGrid.innerHTML = '';
+  testimonialsGrid.appendChild(group1);
+  testimonialsGrid.appendChild(group2);
+}
+
+initTestimonials();
+
 const logoHomeBtn = document.getElementById('logo-home-btn');
 if (logoHomeBtn) logoHomeBtn.addEventListener('click', hideCatalog);
 
