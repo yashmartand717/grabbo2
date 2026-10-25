@@ -1525,11 +1525,66 @@ a, button, .catalog-card, .btn-primary {
   font-weight: 700;
 }
 
+/* Store Real Photos Grid */
+.store-photos-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  grid-template-rows: repeat(2, 160px);
+  gap: 14px;
+  margin: 22px 0 28px 0;
+}
+
+.store-photo-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(253, 224, 37, 0.28);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  background: rgba(18, 17, 15, 0.8);
+}
+
+.store-photo-card.large {
+  grid-row: span 2;
+}
+
+.store-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.store-photo-card:hover img {
+  transform: scale(1.04);
+}
+
+.store-photo-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 75%, transparent 100%);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
 .about-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   margin: 24px 0;
+}
+
+.store-pillars-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
 }
 
 .about-item {
@@ -1707,6 +1762,18 @@ a, button, .catalog-card, .btn-primary {
   }
   .about-redirect-prompt {
     font-size: 1.35rem;
+  }
+  .store-photos-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 12px;
+  }
+  .store-photo-card.large {
+    grid-row: auto;
+    height: 220px;
+  }
+  .store-photo-card {
+    height: 180px;
   }
   .about-actions-row {
     flex-direction: column;
