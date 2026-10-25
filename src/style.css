@@ -292,13 +292,17 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #FDE025 15%, #FFF5A5 50%, #EAB308 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #FDE025 !important;
+  -webkit-text-fill-color: #FDE025 !important;
+  background: none !important;
   display: inline-block;
   font-weight: 800;
-  filter: drop-shadow(0 2px 10px rgba(253, 224, 37, 0.4));
+  text-shadow:
+    0 2px 4px #000000,
+    0 4px 14px rgba(0, 0, 0, 0.98),
+    0 8px 24px rgba(0, 0, 0, 0.92),
+    0 0 24px rgba(253, 224, 37, 0.5);
+  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.9));
 }
 
 .hero-subtitle {
@@ -370,17 +374,10 @@ body {
   margin-bottom: 40px;
   text-align: center;
   color: #ffffff;
-  text-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 2px 5px rgba(0,0,0,0.5);
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #FDE025 15%, #FFF5A5 50%, #EAB308 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  font-weight: 800;
-  filter: drop-shadow(0 2px 10px rgba(253, 224, 37, 0.4));
+  text-shadow:
+    0 2px 4px #000000,
+    0 4px 14px rgba(0, 0, 0, 0.98),
+    0 8px 24px rgba(0, 0, 0, 0.88);
 }
 
 .product-grid {
