@@ -179,59 +179,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial Hero Animation
 
   anime.timeline({
-
     easing: 'easeOutExpo',
-
   })
-
   .add({
-
     targets: '.navbar',
-
     translateY: [-20, 0],
-
     opacity: [0, 1],
-
     duration: 1000,
-
     delay: 200
-
   })
-
   .add({
-
-    targets: '.hero-title',
-
+    targets: '.hero-brand-title, .hero-title',
     translateY: [30, 0],
-
     opacity: [0, 1],
-
     duration: 1000,
-
   }, '-=600')
-
   .add({
-
-    targets: '.hero-subtitle',
-
+    targets: '.hero-brand-subtitle, .hero-subtitle',
     translateY: [20, 0],
-
     opacity: [0, 1],
-
     duration: 800,
-
   }, '-=600')
-
   .add({
-
     targets: '.explore-btn',
-
     scale: [0.9, 1],
-
     opacity: [0, 1],
-
     duration: 600,
-
   }, '-=400');
 
   
