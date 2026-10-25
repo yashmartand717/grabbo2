@@ -523,6 +523,13 @@ function showAbout(e) {
   catalogView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
   if (storefrontSignBtn) storefrontSignBtn.classList.add('hidden-hotspot');
+  if (customCursor) {
+    isHoveringSign = false;
+    customCursor.classList.remove('sign-hover');
+    customCursor.style.width = '';
+    customCursor.style.height = '';
+    customCursor.style.transform = 'translate(-50%, -50%)';
+  }
 
   setTimeout(() => {
     homeView.classList.add('hidden');
@@ -583,9 +590,38 @@ document.querySelectorAll('.about-explore-btn').forEach(btn => {
 // Storefront Sign (Main Fascia Board) Click -> Open About Section
 const signHotspot = document.getElementById('storefront-sign-btn');
 if (signHotspot) {
+  signHotspot.addEventListener('mouseenter', () => {
+    if (!customCursor) return;
+    isHoveringSign = true;
+    customCursor.classList.remove('hover', 'text-hover');
+    customCursor.classList.add('sign-hover');
+
+    const rect = signHotspot.getBoundingClientRect();
+    customCursor.style.left = `${rect.left + rect.width / 2}px`;
+    customCursor.style.top = `${rect.top + rect.height / 2}px`;
+    customCursor.style.width = `${rect.width}px`;
+    customCursor.style.height = `${rect.height}px`;
+  });
+
+  signHotspot.addEventListener('mouseleave', () => {
+    if (!customCursor) return;
+    isHoveringSign = false;
+    customCursor.classList.remove('sign-hover');
+    customCursor.style.width = '';
+    customCursor.style.height = '';
+    customCursor.style.transform = 'translate(-50%, -50%)';
+  });
+
   signHotspot.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (customCursor) {
+      isHoveringSign = false;
+      customCursor.classList.remove('sign-hover');
+      customCursor.style.width = '';
+      customCursor.style.height = '';
+      customCursor.style.transform = 'translate(-50%, -50%)';
+    }
     showAbout();
   });
 }
@@ -888,22 +924,40 @@ if (window.location.hash === '#products') {
 
 // --- Custom Cursor ---
 const customCursor = document.getElementById('custom-cursor');
+let isHoveringSign = false;
+
 if (customCursor) {
   document.addEventListener('mousemove', (e) => {
+    if (isHoveringSign && signHotspot) {
+      const rect = signHotspot.getBoundingClientRect();
+      const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.04;
+      const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.04;
+      customCursor.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+      return;
+    }
     customCursor.style.left = e.clientX + 'px';
     customCursor.style.top = e.clientY + 'px';
+    customCursor.style.transform = 'translate(-50%, -50%)';
   });
 
-  const addHover = () => customCursor.classList.add('hover');
-  const removeHover = () => customCursor.classList.remove('hover');
+  const addHover = () => {
+    if (!isHoveringSign) customCursor.classList.add('hover');
+  };
+  const removeHover = () => {
+    if (!isHoveringSign) customCursor.classList.remove('hover');
+  };
 
-  document.querySelectorAll('a, button, .catalog-card, .event-card').forEach(el => {
+  document.querySelectorAll('a, button:not(#storefront-sign-btn), .catalog-card, .event-card').forEach(el => {
     el.addEventListener('mouseenter', addHover);
     el.addEventListener('mouseleave', removeHover);
   });
 
-  const addTextHover = () => customCursor.classList.add('text-hover');
-  const removeTextHover = () => customCursor.classList.remove('text-hover');
+  const addTextHover = () => {
+    if (!isHoveringSign) customCursor.classList.add('text-hover');
+  };
+  const removeTextHover = () => {
+    if (!isHoveringSign) customCursor.classList.remove('text-hover');
+  };
 
   document.querySelectorAll('#about-view p, #about-view h1, #about-view h2, #about-view h3, #about-view span, #about-view li, #about-view .about-content').forEach(el => {
     el.addEventListener('mouseenter', addTextHover);

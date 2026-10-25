@@ -186,68 +186,23 @@ body {
 .storefront-sign-hotspot {
   position: fixed;
   z-index: 15;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  border-radius: 12px;
-  transition: opacity 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  background: transparent !important;
+  border: none !important;
+  cursor: none !important;
+  outline: none !important;
   padding: 0;
 }
 
 .storefront-sign-hotspot:hover {
-  background: rgba(253, 224, 37, 0.04);
-  box-shadow: 0 0 35px rgba(253, 224, 37, 0.3), inset 0 0 20px rgba(253, 224, 37, 0.12);
-  border: 1px dashed rgba(253, 224, 37, 0.45);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .storefront-sign-hotspot.hidden-hotspot {
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
-}
-
-.storefront-sign-tooltip {
-  position: absolute;
-  bottom: -28px;
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  background: rgba(18, 17, 15, 0.94);
-  border: 1px solid rgba(253, 224, 37, 0.55);
-  color: #FDE025;
-  font-family: var(--font-display, sans-serif);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 4px 14px;
-  border-radius: 20px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7), 0 0 15px rgba(253, 224, 37, 0.25);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.tooltip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #FDE025;
-  box-shadow: 0 0 8px #FDE025;
-  animation: pulseDot 1.5s infinite;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(0.8); }
-}
-
-.storefront-sign-hotspot:hover .storefront-sign-tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 /* Hero Section */
@@ -1308,7 +1263,7 @@ a, button, .catalog-card, .btn-primary {
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
-  transition: width 0.3s ease, height 0.3s ease, background 0.3s ease, border-width 0.3s ease;
+  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease, background 0.3s ease, border-width 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 0 10px var(--primary);
   mix-blend-mode: difference;
 }
@@ -1325,6 +1280,49 @@ a, button, .catalog-card, .btn-primary {
   height: 80px;
   background: white;
   border-width: 0px;
+}
+
+/* Custom Cursor Rectangle Morph over GRABBO Sign */
+.custom-cursor.sign-hover {
+  border-radius: 14px !important;
+  border: 2px solid var(--primary) !important;
+  background: rgba(253, 224, 37, 0.08) !important;
+  box-shadow: 0 0 35px rgba(253, 224, 37, 0.45), inset 0 0 20px rgba(253, 224, 37, 0.15) !important;
+  mix-blend-mode: normal !important;
+  transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-radius 0.25s ease,
+              left 0.15s ease-out,
+              top 0.15s ease-out,
+              background 0.3s ease,
+              box-shadow 0.3s ease !important;
+}
+
+.custom-cursor::after {
+  content: 'ABOUT GRABBO';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(18, 17, 15, 0.94);
+  border: 1px solid rgba(253, 224, 37, 0.6);
+  color: #FDE025;
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 15px rgba(253, 224, 37, 0.3);
+}
+
+.custom-cursor.sign-hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 /* Marquee Section - Continuous Seamless Infinite Loop */
 .marquee-container {
