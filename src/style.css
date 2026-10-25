@@ -209,10 +209,11 @@ body {
 .hero {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   min-height: 100vh;
-  padding: 32vh 5% 8vh;
+  padding: 0 5% 55px;
   text-align: center;
   max-width: 1400px;
   margin: 0 auto;
@@ -978,7 +979,8 @@ footer.site-footer {
 @media (max-width: 768px) {
   .hero {
     min-height: 100vh;
-    padding: 35vh 5% 8vh;
+    padding: 0 5% 45px;
+    justify-content: flex-end;
   }
   .hero-title { font-size: 3rem; }
   .hero-subtitle {
