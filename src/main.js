@@ -323,8 +323,6 @@ const eventsBtn = document.querySelector('a[href="#events"]');
 
 const catalogView = document.getElementById('catalog-view');
 
-const exploreBtns = document.querySelectorAll('.explore-btn, a[href="#products"]');
-
 const backToHomeBtn = document.getElementById('back-to-home');
 
 const catalogGrid = document.getElementById('catalog-grid');
@@ -548,15 +546,28 @@ function showEvents(e) {
   }, 200);
 }
 
-exploreBtns.forEach(btn => {
+// Starting screen "Explore Now" button -> Opens About view
+const heroExploreBtn = document.querySelector('.hero .explore-btn');
+if (heroExploreBtn) {
+  heroExploreBtn.addEventListener('click', showAbout);
+}
+
+// Navbar "Products" link -> Opens Catalog view
+document.querySelectorAll('a[href="#products"]').forEach(btn => {
   btn.addEventListener('click', showCatalog);
 });
+
+// Navbar "About" link -> Opens About view
+if (aboutBtn) {
+  aboutBtn.addEventListener('click', showAbout);
+}
 
 document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn, #back-to-home').forEach(btn => {
   btn.addEventListener('click', hideCatalog);
 });
 
-document.querySelectorAll('.about-explore-btn').forEach(btn => {
+// Direct redirect button inside About view -> Opens Catalog view
+document.querySelectorAll('.about-explore-btn, .direct-catalog-btn, #about-redirect-catalog-btn').forEach(btn => {
   btn.addEventListener('click', showCatalog);
 });
 
@@ -642,35 +653,7 @@ canvas.addEventListener('click', (e) => {
   }
 });
 
-// About Modal 3-Pillar Tab Switching (1. About Store, 2. Our Vision, 3. Our Mission)
-const aboutTabBtns = document.querySelectorAll('.about-tab-btn');
-const aboutPanels = document.querySelectorAll('.about-panel');
 
-function switchAboutTab(targetTab) {
-  aboutTabBtns.forEach(btn => {
-    const isActive = btn.getAttribute('data-tab') === targetTab;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-  });
-
-  aboutPanels.forEach(panel => {
-    panel.classList.toggle('active', panel.id === `panel-${targetTab}`);
-  });
-}
-
-aboutTabBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const targetTab = btn.getAttribute('data-tab');
-    if (targetTab) switchAboutTab(targetTab);
-  });
-});
-
-document.querySelectorAll('.switch-panel-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const targetTab = btn.getAttribute('data-target');
-    if (targetTab) switchAboutTab(targetTab);
-  });
-});
 
 
 
