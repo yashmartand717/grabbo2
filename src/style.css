@@ -7,8 +7,9 @@
   --text-main: #ffffff;
   --text-muted: #a0a0a0;
   
-  --font-display: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 * {
@@ -22,6 +23,9 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* 3D Canvas Background */
@@ -121,14 +125,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 5%;
+  padding: 24px 5%;
   max-width: 1400px;
   margin: 0 auto;
 }
 .logo {
+  font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
 }
 .logo .highlight {
   color: var(--primary);
@@ -154,25 +161,35 @@ body {
 }
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 28px;
   align-items: center;
 }
 .nav-links a {
+  font-family: var(--font-display);
   color: var(--text-main);
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
-  transition: opacity 0.3s;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: opacity 0.3s, color 0.3s;
 }
 .nav-links a:hover {
-  opacity: 0.7;
+  opacity: 0.8;
+  color: var(--primary);
 }
 .btn-primary {
+  font-family: var(--font-display);
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   padding: 10px 24px;
   border-radius: 50px;
   color: var(--bg-dark) !important;
   font-weight: 800 !important;
+  font-size: 0.94rem;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
   box-shadow: 0 4px 15px rgba(253, 224, 37, 0.4);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -230,15 +247,16 @@ body {
 }
 
 .hero-brand-title {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 7.5vw, 6.2rem);
   font-weight: 700;
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  line-height: 1;
+  line-height: 1.05;
   margin: 0;
   padding: 0;
+  text-align: center;
   text-shadow:
     0 2px 4px rgba(0, 0, 0, 0.98),
     0 6px 18px rgba(0, 0, 0, 0.92),
@@ -247,14 +265,15 @@ body {
 }
 
 .hero-brand-subtitle {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(1.9rem, 4.4vw, 3.4rem);
+  font-size: clamp(1.8rem, 4.2vw, 3.2rem);
   font-weight: 500;
   color: #ffffff;
   letter-spacing: 0.02em;
-  line-height: 1.15;
-  margin: -6px 0 0 0;
+  line-height: 1.2;
+  margin: 4px 0 0 0;
+  text-align: center;
   text-shadow:
     0 2px 4px rgba(0, 0, 0, 0.98),
     0 4px 14px rgba(0, 0, 0, 0.92),
@@ -273,14 +292,18 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, #FDE025 15%, #FFF5A5 50%, #EAB308 90%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 800;
+  filter: drop-shadow(0 2px 10px rgba(253, 224, 37, 0.4));
 }
 
 .hero-subtitle {
-  font-size: 1.65rem;
+  font-family: var(--font-body);
+  font-size: 1.55rem;
   color: #ffffff;
   max-width: 640px;
   margin: 0 auto 36px auto;
@@ -298,18 +321,24 @@ body {
 }
 
 .btn-large {
+  font-family: var(--font-display);
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border: none;
   color: var(--bg-dark);
   padding: 16px 42px;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
+  letter-spacing: 0.03em;
   border-radius: 50px;
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 25px rgba(253, 224, 37, 0.4);
   transition: all 0.3s;
   position: relative;
   z-index: 20;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .explore-btn {
@@ -328,14 +357,17 @@ body {
 
 /* Glass Section */
 .glass-section {
-  padding: 100px 10%;
+  padding: 90px 8%;
   max-width: 1400px;
   margin: 0 auto;
 }
 .section-title {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 50px;
+  font-family: var(--font-serif);
+  font-size: clamp(2.1rem, 4.8vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-bottom: 40px;
   text-align: center;
   color: #ffffff;
   text-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 2px 5px rgba(0,0,0,0.5);
@@ -414,6 +446,7 @@ body {
 }
 
 .news-card-badge {
+  font-family: var(--font-display);
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -422,25 +455,29 @@ body {
   background: rgba(253, 224, 37, 0.12);
   border: 1px solid rgba(253, 224, 37, 0.35);
   color: var(--primary);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 16px;
   align-self: flex-start;
   text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  line-height: 1.2;
 }
 
 .news-card-title {
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.4;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
   margin-bottom: 12px;
 }
 
 .news-card-desc {
-  font-size: 0.95rem;
+  font-family: var(--font-body);
+  font-size: 0.94rem;
   color: rgba(255, 255, 255, 0.84);
   line-height: 1.6;
   margin-bottom: 22px;
@@ -448,11 +485,13 @@ body {
 }
 
 .news-card-action {
+  font-family: var(--font-display);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
   color: var(--primary);
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -608,33 +647,34 @@ body {
 
 .author-badge {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--primary);
   margin-bottom: 18px;
   display: inline-block;
+  line-height: 1.2;
   text-shadow: 0 2px 8px rgba(253, 224, 37, 0.35);
 }
 
 .author-title {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-serif);
   font-size: clamp(2.4rem, 4vw, 3.8rem);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.15;
   color: #ffffff;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   letter-spacing: -0.015em;
   text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85);
 }
 
 .author-description {
   font-family: var(--font-body);
-  font-size: 1.05rem;
-  line-height: 1.85;
+  font-size: 1.02rem;
+  line-height: 1.8;
   color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   max-width: 550px;
   font-weight: 400;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
@@ -717,12 +757,13 @@ body {
 }
 
 .founder-name {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-serif);
   font-size: 2.1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
   margin-bottom: 8px;
   letter-spacing: -0.01em;
+  line-height: 1.2;
   text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
 }
 
@@ -730,20 +771,21 @@ body {
   font-family: var(--font-display);
   font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--primary);
   margin-bottom: 18px;
   display: inline-block;
+  line-height: 1.2;
   text-shadow: 0 1px 6px rgba(253, 224, 37, 0.3);
 }
 
 .founder-quote {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.86);
   margin: 0;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
@@ -852,27 +894,31 @@ body {
 
 .testimonial-stars {
   color: var(--primary);
-  font-size: 1.1rem;
-  letter-spacing: 2px;
+  font-size: 1.05rem;
+  letter-spacing: 3px;
   filter: drop-shadow(0 0 8px rgba(253, 224, 37, 0.5));
+  line-height: 1;
 }
 
 .testimonial-badge {
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--primary);
   background: rgba(253, 224, 37, 0.12);
   border: 1px solid rgba(253, 224, 37, 0.3);
   padding: 4px 10px;
   border-radius: 20px;
+  line-height: 1.2;
 }
 
 .testimonial-text {
-  font-size: 0.98rem;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.92);
   margin: 0;
   font-style: italic;
   position: relative;
@@ -887,6 +933,7 @@ body {
 }
 
 .testimonial-avatar {
+  font-family: var(--font-display);
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -902,16 +949,21 @@ body {
 }
 
 .testimonial-author-info strong {
+  font-family: var(--font-display);
   display: block;
-  font-size: 1rem;
+  font-size: 0.98rem;
   color: #ffffff;
   font-weight: 700;
+  line-height: 1.25;
 }
 
 .testimonial-author-info span {
+  font-family: var(--font-body);
   display: block;
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.65);
+  margin-top: 2px;
+  line-height: 1.3;
 }
 
 @media (max-width: 768px) {
@@ -978,17 +1030,18 @@ footer.site-footer {
 }
 
 .footer-brand-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.85rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #ffffff;
+  line-height: 1.2;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .footer-tagline {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.72);
   margin-bottom: 24px;
@@ -1027,12 +1080,13 @@ footer.site-footer {
 
 /* Col 2 & 3 Headings */
 .footer-heading {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--primary);
   margin-bottom: 22px;
   letter-spacing: 0.02em;
+  line-height: 1.2;
   text-shadow: 0 1px 4px rgba(253, 224, 37, 0.3);
 }
 
@@ -1297,13 +1351,15 @@ footer.site-footer {
   scrollbar-width: thin;
 }
 .tab-btn {
+  font-family: var(--font-display);
   background: rgba(30, 28, 25, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: rgba(255, 255, 255, 0.9);
   padding: 10px 22px;
   border-radius: 30px;
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
   cursor: pointer;
   white-space: nowrap;
   backdrop-filter: blur(14px);
@@ -1390,17 +1446,20 @@ footer.site-footer {
   flex-direction: column;
 }
 .catalog-card-details h3 {
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
   font-weight: 700;
   margin-bottom: 8px;
   color: #ffffff;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
   line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 .catalog-card-details p {
+  font-family: var(--font-body);
   color: rgba(255, 255, 255, 0.82);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 0.94rem;
+  line-height: 1.55;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   margin-bottom: 16px;
 }
@@ -1413,14 +1472,18 @@ footer.site-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .catalog-price {
-  font-size: 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
   font-weight: 800;
+  letter-spacing: 0.01em;
   color: var(--primary);
   text-shadow: 0 0 10px rgba(253, 224, 37, 0.3);
 }
 .catalog-stock-tag {
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   padding: 4px 10px;
   border-radius: 20px;
   background: rgba(34, 197, 94, 0.15);
@@ -1677,10 +1740,11 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .about-lead {
-  font-size: 1.15rem;
-  line-height: 1.65;
+  font-family: var(--font-body);
+  font-size: 1.08rem;
+  line-height: 1.7;
   color: #ffffff;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 24px;
   padding: 16px 22px;
   background: rgba(253, 224, 37, 0.08);
@@ -1807,31 +1871,36 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .about-section-badge {
+  font-family: var(--font-display);
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--primary);
   text-shadow: 0 0 10px rgba(253, 224, 37, 0.4);
   margin-bottom: 6px;
+  line-height: 1.2;
 }
 
 .about-panel-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.85rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 3.2vw, 2.4rem);
   font-weight: 700;
   color: #ffffff;
   margin: 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
 
 .about-panel-subtitle {
   font-family: var(--font-body);
   font-size: 1.02rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.72);
   margin: 6px 0 0 0;
-  font-weight: 500;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 /* Vision Card Layout */
@@ -1859,9 +1928,9 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .vision-quote-text {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.15rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: #ffffff;
   font-style: italic;
   margin: 0;
@@ -1947,7 +2016,7 @@ a, button, .catalog-card, .btn-primary {
 
 .mission-pillar-number {
   font-family: var(--font-display);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 800;
   color: var(--primary);
   background: rgba(253, 224, 37, 0.15);
@@ -1959,18 +2028,21 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .mission-pillar-content strong {
+  font-family: var(--font-display);
   display: block;
   color: #ffffff;
-  font-size: 1.02rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
   margin-bottom: 4px;
+  line-height: 1.3;
 }
 
 .mission-pillar-content p {
+  font-family: var(--font-body);
   margin: 0;
   font-size: 0.94rem;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.86);
 }
 
 /* Direct Redirect Box */
@@ -1985,16 +2057,19 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .about-redirect-prompt {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.65rem;
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
   font-weight: 700;
   color: #ffffff;
   margin: 0 0 10px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
 .about-redirect-sub {
-  font-size: 1rem;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
   color: rgba(255, 255, 255, 0.8);
   max-width: 580px;
   margin: 0 auto 24px auto;
@@ -2010,9 +2085,11 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .direct-catalog-btn {
+  font-family: var(--font-display);
   padding: 14px 34px !important;
   font-size: 1.08rem !important;
   font-weight: 800 !important;
+  letter-spacing: 0.02em;
   display: inline-flex !important;
   align-items: center !important;
   gap: 10px !important;
@@ -2174,12 +2251,13 @@ a, button, .catalog-card, .btn-primary {
   font-family: var(--font-display);
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   padding: 5px 12px;
   border-radius: 20px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  line-height: 1.2;
 }
 
 .event-status-pill.live {
@@ -2207,24 +2285,28 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .event-category-tag {
+  font-family: var(--font-display);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .event-title {
-  font-size: 1.35rem;
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 12px;
-  line-height: 1.35;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .event-desc {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-body);
+  font-size: 0.96rem;
+  color: rgba(255, 255, 255, 0.82);
   line-height: 1.65;
   margin-bottom: 22px;
   flex-grow: 1;
@@ -2241,11 +2323,19 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .event-meta-item {
+  font-family: var(--font-body);
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.5;
+}
+
+.event-meta-item strong {
+  font-family: var(--font-display);
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .meta-icon {
@@ -2253,16 +2343,18 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .event-perk-badge {
+  font-family: var(--font-display);
   background: rgba(253, 224, 37, 0.08);
   border: 1px dashed rgba(253, 224, 37, 0.35);
   border-radius: 10px;
   padding: 10px 14px;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--primary);
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: 1.35;
 }
 
 @media (max-width: 768px) {
@@ -2370,9 +2462,9 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .event-empty-title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
   margin-bottom: 12px;
 }
@@ -2391,19 +2483,33 @@ a, button, .catalog-card, .btn-primary {
     padding: 0 20px;
   }
   .hero-brand-title {
-    font-size: clamp(2.6rem, 11vw, 4.2rem);
+    font-size: clamp(2.4rem, 10vw, 3.8rem);
     letter-spacing: 0.05em;
   }
   .hero-brand-subtitle {
-    font-size: clamp(1.4rem, 6vw, 2.2rem);
-    margin: -4px 0 0 0;
+    font-size: clamp(1.35rem, 5.5vw, 2rem);
+    margin: 2px 0 0 0;
   }
   .explore-btn {
     bottom: 24px;
   }
   .btn-large {
     padding: 13px 32px;
-    font-size: 1.05rem;
+    font-size: 1.02rem;
+  }
+  .section-title {
+    font-size: clamp(1.75rem, 6.5vw, 2.3rem);
+    margin-bottom: 28px;
+  }
+  .author-title {
+    font-size: clamp(1.9rem, 7vw, 2.6rem);
+  }
+  .author-description {
+    font-size: 0.95rem;
+    line-height: 1.68;
+  }
+  .founder-name {
+    font-size: 1.75rem;
   }
 }
 
