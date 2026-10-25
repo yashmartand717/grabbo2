@@ -68,6 +68,55 @@ const renderFrame = (index) => {
   }
 };
 
+// --- Storefront Sign Hotspot Positioning ---
+let storefrontSignBtn = null;
+
+const updateStorefrontSignPosition = () => {
+  if (!storefrontSignBtn) {
+    storefrontSignBtn = document.getElementById('storefront-sign-btn');
+  }
+  if (!storefrontSignBtn) return;
+
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const home = document.getElementById('home-view');
+  if (scrollTop > 80 || scrollProgressIndex > 5 || (home && !home.classList.contains('active'))) {
+    storefrontSignBtn.classList.add('hidden-hotspot');
+    return;
+  } else {
+    storefrontSignBtn.classList.remove('hidden-hotspot');
+  }
+
+  const imgWidth = 2560;
+  const imgHeight = 1440;
+  const imgRatio = imgWidth / imgHeight;
+  const canvasRatio = canvasWidth / canvasHeight;
+
+  let drawWidth, drawHeight, offsetX, offsetY;
+
+  if (canvasRatio > imgRatio) {
+    drawWidth = canvasWidth;
+    drawHeight = canvasWidth / imgRatio;
+    offsetX = 0;
+    offsetY = (canvasHeight - drawHeight) / 2;
+  } else {
+    drawWidth = canvasHeight * imgRatio;
+    drawHeight = canvasHeight;
+    offsetX = (canvasWidth - drawWidth) / 2;
+    offsetY = 0;
+  }
+
+  // Exact coordinates of the main storefront fascia board in 2560x1440
+  const signLeft = offsetX + (580 / imgWidth) * drawWidth;
+  const signTop = offsetY + (140 / imgHeight) * drawHeight;
+  const signWidth = ((1780 - 580) / imgWidth) * drawWidth;
+  const signHeight = ((500 - 140) / imgHeight) * drawHeight;
+
+  storefrontSignBtn.style.left = `${Math.round(signLeft)}px`;
+  storefrontSignBtn.style.top = `${Math.round(signTop)}px`;
+  storefrontSignBtn.style.width = `${Math.round(signWidth)}px`;
+  storefrontSignBtn.style.height = `${Math.round(signHeight)}px`;
+};
+
 const resizeCanvas = () => {
   canvasWidth = window.innerWidth;
   canvasHeight = window.innerHeight;
@@ -86,13 +135,14 @@ const resizeCanvas = () => {
   context.imageSmoothingQuality = 'high';
   
   renderFrame(scrollProgressIndex);
+  updateStorefrontSignPosition();
 };
 
 window.addEventListener('resize', resizeCanvas);
 
 // Initial render once the first image is loaded
 images[0].onload = () => {
-  resizeCanvas(); // This will trigger a renderFrame(0)
+  resizeCanvas(); // This will trigger a renderFrame(0) and updateStorefrontSignPosition()
 };
 
 // Listen to scroll to update frame
@@ -119,6 +169,7 @@ window.addEventListener('scroll', () => {
     scrollProgressIndex = frameIndex;
     requestAnimationFrame(() => renderFrame(frameIndex));
   }
+  updateStorefrontSignPosition();
 });
 
 
@@ -374,6 +425,7 @@ function hideCatalog() {
     homeView.classList.add('active');
     homeView.style.opacity = '1';
     window.scrollTo(0, 0);
+    setTimeout(updateStorefrontSignPosition, 250);
   }, 200);
 }
 
@@ -470,6 +522,7 @@ function showAbout(e) {
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
+  if (storefrontSignBtn) storefrontSignBtn.classList.add('hidden-hotspot');
 
   setTimeout(() => {
     homeView.classList.add('hidden');
@@ -525,6 +578,59 @@ document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn
 
 document.querySelectorAll('.about-explore-btn').forEach(btn => {
   btn.addEventListener('click', showCatalog);
+});
+
+// Storefront Sign (Main Fascia Board) Click -> Open About Section
+const signHotspot = document.getElementById('storefront-sign-btn');
+if (signHotspot) {
+  signHotspot.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    showAbout();
+  });
+}
+
+// Canvas click backup for the storefront sign (frame 0 only)
+canvas.addEventListener('click', (e) => {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const home = document.getElementById('home-view');
+  if (scrollTop > 80 || scrollProgressIndex > 5 || (home && !home.classList.contains('active'))) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const clickY = e.clientY - rect.top;
+
+  const imgWidth = 2560;
+  const imgHeight = 1440;
+  const imgRatio = imgWidth / imgHeight;
+  const canvasRatio = canvasWidth / canvasHeight;
+
+  let drawWidth, drawHeight, offsetX, offsetY;
+  if (canvasRatio > imgRatio) {
+    drawWidth = canvasWidth;
+    drawHeight = canvasWidth / imgRatio;
+    offsetX = 0;
+    offsetY = (canvasHeight - drawHeight) / 2;
+  } else {
+    drawWidth = canvasHeight * imgRatio;
+    drawHeight = canvasHeight;
+    offsetX = (canvasWidth - drawWidth) / 2;
+    offsetY = 0;
+  }
+
+  const signLeft = offsetX + (580 / imgWidth) * drawWidth;
+  const signTop = offsetY + (140 / imgHeight) * drawHeight;
+  const signWidth = ((1780 - 580) / imgWidth) * drawWidth;
+  const signHeight = ((500 - 140) / imgHeight) * drawHeight;
+
+  if (
+    clickX >= signLeft &&
+    clickX <= signLeft + signWidth &&
+    clickY >= signTop &&
+    clickY <= signTop + signHeight
+  ) {
+    showAbout();
+  }
 });
 
 // About Modal 3-Pillar Tab Switching (1. About Store, 2. Our Vision, 3. Our Mission)
