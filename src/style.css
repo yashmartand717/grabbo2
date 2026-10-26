@@ -18,6 +18,16 @@
   box-sizing: border-box;
 }
 
+::selection {
+  background: rgba(253, 224, 37, 0.35);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: rgba(253, 224, 37, 0.35);
+  color: #ffffff;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--bg-dark);
@@ -26,6 +36,24 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Allow text selection on reading and interactive copy content */
+input,
+textarea,
+.footer-info-item span,
+.author-description,
+.about-item-text,
+.event-desc,
+.news-card-desc,
+.testimonial-text {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
 }
 
 /* 3D Canvas Background */
@@ -257,6 +285,9 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   text-shadow:
     0 2px 4px rgba(0, 0, 0, 0.98),
     0 6px 18px rgba(0, 0, 0, 0.92),
@@ -274,6 +305,9 @@ body {
   line-height: 1.2;
   margin: 4px 0 0 0;
   text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   text-shadow:
     0 2px 4px rgba(0, 0, 0, 0.98),
     0 4px 14px rgba(0, 0, 0, 0.92),
@@ -288,6 +322,9 @@ body {
   font-weight: 800;
   margin-bottom: 20px;
   letter-spacing: -2px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
 }
 
