@@ -1,6 +1,7 @@
 // Grabbo Web - Premium Campus Essentials @ SNU Shopping Arcade
 import './style.css';
 import anime from 'animejs';
+import { products, events, testimonials } from './content.js';
 
 // --- Scroll Sequence Animation ---
 const canvas = document.getElementById('bg-canvas');
@@ -314,57 +315,7 @@ document.querySelectorAll('.product-card').forEach(card => {
 
 
 
-const catalogData = {
-  precautions: [
-    { name: "N95 Face Mask", desc: "High filtration efficiency mask for protection against viruses & dust.", image: "/images/precautions/n95_mask.jpg", price: "₹25", suggestion: "Protects against Covid & Viruses" },
-    { name: "Dettol Hand Sanitizer", desc: "Kills 99.9% of germs without water. Essential pocket protection.", image: "/images/precautions/sanitizer.jpg", price: "₹50", suggestion: "Prevents Viral Infections" },
-    { name: "Lifebuoy Total 10 Soap", desc: "Advanced germ protection soap with silver shield formula.", image: "/images/precautions/soap.jpg", price: "₹38", suggestion: "Washes away germs" },
-    { name: "Odomos Mosquito Repellent", desc: "Clinically tested cream for Dengue and Malaria protection.", image: "/images/precautions/repellent.jpg", price: "₹65", suggestion: "Helps in Dengue & Malaria" },
-    { name: "Savlon Antiseptic Liquid", desc: "First aid disinfectant liquid for wounds, cuts & personal hygiene.", image: "/images/precautions/antiseptic.jpg", price: "₹45", suggestion: "First aid & hygiene" },
-    { name: "Crocin Advance Tablet", desc: "Fast-acting relief for fever, headache, and body aches.", image: "/images/precautions/crocin.jpg", price: "₹20", suggestion: "Relieves Fever & Pain" },
-    { name: "Vicks VapoRub", desc: "Effective multi-symptom relief from cold, cough, and blocked nose.", image: "/images/precautions/vicks.jpg", price: "₹55", suggestion: "Relieves Cold & Cough" },
-    { name: "Electral ORS Powder", desc: "WHO-based oral rehydration salts formula for dehydration & fatigue.", image: "/images/precautions/electral.jpg", price: "₹22", suggestion: "Prevents Dehydration" },
-    { name: "Digital Thermometer", desc: "Quick 10-second accurate digital body temperature measurement.", image: "/images/precautions/thermometer.jpg", price: "₹180", suggestion: "Checks Fever Accurately" }
-  ],
-
-  beverages: [
-    { name: "Alo Frut Blood Orange Mojito", desc: "Refreshing mocktail with tangy blood orange and real aloe vera.", image: "/alo_frut_orange_1788390073204.jpg", price: "₹40" },
-    { name: "Alo Frut Kiwi Mojito", desc: "Crisp sweet and sour kiwi refreshment packed with aloe pulp.", image: "/alo_frut_kiwi_transparent.png", price: "₹40" },
-    { name: "Amul Badam Shaker", desc: "Rich and creamy almond flavored milk with real badam bits.", image: "/amul_badam_1788390094373.jpg", price: "₹35" },
-    { name: "Amul Kool Kesar", desc: "Classic saffron-infused chilled milk for an instant energy boost.", image: "/cold_drink_1788388374768.jpg", price: "₹30" },
-    { name: "Coolberg Cranberry", desc: "Non-alcoholic craft cranberry malt beer with rich fruity notes.", image: "/coolberg_1788390109163.jpg", price: "₹85" },
-    { name: "Coolberg Peach", desc: "Crisp and aromatic non-alcoholic peach flavored malt beverage.", image: "/coolberg_1788390109163.jpg", price: "₹85" },
-    { name: "Schweppes Tonic Water", desc: "Crisp, bubbly Indian tonic water with delicate citrus quinine notes.", image: "/schweppes_1788390124215.jpg", price: "₹60" },
-    { name: "Schweppes Ginger Ale", desc: "Bubbly golden ginger ale with a sharp and refreshing kick.", image: "/schweppes.jpg", price: "₹60" },
-    { name: "Epigamia Milkshake Vanilla", desc: "High protein, creamy milkshake enriched with real vanilla & calcium.", image: "/epigamia_vanilla_1788390147485.jpg", price: "₹40" },
-    { name: "Raw Pressery Aam Panna", desc: "Traditional Indian raw mango cooler packed with electrolytes.", image: "/raw_pressery_1788390158064.jpg", price: "₹70" },
-    { name: "Hell Energy Watermelon", desc: "High-octane watermelon energy drink with B-vitamins & taurine.", image: "/hell_energy_1788390167837.jpg", price: "₹60" },
-    { name: "Amul Sweet Lassi", desc: "Thick, traditional probiotic sweet yogurt drink served chilled.", image: "/amul_lassi_transparent.png", price: "₹25" },
-    { name: "Amul Masti Buttermilk", desc: "Refreshing spiced cooling chaas with curry leaves & ginger.", image: "/buttermilk.jpg", price: "₹15" },
-    { name: "Sofit Soya Milk Chocolate", desc: "Plant-based dairy-free chocolate milk rich in protein & omega-3.", image: "/sofit_choco_1788390189395.jpg", price: "₹38" },
-    { name: "Hershey's Cookies & Cream", desc: "Thick and indulgent cookies & cream chocolate milkshake.", image: "/hersheys.jpg", price: "₹45" }
-  ],
-
-  coffee: [
-    { name: "Davidoff Fine Aroma Coffee", desc: "100% Arabica luxury instant coffee with delicate acidic notes.", image: "/hot_coffee_transparent.png", price: "₹550" },
-    { name: "Grabbo Special Hot Coffee", desc: "Freshly brewed rich espresso roast coffee made to order.", image: "/hot_coffee_1788388353442.jpg", price: "₹30" },
-    { name: "Maggi Masala Special Noodles", desc: "Classic late-night 2 AM companion cooked piping hot with veggies.", image: "/maggi_noodles_1788388364141.jpg", price: "₹40" }
-  ],
-
-  bakery: [
-    { name: "Winkies Mango Swiss Roll", desc: "Soft, fluffy sponge roll wrapped around luscious mango cream.", image: "/swiss_roll.jpg", price: "₹25" },
-    { name: "Winkies Rich Butter Fruit Cake", desc: "Golden butter sponge loaded with candied fruit bits and raisins.", image: "/fruit_cake.jpg", price: "₹30" },
-    { name: "Winkies Sliced Choco Cake", desc: "Decadent dark chocolate slice cake with cocoa drizzle.", image: "/choco_cake.jpg", price: "₹25" }
-  ],
-
-  snacks: [
-    { name: "Bingo! Cheese Nachos", desc: "Crunchy golden corn tortilla chips layered with cheesy tang.", image: "/nachos.jpg", price: "₹30" },
-    { name: "Bingo! Mad Angles Achaari", desc: "Perfect triangular crunchy chips coated in zesty achaari masala.", image: "/mad_angles.jpg", price: "₹20" },
-    { name: "Fun Flips Baked Puffs", desc: "Classic nostalgic khatta-meetha crunchy baked corn puffs.", image: "/puffs.jpg", price: "₹15" }
-  ]
-};
-
-
+// Products, events and testimonials live in ./content.js
 
 const homeView = document.getElementById('home-view');
 const aboutView = document.getElementById('about-view');
@@ -463,14 +414,14 @@ function hideCatalog(e, updateHistory = true) {
 
 function renderCatalog(category) {
   catalogGrid.innerHTML = '';
-  const products = catalogData[category] || [];
+  const categoryProducts = products.filter(prod => prod.category === category);
 
-  if (products.length === 0) {
+  if (categoryProducts.length === 0) {
     catalogGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: #fff; font-size: 1.2rem; background: rgba(22, 20, 18, 0.9); border-radius: 20px;">No products found in this category.</div>`;
     return;
   }
 
-  products.forEach((prod, i) => {
+  categoryProducts.forEach((prod, i) => {
     const card = document.createElement('div');
     card.className = 'catalog-card';
     card.style.opacity = '1';
@@ -973,57 +924,6 @@ function initTestimonials() {
   const testimonialsGrid = document.getElementById('dynamic-testimonials-grid');
   if (!testimonialsGrid) return;
 
-  const testimonials = [
-    {
-      stars: 5,
-      badge: "Late Night Savior",
-      text: "Grabbo is literally the reason I survived mid-sem exams. Having hot Maggi, chilled Red Bull, and stationery available at 2 AM inside the arcade is a blessing for hostelers!",
-      author: "Aarav Sharma",
-      role: "3rd Year B.Tech CSE • SNU Hostel 3",
-      avatar: "AS"
-    },
-    {
-      stars: 5,
-      badge: "Local Vocal Fan",
-      text: "The 'Local Vocal' sessions at Grabbo are unmatched! Performing acoustic sets on open mic nights while enjoying cold hazelnut brew has created my best campus memories.",
-      author: "Sneha Mukherjee",
-      role: "2nd Year B.Des • Campus Culture Club",
-      avatar: "SM"
-    },
-    {
-      stars: 5,
-      badge: "Daily Convenience",
-      text: "As faculty living on campus, having a full-fledged departmental store with fresh bakery, pantry staples, and prompt doorstep delivery makes university life so seamless.",
-      author: "Prof. Rajesh Verma",
-      role: "Faculty Resident • Shiv Nadar University",
-      avatar: "RV"
-    },
-    {
-      stars: 5,
-      badge: "Breeze & Events",
-      text: "JALSA 2.0 collaboration between Breeze and Grabbo was the absolute highlight of the semester! Great music, festive Dandiya energy, and delicious street snacks.",
-      author: "Ananya Gupta",
-      role: "4th Year BMS • Student Council",
-      avatar: "AG"
-    },
-    {
-      stars: 5,
-      badge: "Distant Parent Care",
-      text: "Sending care essentials to our son from Bengaluru used to worry us until we found Grabbo’s parent support desk. They ensure timely deliveries and warm care for our ward!",
-      author: "Meenakshi & Suresh Iyer",
-      role: "Parents from Bengaluru • Grabbo Connect",
-      avatar: "MI"
-    },
-    {
-      stars: 5,
-      badge: "Energy & Refreshments",
-      text: "For all our sports tournaments and late practice matches, Grabbo supplied energy drinks, electrolytes, and wholesome snacks without any delay. Highly dependable!",
-      author: "Rohan Mehta",
-      role: "Club President • SNU Sports Society",
-      avatar: "RM"
-    }
-  ];
-
   function createTestimonialCard(item) {
     const card = document.createElement('div');
     card.className = 'testimonial-card';
@@ -1073,6 +973,122 @@ function initTestimonials() {
 }
 
 initTestimonials();
+
+// --- Events (About page & Events page) ---
+// An event is past from the day after its endDate, in the visitor's local time
+const todayISO = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+const isPastEvent = event => Boolean(event.endDate) && event.endDate < todayISO;
+
+function createEventCard(event, isPast = false) {
+  const card = document.createElement('div');
+  card.className = event.featured ? 'event-card featured-event-card' : 'event-card';
+  if (isPast) card.classList.add('past-event-card');
+
+  card.innerHTML = `
+    <div class="event-card-img">
+      <img loading="lazy">
+      <div class="event-img-overlay-badge"><span></span></div>
+    </div>
+    <div class="event-card-body">
+      <div class="event-badge-row">
+        <span class="event-status-pill fest"></span>
+        <span class="event-category-tag"></span>
+      </div>
+      <h3 class="event-title"></h3>
+      <p class="event-desc"></p>
+      <div class="event-meta">
+        <div class="event-meta-item">
+          <span class="meta-icon">📅</span>
+          <div><strong>Date & Time:</strong> <span class="event-date"></span></div>
+        </div>
+        <div class="event-meta-item">
+          <span class="meta-icon">📍</span>
+          <div><strong>Location:</strong> <span class="event-location"></span></div>
+        </div>
+        <div class="event-meta-item">
+          <span class="meta-icon">🤝</span>
+          <div><strong>Hosted by:</strong> <span class="event-host"></span></div>
+        </div>
+      </div>
+      <div class="event-perk-badge"></div>
+    </div>
+  `;
+
+  const img = card.querySelector('.event-card-img img');
+  img.src = event.image;
+  img.alt = event.imageAlt || event.title;
+  card.querySelector('.event-status-pill').textContent = event.status || '';
+  card.querySelector('.event-category-tag').textContent = event.tag || '';
+  card.querySelector('.event-title').textContent = event.title;
+  card.querySelector('.event-desc').textContent = event.desc;
+  card.querySelector('.event-date').textContent = event.date;
+  card.querySelector('.event-location').textContent = event.location;
+  card.querySelector('.event-host').textContent = event.host;
+
+  if (event.featured) {
+    card.querySelector('.event-card-img').classList.add('featured-img');
+    card.querySelector('.event-title').style.cssText = 'font-size: 1.85rem; margin-bottom: 12px;';
+  }
+  // Optional fields: drop their elements when left out
+  if (event.imageBadge) {
+    card.querySelector('.event-img-overlay-badge span').textContent = event.imageBadge;
+  } else {
+    card.querySelector('.event-img-overlay-badge').remove();
+  }
+  if (event.perk) {
+    card.querySelector('.event-perk-badge').textContent = event.perk;
+  } else {
+    card.querySelector('.event-perk-badge').remove();
+  }
+  if (isPast) {
+    const pill = card.querySelector('.event-status-pill');
+    pill.className = 'event-status-pill past';
+    pill.textContent = '✓ Past Event';
+  } else if (!event.status) {
+    card.querySelector('.event-status-pill').remove();
+  }
+  if (!event.tag) card.querySelector('.event-category-tag').remove();
+
+  return card;
+}
+
+function initEvents() {
+  const upcomingEvents = events.filter(event => !isPastEvent(event));
+  const pastEvents = events.filter(isPastEvent);
+
+  const upcomingContainers = [
+    document.getElementById('about-events-list'),
+    document.getElementById('events-grid')
+  ];
+
+  upcomingContainers.forEach(container => {
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (upcomingEvents.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'events-empty-note';
+      empty.innerHTML = 'No upcoming events right now. Follow <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer">@grabbo_snu</a> for announcements.';
+      container.appendChild(empty);
+      return;
+    }
+
+    upcomingEvents.forEach(event => container.appendChild(createEventCard(event)));
+  });
+
+  // Past events: Events page only, most recent first
+  const pastSection = document.getElementById('past-events-section');
+  const pastGrid = document.getElementById('past-events-grid');
+  if (!pastSection || !pastGrid) return;
+
+  pastGrid.innerHTML = '';
+  pastSection.hidden = pastEvents.length === 0;
+  pastEvents
+    .sort((a, b) => b.endDate.localeCompare(a.endDate))
+    .forEach(event => pastGrid.appendChild(createEventCard(event, true)));
+}
+
+initEvents();
 
 // --- SPA Router: Browser Back/Forward & Direct URL Sync ---
 const logoHomeBtn = document.getElementById('logo-home-btn');

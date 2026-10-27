@@ -461,46 +461,8 @@
                   <p class="about-panel-subtitle">Celebrate, Connect & Unwind with the Grabbo Community</p>
                 </div>
 
-                <!-- JALSA 2.0 - Featured Main Event Card -->
-                <div class="event-card featured-event-card" style="margin-top: 18px;">
-                  <div class="event-card-img featured-img">
-                    <img src="/events/jalsa_event_collage.jpg" alt="JALSA 2.0 Event by Grabbo at Shiv Nadar University" loading="lazy">
-                    <div class="event-img-overlay-badge">
-                      <span>✨ Featured Campus Event</span>
-                    </div>
-                  </div>
-
-                  <div class="event-card-body">
-                    <div class="event-badge-row">
-                      <span class="event-status-pill fest">🎉 Grand Campus Celebration</span>
-                      <span class="event-category-tag">Breeze × Grabbo</span>
-                    </div>
-
-                    <h3 class="event-title" style="font-size: 1.85rem; margin-bottom: 12px;">JALSA 2.0</h3>
-                    <p class="event-desc">
-                      An unforgettable festive night hosted by Grabbo in collaboration with Breeze at Shiv Nadar University! A high-energy evening of music, Garba & Dandiya dance, and delectable snacks curated directly by Grabbo.
-                    </p>
-
-                    <div class="event-meta">
-                      <div class="event-meta-item">
-                        <span class="meta-icon">📅</span>
-                        <div><strong>Date & Time:</strong> October 26th • 6:00 PM – 10:00 PM</div>
-                      </div>
-                      <div class="event-meta-item">
-                        <span class="meta-icon">📍</span>
-                        <div><strong>Location:</strong> Library Lawn, Shiv Nadar University</div>
-                      </div>
-                      <div class="event-meta-item">
-                        <span class="meta-icon">🤝</span>
-                        <div><strong>Hosted by:</strong> Grabbo @ Shopping Arcade × Breeze</div>
-                      </div>
-                    </div>
-
-                    <div class="event-perk-badge">
-                      🪔 Music, Dandiya, Delectable Grabbo Snacks & Refreshments
-                    </div>
-                  </div>
-                </div>
+                <!-- Event cards are built from src/content.js -->
+                <div id="about-events-list" style="margin-top: 18px;"></div>
               </section>
 
               <!-- DIRECT REDIRECT TO PRODUCT SECTION -->
@@ -558,46 +520,18 @@
           </div>
 
           <div class="events-grid" id="events-grid">
-            <!-- JALSA 2.0 - Featured Main Event Card -->
-            <div class="event-card featured-event-card">
-              <div class="event-card-img featured-img">
-                <img src="/events/jalsa_event_collage.jpg" alt="JALSA 2.0 Event by Grabbo at Shiv Nadar University" loading="lazy">
-                <div class="event-img-overlay-badge">
-                  <span>✨ Featured Campus Event</span>
-                </div>
-              </div>
+            <!-- Event cards are built from src/content.js -->
+          </div>
 
-              <div class="event-card-body">
-                <div class="event-badge-row">
-                  <span class="event-status-pill fest">🎉 Grand Campus Celebration</span>
-                  <span class="event-category-tag">Breeze × Grabbo</span>
-                </div>
-
-                <h3 class="event-title" style="font-size: 1.85rem; margin-bottom: 12px;">JALSA 2.0</h3>
-                <p class="event-desc">
-                  An unforgettable festive night hosted by Grabbo in collaboration with Breeze at Shiv Nadar University! A high-energy evening of music, Garba & Dandiya dance, and delectable snacks curated directly by Grabbo.
-                </p>
-
-                <div class="event-meta">
-                  <div class="event-meta-item">
-                    <span class="meta-icon">📅</span>
-                    <div><strong>Date & Time:</strong> October 26th • 6:00 PM – 10:00 PM</div>
-                  </div>
-                  <div class="event-meta-item">
-                    <span class="meta-icon">📍</span>
-                    <div><strong>Location:</strong> Library Lawn, Shiv Nadar University</div>
-                  </div>
-                  <div class="event-meta-item">
-                    <span class="meta-icon">🤝</span>
-                    <div><strong>Hosted by:</strong> Grabbo @ Shopping Arcade × Breeze</div>
-                  </div>
-                </div>
-
-                <div class="event-perk-badge">
-                  🪔 Music, Dandiya, Delectable Grabbo Snacks & Refreshments
-                </div>
+          <!-- Past events (shown only when there are any) -->
+          <div class="past-events-section" id="past-events-section" hidden>
+            <div class="events-header">
+              <div>
+                <span class="author-badge" style="margin-bottom: 8px;">LOOKING BACK</span>
+                <h2 class="section-title" style="margin-bottom: 0; text-align: left;">Past <span class="gradient-text">Events</span></h2>
               </div>
             </div>
+            <div class="events-grid" id="past-events-grid"></div>
           </div>
         </div>
       </div> <!-- End Events View -->
