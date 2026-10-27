@@ -7,15 +7,10 @@ const canvas = document.getElementById('bg-canvas');
 const context = canvas.getContext('2d');
 
 // 300-frame Storefront Interior Sequence
-const useNewAnimation = true;
-const frameCount = useNewAnimation ? 300 : 150;
+const frameCount = 300;
 const currentFrame = index => {
   const frameNumber = (index + 1).toString().padStart(3, '0');
-  if (useNewAnimation) {
-    return `/ezgif-409ce6f3040f8cae-jpg/ezgif-frame-${frameNumber}.jpg`;
-  } else {
-    return `/scroll_sequence/ezgif-frame-${frameNumber}.jpg`;
-  }
+  return `/hero-frames/ezgif-frame-${frameNumber}.webp`;
 };
 
 const images = [];
@@ -468,7 +463,8 @@ function renderCatalog(category) {
     if (prod.suggestion) {
       const badge = document.createElement('div');
       badge.className = 'suggestion-badge';
-      badge.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg> ${prod.suggestion}`;
+      badge.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>`;
+      badge.append(` ${prod.suggestion}`);
       imgContainer.appendChild(badge);
     }
     
@@ -484,13 +480,14 @@ function renderCatalog(category) {
     const meta = document.createElement('div');
     meta.className = 'catalog-card-meta';
     meta.innerHTML = `
-      <span class="catalog-price">${prod.price || 'In Store'}</span>
+      <span class="catalog-price"></span>
       <span class="catalog-stock-tag">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
         In Stock @ Arcade
       </span>
     `;
-    
+    meta.querySelector('.catalog-price').textContent = prod.price || 'In Store';
+
     detailsContainer.appendChild(title);
     detailsContainer.appendChild(desc);
     detailsContainer.appendChild(meta);
@@ -801,18 +798,23 @@ async function fetchHealthNews() {
     card.setAttribute('data-category', item.category || 'precautions');
     card.style.cursor = 'pointer';
 
+    // Static markup only; feed-supplied text is set via textContent (headlines are third-party input)
     card.innerHTML = `
       <div class="news-card-badge">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-        ${item.badge}
+        <span class="news-card-badge-text"></span>
       </div>
-      <h3 class="news-card-title">${item.title}</h3>
-      <p class="news-card-desc">${item.desc}</p>
+      <h3 class="news-card-title"></h3>
+      <p class="news-card-desc"></p>
       <div class="news-card-action">
-        <span>${item.action || 'View Essentials & Products'}</span>
+        <span class="news-card-action-text"></span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
     `;
+    card.querySelector('.news-card-badge-text').textContent = item.badge;
+    card.querySelector('.news-card-title').textContent = item.title;
+    card.querySelector('.news-card-desc').textContent = item.desc;
+    card.querySelector('.news-card-action-text').textContent = item.action || 'View Essentials & Products';
 
     card.addEventListener('click', () => {
       const category = card.getAttribute('data-category') || 'precautions';
@@ -891,9 +893,8 @@ async function fetchHealthNews() {
           title = title.split(' - ')[0].replace(/[\?]{2,}/g, '"').trim();
 
           let description = item.querySelector('description')?.textContent || '';
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = description;
-          let textContent = tempDiv.textContent || tempDiv.innerText || '';
+          // DOMParser yields an inert document: no scripts run, no images load
+          let textContent = new DOMParser().parseFromString(description, 'text/html').body.textContent || '';
           textContent = textContent.replace(/[\?]{2,}/g, '"').trim();
           
           if (!textContent || textContent === title) {
@@ -1000,18 +1001,23 @@ function initTestimonials() {
       <div>
         <div class="testimonial-top-row">
           <div class="testimonial-stars" aria-label="5 stars">★★★★★</div>
-          <span class="testimonial-badge">${item.badge}</span>
+          <span class="testimonial-badge"></span>
         </div>
-        <p class="testimonial-text">“${item.text}”</p>
+        <p class="testimonial-text"></p>
       </div>
       <div class="testimonial-author-row">
-        <div class="testimonial-avatar">${item.avatar}</div>
+        <div class="testimonial-avatar"></div>
         <div class="testimonial-author-info">
-          <strong>${item.author}</strong>
-          <span>${item.role}</span>
+          <strong></strong>
+          <span></span>
         </div>
       </div>
     `;
+    card.querySelector('.testimonial-badge').textContent = item.badge;
+    card.querySelector('.testimonial-text').textContent = `“${item.text}”`;
+    card.querySelector('.testimonial-avatar').textContent = item.avatar;
+    card.querySelector('.testimonial-author-info strong').textContent = item.author;
+    card.querySelector('.testimonial-author-info span').textContent = item.role;
 
     return card;
   }
