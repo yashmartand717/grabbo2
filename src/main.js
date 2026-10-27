@@ -609,6 +609,13 @@ document.addEventListener('keydown', (e) => {
   if (anyOpen) hideCatalog(null, true);
 });
 
+// Show the whole Story section: centred when it fits in the window, otherwise aligned to the top
+const scrollSectionIntoView = (target) => {
+  const rect = target.getBoundingClientRect();
+  const offset = rect.height < window.innerHeight ? (window.innerHeight - rect.height) / 2 : 0;
+  window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
+};
+
 // Navbar "Story" link -> Scrolls down to the Story section
 function scrollToStory(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
@@ -641,11 +648,9 @@ function scrollToStory(e, updateHistory = true) {
     homeView.classList.add('active');
     homeView.style.opacity = '1';
     
-    setTimeout(() => {
-      storyTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 150);
+    setTimeout(() => scrollSectionIntoView(storyTarget), 150);
   } else {
-    storyTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollSectionIntoView(storyTarget);
   }
 }
 
