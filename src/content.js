@@ -73,6 +73,60 @@ export const events = [
   }
 ];
 
+// "Weather at SNU" section: food picks for the current weather on campus.
+// Product names must match a product's "name" above exactly; unknown names are skipped.
+// Which mood applies: rainy if it is raining, otherwise by temperature —
+// hot 32°C and above, warm 26–32°C, pleasant 18–26°C, cold below 18°C.
+export const weatherSuggestions = {
+  hot: {
+    icon: "☀️",
+    title: "Beat the Heat",
+    subtitle: "It's scorching at SNU. Cool down with chilled coolers and stay hydrated.",
+    products: ["Raw Pressery Aam Panna", "Amul Masti Buttermilk", "Amul Sweet Lassi", "Alo Frut Blood Orange Mojito", "Schweppes Tonic Water", "Electral ORS Powder"]
+  },
+  warm: {
+    icon: "🌤️",
+    title: "Warm Day Refreshers",
+    subtitle: "A warm one on campus. Grab something cold and fizzy between classes.",
+    products: ["Coolberg Cranberry", "Epigamia Milkshake Vanilla", "Hershey's Cookies & Cream", "Amul Kool Kesar", "Alo Frut Kiwi Mojito", "Hell Energy Watermelon"]
+  },
+  rainy: {
+    icon: "🌧️",
+    title: "Rainy Day Cravings",
+    subtitle: "It's raining at SNU. Nothing beats hot Maggi, coffee and crunchy snacks.",
+    products: ["Maggi Masala Special Noodles", "Grabbo Special Hot Coffee", "Bingo! Cheese Nachos", "Bingo! Mad Angles Achaari", "Fun Flips Baked Puffs", "Winkies Rich Butter Fruit Cake"]
+  },
+  pleasant: {
+    icon: "🍃",
+    title: "Perfect Weather Picks",
+    subtitle: "Lovely weather on campus. Ideal for coffee and a sweet bite with friends.",
+    products: ["Grabbo Special Hot Coffee", "Winkies Mango Swiss Roll", "Winkies Rich Butter Fruit Cake", "Amul Badam Shaker", "Epigamia Milkshake Vanilla", "Bingo! Cheese Nachos"]
+  },
+  cold: {
+    icon: "🧣",
+    title: "Warm Up, SNU",
+    subtitle: "Chilly out there. Warm yourself up with something hot and comforting.",
+    products: ["Grabbo Special Hot Coffee", "Davidoff Fine Aroma Coffee", "Maggi Masala Special Noodles", "Winkies Sliced Choco Cake", "Winkies Rich Butter Fruit Cake", "Sofit Soya Milk Chocolate"]
+  }
+};
+
+// Health news only shows headlines from these outlets (website domains, without "www.").
+// Add or remove a domain to change which outlets are trusted.
+export const newsSources = [
+  "indiatoday.in",
+  "hindustantimes.com",
+  "timesofindia.indiatimes.com",
+  "economictimes.indiatimes.com",
+  "ndtv.com",
+  "indianexpress.com",
+  "newindianexpress.com",
+  "thehindu.com",
+  "theprint.in",
+  "livemint.com",
+  "business-standard.com",
+  "news18.com"
+];
+
 // Shown in the "What The Campus Says" scrolling section.
 export const testimonials = [
   {

@@ -1,7 +1,7 @@
 // Grabbo Web - Premium Campus Essentials @ SNU Shopping Arcade
 import './style.css';
 import anime from 'animejs';
-import { products, events, testimonials } from './content.js';
+import { products, events, testimonials, newsSources, weatherSuggestions } from './content.js';
 
 // --- Scroll Sequence Animation ---
 const canvas = document.getElementById('bg-canvas');
@@ -580,6 +580,35 @@ document.querySelectorAll('a[href="#events"]').forEach(btn => {
   btn.addEventListener('click', (e) => showEvents(e, true));
 });
 
+// About & Events: clicking the dimmed area outside the card returns to Home
+const dismissibleViews = [
+  { view: aboutView, card: '.about-card' },
+  { view: eventsView, card: '.events-container' }
+];
+// Navbar links and the logo do their own navigation; empty navbar space counts as outside
+const isOutsideCard = (target, card) => !target.closest(card) && !target.closest('.navbar a, .navbar button, #logo-home-btn');
+let pointerDownTarget = null;
+
+// Remember where the press started, so selecting text inside the card and releasing outside doesn't close it
+document.addEventListener('pointerdown', (e) => {
+  pointerDownTarget = e.target;
+});
+
+document.addEventListener('click', (e) => {
+  const open = dismissibleViews.find(({ view }) => view && view.classList.contains('active'));
+  if (!open || !pointerDownTarget) return;
+  if (isOutsideCard(e.target, open.card) && isOutsideCard(pointerDownTarget, open.card)) {
+    hideCatalog(null, true);
+  }
+});
+
+// Esc closes About, Events or Products
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const anyOpen = [aboutView, eventsView, catalogView].some(view => view && view.classList.contains('active'));
+  if (anyOpen) hideCatalog(null, true);
+});
+
 // Navbar "Story" link -> Scrolls down to the Story section
 function scrollToStory(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
@@ -746,27 +775,123 @@ tabBtns.forEach(btn => {
 
 });
 
+// --- Health News: outbreak headlines from trusted outlets (newsSources in content.js) ---
+const NEWS_LOOKBACK_DAYS = 14;
+const NEWS_QUERY = `(dengue OR malaria OR chikungunya OR H1N1 OR "swine flu" OR "viral fever" OR influenza OR covid OR typhoid OR cholera) (delhi OR noida OR "greater noida" OR gurugram OR ghaziabad OR ncr) when:${NEWS_LOOKBACK_DAYS}d`;
+const NEWS_URL = `/api/news/rss/search?q=${encodeURIComponent(NEWS_QUERY)}&hl=en-IN&gl=IN&ceid=IN:en`;
+const MAX_NEWS_CARDS = 8;
+const MIN_NEWS_CARDS = 3; // topped up with health tips below this
+const NCR_PATTERN = /delhi|noida|gurugram|gurgaon|ghaziabad|faridabad|\bncr\b/i;
+// Outside Delhi NCR (and for Covid/flu everywhere, which turn up in unrelated stories), a headline
+// must be about the illness spreading, not about policy, courts or money
+const HEALTH_CONTEXT = /\bcases?\b|outbreak|surge|spike|\brise\b|rising|infect|patients?|deaths?|\bdied\b|hospitali[sz]|alert|advisory|symptoms?|prevent|precaution|spread|\bwave\b|down with|fevers?/i;
+const OFF_TOPIC = /fraud|scam|insur|\bclaim|court|appeal|verdict|stock|shares|tariff|price|budget|tender/i;
+
+const NEWS_TOPICS = [
+  { pattern: /dengue|chikungunya|malaria|mosquito|vector/i, label: 'Dengue & Malaria Alert', tip: 'Use mosquito repellent, wear full sleeves after sunset, and don\'t let water collect near your room.' },
+  { pattern: /h1n1|swine flu|influenza|viral fever/i, label: 'Flu & Viral Alert', tip: 'Wear a mask in crowded places, wash hands often, and see a doctor if a fever lasts more than two days.' },
+  { pattern: /\bflu\b/i, label: 'Flu & Viral Alert', tip: 'Wear a mask in crowded places, wash hands often, and see a doctor if a fever lasts more than two days.', needsContext: true },
+  { pattern: /covid/i, label: 'Covid Update', tip: 'Mask up in crowded indoor spaces, sanitise your hands, and get tested if you have symptoms.', needsContext: true },
+  { pattern: /typhoid|cholera/i, label: 'Water-borne Alert', tip: 'Drink only purified water, avoid uncovered street food, and keep ORS handy.' }
+];
+
+const formatNewsDate = (date) => {
+  const hours = Math.floor((Date.now() - date.getTime()) / 3600000);
+  if (hours < 1) return 'Just now';
+  if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  if (hours < 48) return 'Yesterday';
+  return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+};
+
+const isTrustedNewsSource = (url) => {
+  let host = '';
+  try {
+    host = new URL(url).hostname.replace(/^(www|m)\./, '');
+  } catch (e) {
+    return false;
+  }
+  return newsSources.some(domain => host === domain || host.endsWith(`.${domain}`));
+};
+
+// Google News RSS -> news cards: trusted outlets only, recent, on-topic, Delhi NCR stories first
+function parseHealthNews(xmlText) {
+  const items = new DOMParser().parseFromString(xmlText, 'text/xml').querySelectorAll('item');
+  const cutoff = Date.now() - NEWS_LOOKBACK_DAYS * 24 * 3600000;
+  const seenTitles = new Set();
+  const cards = [];
+
+  items.forEach(item => {
+    const source = item.querySelector('source');
+    if (!source || !isTrustedNewsSource(source.getAttribute('url'))) return;
+    const sourceName = source.textContent.trim();
+
+    // Google appends " - <Source Name>" to every headline
+    let title = (item.querySelector('title')?.textContent || '').trim();
+    if (sourceName && title.endsWith(` - ${sourceName}`)) {
+      title = title.slice(0, -(sourceName.length + 3)).trim();
+    }
+
+    const topic = NEWS_TOPICS.find(t => t.pattern.test(title));
+    if (!topic || OFF_TOPIC.test(title)) return;
+    const isNCR = NCR_PATTERN.test(title);
+    if ((topic.needsContext || !isNCR) && !HEALTH_CONTEXT.test(title)) return;
+
+    const published = new Date(item.querySelector('pubDate')?.textContent || '');
+    if (isNaN(published.getTime()) || published.getTime() < cutoff) return;
+
+    const titleKey = title.toLowerCase();
+    if (seenTitles.has(titleKey)) return;
+    seenTitles.add(titleKey);
+
+    // Link back to the publisher's article; feed URLs are third-party input, so only https is allowed
+    let link = '';
+    try {
+      const url = new URL(item.querySelector('link')?.textContent.trim() || '');
+      if (url.protocol === 'https:') link = url.href;
+    } catch (e) {
+      // no usable link: the headline is shown without one
+    }
+
+    cards.push({
+      badge: `${topic.label} • ${isNCR ? 'Delhi NCR' : 'India'}`,
+      title,
+      link,
+      source: `${sourceName} • ${formatNewsDate(published)}`,
+      desc: `Grabbo tip: ${topic.tip}`,
+      action: 'View Precautions & Essentials',
+      category: 'precautions',
+      isNCR,
+      published
+    });
+  });
+
+  return cards
+    .sort((a, b) => (b.isNCR - a.isNCR) || (b.published - a.published))
+    .slice(0, MAX_NEWS_CARDS);
+}
+
 async function fetchHealthNews() {
   const newsGrid = document.getElementById('dynamic-news-grid');
   if (!newsGrid) return;
 
+  // Shown when there is little or no recent news; labelled as tips so they never pass as headlines
   const fallbackAlerts = [
     {
-      badge: "Flu & Viral Alert • Delhi NCR",
+      badge: "Grabbo Health Tip",
       title: "Seasonal Viral & H1N1 Flu Advisory",
       desc: "Weather changes and seasonal humidity have led to an uptick in viral fevers and sore throats. Grabbo recommends keeping N95 masks, Crocin, and Vicks handy in your hostel room.",
       action: "View Fever & Cold Essentials",
       category: "precautions"
     },
     {
-      badge: "Vector Prevention • Campus",
+      badge: "Grabbo Health Tip",
       title: "Dengue & Mosquito Defense Measures",
       desc: "Rainwater pooling after showers increases mosquito breeding. Protect yourself during evening study walks with Odomos mosquito repellent cream and protective lotions.",
       action: "View Mosquito Defense",
       category: "precautions"
     },
     {
-      badge: "Daily Vitality • SNU Arcade",
+      badge: "Grabbo Health Tip",
       title: "Electrolyte Balance & Exhaustion Care",
       desc: "Humid campus days and long study sessions quickly drain vital salts and energy. Replenish with WHO-standard Electral ORS and cold energy drinks from Grabbo.",
       action: "View Hydration & ORS",
@@ -778,7 +903,6 @@ async function fetchHealthNews() {
     const card = document.createElement('div');
     card.className = 'product-card news-card';
     card.setAttribute('data-category', item.category || 'precautions');
-    card.style.cursor = 'pointer';
 
     // Static markup only; feed-supplied text is set via textContent (headlines are third-party input)
     card.innerHTML = `
@@ -787,24 +911,51 @@ async function fetchHealthNews() {
         <span class="news-card-badge-text"></span>
       </div>
       <h3 class="news-card-title"></h3>
+      <p class="news-card-source"></p>
       <p class="news-card-desc"></p>
-      <div class="news-card-action">
+      <button type="button" class="news-card-action">
         <span class="news-card-action-text"></span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </div>
+      </button>
     `;
     card.querySelector('.news-card-badge-text').textContent = item.badge;
-    card.querySelector('.news-card-title').textContent = item.title;
+
+    // Headline and source open the original article on the publisher's site
+    const titleEl = card.querySelector('.news-card-title');
+    const sourceEl = card.querySelector('.news-card-source');
+    if (item.link) {
+      const titleLink = document.createElement('a');
+      titleLink.href = item.link;
+      titleLink.target = '_blank';
+      titleLink.rel = 'noopener noreferrer';
+      titleLink.className = 'news-card-link';
+      titleLink.textContent = item.title;
+      titleEl.appendChild(titleLink);
+    } else {
+      titleEl.textContent = item.title;
+    }
+    if (item.source) {
+      if (item.link) {
+        const sourceLink = document.createElement('a');
+        sourceLink.href = item.link;
+        sourceLink.target = '_blank';
+        sourceLink.rel = 'noopener noreferrer';
+        sourceLink.className = 'news-card-link';
+        sourceLink.textContent = `${item.source} ↗`;
+        sourceLink.setAttribute('aria-label', `Read the full story on ${item.source.split(' • ')[0]}`);
+        sourceEl.appendChild(sourceLink);
+      } else {
+        sourceEl.textContent = item.source;
+      }
+    } else {
+      sourceEl.remove();
+    }
     card.querySelector('.news-card-desc').textContent = item.desc;
     card.querySelector('.news-card-action-text').textContent = item.action || 'View Essentials & Products';
 
-    card.addEventListener('click', () => {
-      const category = card.getAttribute('data-category') || 'precautions';
-      tabBtns.forEach(b => b.classList.remove('active'));
-      const targetTab = Array.from(tabBtns).find(b => b.getAttribute('data-category') === category);
-      if (targetTab) targetTab.classList.add('active');
-      renderCatalog(category);
-      showCatalog();
+    // Grabbo's own suggestion, kept separate from the publisher's headline
+    card.querySelector('.news-card-action').addEventListener('click', () => {
+      openCatalogCategory(card.getAttribute('data-category') || 'precautions');
     });
 
     return card;
@@ -833,88 +984,26 @@ async function fetchHealthNews() {
     list.forEach(item => {
       group2.appendChild(createCardElement(item));
     });
+    // The clone is decorative; keep its links and buttons out of keyboard navigation
+    group2.querySelectorAll('a, button').forEach(el => el.setAttribute('tabindex', '-1'));
 
     newsGrid.appendChild(group1);
     newsGrid.appendChild(group2);
   }
 
+  let newsCards = [];
   try {
-    let textData = null;
-
-    // 1. Try real-time API
-    try {
-      const response = await fetch('/api/news/rss/search?q=disease+OR+fever+OR+dengue+OR+malaria+OR+covid+delhi+ncr&hl=en-IN&gl=IN&ceid=IN:en');
-      if (response.ok) {
-        textData = await response.text();
-      }
-    } catch (e) {
-      // ignore
+    const response = await fetch(NEWS_URL);
+    if (response.ok) {
+      newsCards = parseHealthNews(await response.text());
     }
-
-    // 2. Try local rss.xml
-    if (!textData) {
-      try {
-        const localResp = await fetch('/rss.xml');
-        if (localResp.ok) {
-          textData = await localResp.text();
-        }
-      } catch (e) {
-        // ignore
-      }
-    }
-
-    if (textData) {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(textData, "text/xml");
-      const items = xmlDoc.querySelectorAll('item');
-
-      if (items.length > 0) {
-        const topNews = Array.from(items).slice(0, 8);
-        const parsedCards = topNews.map((item) => {
-          let title = item.querySelector('title')?.textContent || 'Health Advisory';
-          title = title.split(' - ')[0].replace(/[\?]{2,}/g, '"').trim();
-
-          let description = item.querySelector('description')?.textContent || '';
-          // DOMParser yields an inert document: no scripts run, no images load
-          let textContent = new DOMParser().parseFromString(description, 'text/html').body.textContent || '';
-          textContent = textContent.replace(/[\?]{2,}/g, '"').trim();
-          
-          if (!textContent || textContent === title) {
-            if (/dengue|mosquito/i.test(title)) {
-              textContent = "Post-rain water pooling increases mosquito breeding. Wear covered clothing and use Odomos repellent cream to safeguard against dengue and malaria.";
-            } else if (/h1n1|flu|fever/i.test(title)) {
-              textContent = "Seasonal weather variations are causing a surge in viral fever and influenza. Keep Crocin, paracetamol, and N95 masks at hand.";
-            } else {
-              textContent = "Stay protected with daily hygiene, proper hydration, and first-aid essentials available at the Grabbo SNU Arcade.";
-            }
-          }
-
-          const badge = /dengue|mosquito/i.test(title) 
-            ? "Mosquito Advisory • Delhi NCR"
-            : /h1n1|flu|fever/i.test(title)
-            ? "Viral & Flu Alert • Delhi NCR"
-            : "Health Notice • Delhi NCR";
-
-          return {
-            badge,
-            title,
-            desc: textContent,
-            action: "View Precautions & Essentials",
-            category: "precautions"
-          };
-        });
-
-        renderNewsCards(parsedCards);
-        return;
-      }
-    }
-
-    // Fallback if no items
-    renderNewsCards(fallbackAlerts);
   } catch (err) {
-    console.warn('Health news fallback activated:', err);
-    renderNewsCards(fallbackAlerts);
+    console.warn('Health news unavailable, showing health tips:', err);
   }
+
+  // Top up with health tips when there are only a few (or no) recent headlines
+  const tips = fallbackAlerts.slice(0, Math.max(0, MIN_NEWS_CARDS - newsCards.length));
+  renderNewsCards([...newsCards, ...tips]);
 }
 
 fetchHealthNews();
@@ -1089,6 +1178,131 @@ function initEvents() {
 }
 
 initEvents();
+
+// Opens the Products view on a given category tab
+function openCatalogCategory(category) {
+  tabBtns.forEach(b => b.classList.remove('active'));
+  const targetTab = Array.from(tabBtns).find(b => b.getAttribute('data-category') === category);
+  if (targetTab) targetTab.classList.add('active');
+  renderCatalog(category);
+  showCatalog();
+}
+
+// --- Weather at SNU: food picks for the current campus weather (picks in content.js) ---
+const WEATHER_URL = '/api/weather';
+const WEATHER_REFRESH_MS = 30 * 60 * 1000;
+const RAIN_SYMBOL = /rain|sleet|snow|thunder|shower/;
+
+// MET Norway symbol codes, e.g. "partlycloudy_day", "lightrainshowers_night"
+const WEATHER_LABELS = [
+  [/thunder/, 'Thunderstorms'],
+  [/heavyrain/, 'Heavy rain'],
+  [/lightrain/, 'Light rain'],
+  [/rain|shower/, 'Rainy'],
+  [/sleet|snow/, 'Sleet'],
+  [/fog/, 'Foggy'],
+  [/clearsky/, 'Clear skies'],
+  [/fair/, 'Mostly clear'],
+  [/partlycloudy/, 'Partly cloudy'],
+  [/cloudy/, 'Cloudy']
+];
+
+const weatherMood = (temperature, symbol, precipitation) => {
+  if (RAIN_SYMBOL.test(symbol) || precipitation >= 0.3) return 'rainy';
+  if (temperature >= 32) return 'hot';
+  if (temperature >= 26) return 'warm';
+  if (temperature >= 18) return 'pleasant';
+  return 'cold';
+};
+
+// Used when live weather is unavailable: typical Delhi NCR seasons by month (in IST)
+const seasonalMood = () => {
+  const month = Number(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata', month: 'numeric' }));
+  if (month >= 4 && month <= 6) return 'hot';
+  if (month >= 7 && month <= 9) return 'rainy';
+  if (month === 12 || month <= 2) return 'cold';
+  return 'pleasant';
+};
+
+function createWeatherProductCard(prod) {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'weather-product';
+  card.innerHTML = `
+    <span class="weather-product-img"><img loading="lazy"></span>
+    <span class="weather-product-name"></span>
+    <span class="weather-product-price"></span>
+  `;
+  const img = card.querySelector('img');
+  img.src = prod.image;
+  img.alt = prod.name;
+  img.onerror = () => {
+    img.src = '/logo.png';
+  };
+  card.querySelector('.weather-product-name').textContent = prod.name;
+  card.querySelector('.weather-product-price').textContent = prod.price || 'In Store';
+  card.addEventListener('click', () => openCatalogCategory(prod.category));
+  return card;
+}
+
+function renderWeatherPicks(mood, reading) {
+  const suggestion = weatherSuggestions[mood];
+  const productsEl = document.getElementById('weather-products');
+  if (!suggestion || !productsEl) return;
+
+  document.getElementById('weather-icon').textContent = suggestion.icon;
+  document.getElementById('weather-title').textContent = suggestion.title;
+  document.getElementById('weather-subtitle').textContent = suggestion.subtitle;
+
+  const tempEl = document.getElementById('weather-temp');
+  const conditionEl = document.getElementById('weather-condition');
+  const creditEl = document.getElementById('weather-credit');
+  if (reading) {
+    tempEl.textContent = `${Math.round(reading.temperature)}°C`;
+    tempEl.hidden = false;
+    conditionEl.textContent = `${reading.label} on campus right now`;
+    creditEl.hidden = false;
+  } else {
+    // No live reading: show seasonal picks without claiming a current temperature
+    tempEl.hidden = true;
+    conditionEl.textContent = 'Seasonal picks for this time of year';
+    creditEl.hidden = true;
+  }
+
+  productsEl.innerHTML = '';
+  suggestion.products
+    .map(name => products.find(prod => prod.name === name))
+    .filter(Boolean)
+    .forEach(prod => productsEl.appendChild(createWeatherProductCard(prod)));
+}
+
+async function updateWeatherPicks() {
+  try {
+    const response = await fetch(WEATHER_URL);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+
+    // Forecast steps are hourly; use the one covering the current hour
+    const now = Date.now();
+    const steps = data?.properties?.timeseries || [];
+    const current = steps.find((step, i) => !steps[i + 1] || Date.parse(steps[i + 1].time) > now);
+    const temperature = current?.data?.instant?.details?.air_temperature;
+    if (typeof temperature !== 'number') throw new Error('No temperature in forecast');
+
+    const nextHour = current.data.next_1_hours || {};
+    const symbol = nextHour.summary?.symbol_code || '';
+    const precipitation = nextHour.details?.precipitation_amount || 0;
+    const label = (WEATHER_LABELS.find(([pattern]) => pattern.test(symbol)) || [null, 'Current weather'])[1];
+
+    renderWeatherPicks(weatherMood(temperature, symbol, precipitation), { temperature, label });
+  } catch (err) {
+    console.warn('SNU weather unavailable, showing seasonal picks:', err);
+    renderWeatherPicks(seasonalMood(), null);
+  }
+}
+
+updateWeatherPicks();
+setInterval(updateWeatherPicks, WEATHER_REFRESH_MS);
 
 // --- SPA Router: Browser Back/Forward & Direct URL Sync ---
 const logoHomeBtn = document.getElementById('logo-home-btn');
