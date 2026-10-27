@@ -19,35 +19,57 @@ for (let i = 0; i < frameCount; i++) {
 }
 
 // Progressive & On-Demand Frame Loader
-const loadFrame = (index) => {
+let drawnIndex = -1;
+
+const isFrameReady = (index) =>
+  index >= 0 && index < frameCount && images[index].complete && images[index].naturalWidth > 0;
+
+const loadFrame = (index, priority = 'auto') => {
   if (index >= 0 && index < frameCount && !images[index].src) {
-    images[index].src = currentFrame(index);
+    const img = images[index];
+    img.fetchPriority = priority;
+    img.addEventListener('load', () => {
+      // Repaint when a frame closer to the scroll position than the one on screen arrives
+      if (Math.abs(index - scrollProgressIndex) < Math.abs(drawnIndex - scrollProgressIndex)) {
+        renderFrame(scrollProgressIndex);
+      }
+    }, { once: true });
+    img.src = currentFrame(index);
   }
 };
 
 // Immediately load initial frame & initial 30 frames for smooth first experience
-loadFrame(0);
+loadFrame(0, 'high');
 for (let i = 1; i < Math.min(30, frameCount); i++) {
   loadFrame(i);
 }
 
-// Background idle preload for remaining frames to keep network thread free
-let nextBatchStart = 30;
-const batchSize = 15;
-const preloadRemainingFrames = () => {
-  if (nextBatchStart >= frameCount) return;
-  const batchEnd = Math.min(nextBatchStart + batchSize, frameCount);
-  for (let i = nextBatchStart; i < batchEnd; i++) {
-    loadFrame(i);
+// Then a coarse pass over the whole sequence (every 10th, 5th, 2nd frame, then the rest)
+// so any scroll position has a nearby frame to show early
+const preloadOrder = [];
+for (const step of [10, 5, 2, 1]) {
+  for (let i = 30; i < frameCount; i += step) {
+    preloadOrder.push(i);
   }
-  nextBatchStart = batchEnd;
-  if (nextBatchStart < frameCount) {
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(preloadRemainingFrames, { timeout: 800 });
-    } else {
-      setTimeout(preloadRemainingFrames, 120);
+}
+
+let preloadPos = 0;
+const preloadBatchSize = 6;
+const preloadRemainingFrames = () => {
+  const batch = [];
+  while (batch.length < preloadBatchSize && preloadPos < preloadOrder.length) {
+    const index = preloadOrder[preloadPos++];
+    if (!images[index].src) {
+      loadFrame(index);
+      batch.push(images[index]);
     }
   }
+  if (!batch.length) return;
+  // Wait for this batch before queuing more, so frames requested by scrolling aren't stuck behind it
+  Promise.all(batch.map(img => new Promise(resolve => {
+    img.addEventListener('load', resolve, { once: true });
+    img.addEventListener('error', resolve, { once: true });
+  }))).then(preloadRemainingFrames);
 };
 
 let canvasWidth = window.innerWidth;
@@ -56,14 +78,22 @@ let scrollProgressIndex = 0;
 
 const renderFrame = (index) => {
   // Ensure current and adjacent frames are prioritized immediately
-  loadFrame(index);
-  loadFrame(index + 1);
+  loadFrame(index, 'high');
+  loadFrame(index + 1, 'high');
   loadFrame(index + 2);
   loadFrame(index - 1);
 
-  if (images[index] && images[index].complete && images[index].naturalWidth > 0) {
-    const img = images[index];
-    
+  // Draw the requested frame, or the nearest loaded one so the animation never freezes
+  let drawIndex = -1;
+  for (let d = 0; d < frameCount && drawIndex === -1; d++) {
+    if (isFrameReady(index - d)) drawIndex = index - d;
+    else if (isFrameReady(index + d)) drawIndex = index + d;
+  }
+
+  if (drawIndex !== -1) {
+    const img = images[drawIndex];
+    drawnIndex = drawIndex;
+
     // Draw image covering the canvas without zooming on scroll
     const imgRatio = img.width / img.height;
     const canvasRatio = canvasWidth / canvasHeight;
@@ -163,6 +193,7 @@ window.addEventListener('resize', resizeCanvas);
 // Initial render once the first image is loaded
 images[0].onload = () => {
   resizeCanvas(); // This will trigger a renderFrame(0) and updateStorefrontSignPosition()
+  preloadRemainingFrames();
 };
 
 // Listen to scroll to update frame
