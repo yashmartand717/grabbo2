@@ -317,11 +317,27 @@ document.querySelectorAll('.product-card').forEach(card => {
 
 // Products, events and testimonials live in ./content.js
 
+// Clean URLs: each view has its own path (vercel.json serves index.html for them)
+const ROUTES = { home: '/', products: '/products', about: '/about', events: '/events', story: '/story' };
+// Old "#products"-style links are redirected to the matching path on load
+const LEGACY_HASHES = { '#home': 'home', '#products': 'products', '#about': 'about', '#events': 'events', '#story': 'story' };
+
+const currentRoute = () => {
+  const path = window.location.pathname.replace(/\/+$/, '') || '/';
+  return Object.keys(ROUTES).find(view => ROUTES[view] === path) || 'home';
+};
+
+const navigateTo = (view) => {
+  if (window.location.pathname !== ROUTES[view]) {
+    history.pushState({ view }, '', ROUTES[view]);
+  }
+};
+
 const homeView = document.getElementById('home-view');
 const aboutView = document.getElementById('about-view');
-const aboutBtn = document.querySelector('a[href="#about"]');
+const aboutBtn = document.querySelector('a[href="/about"]');
 const eventsView = document.getElementById('events-view');
-const eventsBtn = document.querySelector('a[href="#events"]');
+const eventsBtn = document.querySelector('a[href="/events"]');
 
 const catalogView = document.getElementById('catalog-view');
 
@@ -335,9 +351,7 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 
 function showCatalog(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
-  if (updateHistory && window.location.hash !== '#products') {
-    history.pushState({ view: 'products' }, '', '#products');
-  }
+  if (updateHistory) navigateTo('products');
   
   canvas.style.filter = 'brightness(0.25)';
   window.scrollTo(0, 0);
@@ -375,9 +389,7 @@ function showCatalog(e, updateHistory = true) {
 
 function hideCatalog(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
-  if (updateHistory && window.location.hash && window.location.hash !== '#home') {
-    history.pushState({ view: 'home' }, '', '#home');
-  }
+  if (updateHistory) navigateTo('home');
 
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
@@ -498,9 +510,7 @@ function renderCatalog(category) {
 
 function showAbout(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
-  if (updateHistory && window.location.hash !== '#about') {
-    history.pushState({ view: 'about' }, '', '#about');
-  }
+  if (updateHistory) navigateTo('about');
   
   canvas.style.filter = 'brightness(0.3)';
   window.scrollTo(0, 0);
@@ -536,9 +546,7 @@ function showAbout(e, updateHistory = true) {
 
 function showEvents(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
-  if (updateHistory && window.location.hash !== '#events') {
-    history.pushState({ view: 'events' }, '', '#events');
-  }
+  if (updateHistory) navigateTo('events');
   
   canvas.style.filter = 'brightness(0.3)';
   window.scrollTo(0, 0);
@@ -571,12 +579,12 @@ if (heroExploreBtn) {
 }
 
 // Navbar "Products" link -> Opens Catalog view
-document.querySelectorAll('a[href="#products"]').forEach(btn => {
+document.querySelectorAll('a[href="/products"]').forEach(btn => {
   btn.addEventListener('click', (e) => showCatalog(e, true));
 });
 
 // Navbar "Events" link -> Opens Events view
-document.querySelectorAll('a[href="#events"]').forEach(btn => {
+document.querySelectorAll('a[href="/events"]').forEach(btn => {
   btn.addEventListener('click', (e) => showEvents(e, true));
 });
 
@@ -619,9 +627,7 @@ const scrollSectionIntoView = (target) => {
 // Navbar "Story" link -> Scrolls down to the Story section
 function scrollToStory(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
-  if (updateHistory && window.location.hash !== '#story') {
-    history.pushState({ view: 'story' }, '', '#story');
-  }
+  if (updateHistory) navigateTo('story');
   
   const storyTarget = document.getElementById('story') || document.getElementById('author-section');
   if (!storyTarget) return;
@@ -654,12 +660,12 @@ function scrollToStory(e, updateHistory = true) {
   }
 }
 
-document.querySelectorAll('a[href="#story"], .nav-story-link').forEach(btn => {
+document.querySelectorAll('a[href="/story"], .nav-story-link').forEach(btn => {
   btn.addEventListener('click', (e) => scrollToStory(e, true));
 });
 
 // Navbar "About" link fallback -> Opens About view
-document.querySelectorAll('a[href="#about"]').forEach(btn => {
+document.querySelectorAll('a[href="/about"]').forEach(btn => {
   btn.addEventListener('click', (e) => showAbout(e, true));
 });
 
@@ -1316,30 +1322,34 @@ if (logoHomeBtn) {
 }
 
 // Popstate listener handles browser Back & Forward navigation seamlessly
-window.addEventListener('popstate', (e) => {
-  const hash = window.location.hash;
-  if (hash === '#products') {
+window.addEventListener('popstate', () => {
+  const route = currentRoute();
+  if (route === 'products') {
     showCatalog(null, false);
-  } else if (hash === '#about') {
+  } else if (route === 'about') {
     showAbout(null, false);
-  } else if (hash === '#events') {
+  } else if (route === 'events') {
     showEvents(null, false);
-  } else if (hash === '#story') {
+  } else if (route === 'story') {
     scrollToStory(null, false);
   } else {
     hideCatalog(null, false);
   }
 });
 
-// Initial route inspection on page load
-const initialHash = window.location.hash;
-if (initialHash === '#products') {
+// Initial route inspection on page load (old "#view" links are rewritten to their clean path first)
+const legacyView = LEGACY_HASHES[window.location.hash];
+if (legacyView) {
+  history.replaceState({ view: legacyView }, '', ROUTES[legacyView]);
+}
+const initialRoute = currentRoute();
+if (initialRoute === 'products') {
   showCatalog(null, false);
-} else if (initialHash === '#about') {
+} else if (initialRoute === 'about') {
   showAbout(null, false);
-} else if (initialHash === '#events') {
+} else if (initialRoute === 'events') {
   showEvents(null, false);
-} else if (initialHash === '#story') {
+} else if (initialRoute === 'story') {
   setTimeout(() => scrollToStory(null, false), 400);
 }
 

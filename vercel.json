@@ -1,8 +1,13 @@
 {
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/api/news/rss/search",
       "destination": "https://news.google.com/rss/search"
+    },
+    {
+      "source": "/:view(products|about|events|story)",
+      "destination": "/index.html"
     },
     {
       "source": "/api/weather",
