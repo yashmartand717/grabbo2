@@ -43,6 +43,31 @@ const showView = (html, viewId) => {
   return replaceOnce(html, new RegExp(`id="${viewId}" class="view-section hidden"`), `id="${viewId}" class="view-section active"`, viewId)
 }
 
+// Gives the page its own H1: the hidden home hero heading becomes a <p>, and the view's
+// first section title becomes the H1
+const setPageHeading = (html, viewId) => {
+  html = replaceOnce(html, /<h1 class="hero-brand-title">GRABBO<span class="visually-hidden">[^<]*<\/span><\/h1>/,
+    '<p class="hero-brand-title">GRABBO</p>', 'hero h1')
+  const open = html.indexOf('<h2 class="section-title"', html.indexOf(`id="${viewId}"`))
+  const close = html.indexOf('</h2>', open)
+  if (open === -1 || close === -1) throw new Error(`prerender: section title not found in ${viewId}`)
+  return html.slice(0, open) + '<h1' + html.slice(open + 3, close) + '</h1>' + html.slice(close + 5)
+}
+
+const breadcrumbJsonLd = view => `    <script type="application/ld+json">
+      ${JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: BREADCRUMB_NAMES[view], item: SITE_URL + pageMeta[view].path }
+        ]
+      })}
+    </script>
+  </head>`
+
+const BREADCRUMB_NAMES = { products: 'Products', about: 'About', events: 'Events' }
+
 const productCard = prod => `
             <div class="catalog-card">
               <div class="catalog-card-img"><img src="${escapeHtml(prod.image)}" alt="${escapeHtml(prod.name)}" class="product-image" loading="lazy"></div>
@@ -91,6 +116,7 @@ const fillEvents = html => {
 const sitemapXml = () => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${['home', ...Object.keys(PAGES)].map(view => `  <url><loc>${SITE_URL}${pageMeta[view].path}</loc></url>`).join('\n')}
+  <url><loc>${SITE_URL}/privacy</loc></url>
 </urlset>
 `
 
@@ -136,7 +162,8 @@ const prerenderPages = () => {
     writeBundle() {
       const indexHtml = readFileSync(resolve(outDir, 'index.html'), 'utf8')
       for (const [view, viewId] of Object.entries(PAGES)) {
-        let html = showView(setPageMeta(indexHtml, view), viewId)
+        let html = setPageHeading(showView(setPageMeta(indexHtml, view), viewId), viewId)
+        html = replaceOnce(html, /  <\/head>/, breadcrumbJsonLd(view), '</head>')
         if (view === 'products') html = fillProducts(html)
         if (view === 'events') html = fillEvents(html)
         mkdirSync(resolve(outDir, view), { recursive: true })

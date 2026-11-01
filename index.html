@@ -23,13 +23,14 @@
     <meta name="twitter:card" content="summary_large_image" />
     <!-- Structured data for Google: who Grabbo is and where the store is.
          Keep the address and phone numbers identical to the footer and the Google Business Profile.
-         Opening hours: add "openingHoursSpecification" here once confirmed. -->
+         Still to add once confirmed: "openingHoursSpecification", "priceRange", and the
+         Google Business Profile URL in "sameAs". -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
           {
-            "@type": "ConvenienceStore",
+            "@type": ["ConvenienceStore", "CafeOrCoffeeShop"],
             "@id": "https://www.grabbo.store/#store",
             "name": "Grabbo",
             "alternateName": "Grabbo @ SNU",
@@ -42,11 +43,19 @@
               "https://www.grabbo.store/store/grabbo_store_aisle.jpg"
             ],
             "telephone": "+91-9999725000",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "customer service",
+              "telephone": "+91-9289300102",
+              "areaServed": "IN"
+            },
             "email": "grabbo.snu@gmail.com",
             "foundingDate": "2021-04",
             "founder": { "@type": "Person", "name": "Vijay Tiwary" },
-            "parentOrganization": { "@type": "Organization", "name": "Auctus Resources", "email": "auctusresources@gmail.com" },
+            "parentOrganization": { "@type": "Organization", "name": "Auctus Resources" },
             "currenciesAccepted": "INR",
+            "areaServed": { "@type": "CollegeOrUniversity", "name": "Shiv Nadar University" },
+            "hasMap": "https://www.google.com/maps/search/?api=1&query=28.5254%2C77.5755",
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "Shopping Arcade, Shiv Nadar Institution of Eminence, G. T. Road, Dadri",
@@ -73,7 +82,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <!-- First hero frame, so the storefront shows before the frame sequence script runs
+         (same media query as useMobileFrames in src/main.js) -->
+    <link rel="preload" as="image" href="/hero-frames-mobile/frame-001.webp" fetchpriority="high" media="(max-width: 900px) and (orientation: portrait)">
+    <link rel="preload" as="image" href="/hero-frames/ezgif-frame-001.webp" fetchpriority="high" media="not all and (max-width: 900px) and (orientation: portrait)">
     <meta name="referrer" content="strict-origin-when-cross-origin" />
   </head>
   <body>
@@ -120,6 +132,73 @@
           <button class="btn-large explore-btn">Explore Now</button>
         </header>
 
+      <!-- What and where, in plain text for visitors, search engines and AI assistants.
+           Add the opening hours here once confirmed (and in the JSON-LD above). -->
+      <section id="store-intro" class="store-intro">
+        <span class="author-badge">CAMPUS STORE &amp; CAFÉ</span>
+        <h2 class="store-intro-title">Your convenience store at Shiv Nadar University</h2>
+        <p class="store-intro-text">
+          Grabbo is the in-campus convenience store and café at the Shopping Arcade, Shiv Nadar University, Greater Noida (U.P. 201314).
+          We stock snacks, beverages, coffee, bakery, pantry staples and health essentials, run a heat &amp; eat café,
+          and deliver to student hostels and campus residences.
+        </p>
+        <div class="store-intro-actions">
+          <a href="tel:+919999725000" class="btn-primary">Call +91 9999725000</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=28.5254%2C77.5755" target="_blank" rel="noopener noreferrer" class="btn-primary store-intro-btn-secondary">Get Directions</a>
+          <a href="/products" class="btn-primary store-intro-btn-secondary">Products &amp; Prices</a>
+        </div>
+      </section>
+
+      <!-- Author & Founder Section (The Story) -->
+      <section id="story" class="author-section">
+        <div class="author-container">
+          <!-- Left Column: The Story & Journey -->
+          <div class="author-story">
+            <span class="author-badge">THE STORY</span>
+            <h2 class="author-title">GRABBO</h2>
+            <p class="author-description">
+              <strong>Auctus Resources</strong> is primarily a Corporate Consulting and Networking Agency. During one of its corporate consulting journeys in the midst of the pandemic, in <strong>April 2021</strong>, <strong>“GRABBO”</strong> was born — initially conceived to cater to the essential needs of the staff and support teams of <strong>Shiv Nadar University</strong> within the campus premises of Delhi NCR.
+            </p>
+            <p class="author-description">
+              As the world regained momentum post-pandemic, <strong>GRABBO</strong> continued to thrive, soon becoming a popular destination among the students who were captivated by its convenience and thoughtful presence.
+            </p>
+            <p class="author-description">
+              However, since its inception, GRABBO was envisioned to be more than just a convenience or departmental store. Staying true to that vision, GRABBO has now evolved into an <strong>Experience Center</strong> — a place that connects students, staff, service providers, and even parents, creating moments of engagement and community.
+            </p>
+            <p class="author-closing-note" style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--primary); font-size: 1.05rem; line-height: 1.6; margin-top: 14px; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">
+              Visit GRABBO — to grab not just what you need, but a memory of experience.
+            </p>
+          </div>
+
+          <!-- Right Column: The Founder -->
+          <div class="author-profile">
+            <!-- Founder photo goes here once available (the .founder-image-* styles are kept in style.css) -->
+            <div class="founder-details">
+              <h3 class="founder-name">The Founder</h3>
+              <span class="founder-role">Vijay Tiwary</span>
+              <p class="founder-quote">
+                "I wanted to build a space where grabbing an everyday essential feels just as luxurious as walking into a high-end boutique."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section id="testimonials" class="glass-section testimonials-section-marquee">
+        <div style="text-align: center; margin-bottom: 25px; padding: 0 5%;">
+          <span class="author-badge">STUDENT & CAMPUS LOVE</span>
+          <h2 class="section-title" style="margin-bottom: 10px;">What The <span class="gradient-text">Campus Says</span></h2>
+          <p style="color: rgba(255, 255, 255, 0.72); font-size: 1.05rem; max-width: 620px; margin: 0 auto; line-height: 1.6;">
+            Honest experiences from students, faculty, parents, and clubs who make Grabbo their everyday campus home.
+          </p>
+        </div>
+        <div class="testimonials-marquee-container" id="dynamic-testimonials-grid">
+          <div style="color: rgba(255, 255, 255, 0.7); text-align: center; width: 100%; padding: 20px;">
+            Loading campus testimonials...
+          </div>
+        </div>
+      </section>
 
       <section id="health-news" class="glass-section news-section-marquee">
         <h2 class="section-title">Health <span class="gradient-text">News & Precautions</span></h2>
@@ -149,62 +228,6 @@
           </div>
         </div>
         <p class="weather-credit" id="weather-credit">Weather data from <a href="https://www.met.no/en" target="_blank" rel="noopener noreferrer">MET Norway</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>)</p>
-      </section>
-
-      <!-- Author & Founder Section (The Story) -->
-      <section id="story" class="author-section">
-        <div class="author-container">
-          <!-- Left Column: The Story & Journey -->
-          <div class="author-story">
-            <span class="author-badge">THE STORY</span>
-            <h2 class="author-title">GRABBO</h2>
-            <p class="author-description">
-              <strong>Auctus Resources</strong> is primarily a Corporate Consulting and Networking Agency. During one of its corporate consulting journeys in the midst of the pandemic, in <strong>April 2021</strong>, <strong>“GRABBO”</strong> was born — initially conceived to cater to the essential needs of the staff and support teams of <strong>Shiv Nadar University</strong> within the campus premises of Delhi NCR.
-            </p>
-            <p class="author-description">
-              As the world regained momentum post-pandemic, <strong>GRABBO</strong> continued to thrive, soon becoming a popular destination among the students who were captivated by its convenience and thoughtful presence.
-            </p>
-            <p class="author-description">
-              However, since its inception, GRABBO was envisioned to be more than just a convenience or departmental store. Staying true to that vision, GRABBO has now evolved into an <strong>Experience Center</strong> — a place that connects students, staff, service providers, and even parents, creating moments of engagement and community.
-            </p>
-            <p class="author-closing-note" style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--primary); font-size: 1.05rem; line-height: 1.6; margin-top: 14px; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">
-              Visit GRABBO — to grab not just what you need, but a memory of experience.
-            </p>
-          </div>
-
-          <!-- Right Column: The Founder -->
-          <div class="author-profile">
-            <div class="founder-image-wrapper">
-              <div class="founder-image-circle">
-                <span class="founder-placeholder-title">OWNER IMAGE</span>
-                <span class="founder-placeholder-sub">(AWAITING UPLOAD)</span>
-              </div>
-            </div>
-            <div class="founder-details">
-              <h3 class="founder-name">The Founder</h3>
-              <span class="founder-role">Vijay Tiwary</span>
-              <p class="founder-quote">
-                "I wanted to build a space where grabbing an everyday essential feels just as luxurious as walking into a high-end boutique."
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Testimonials Section -->
-      <section id="testimonials" class="glass-section testimonials-section-marquee">
-        <div style="text-align: center; margin-bottom: 25px; padding: 0 5%;">
-          <span class="author-badge">STUDENT & CAMPUS LOVE</span>
-          <h2 class="section-title" style="margin-bottom: 10px;">What The <span class="gradient-text">Campus Says</span></h2>
-          <p style="color: rgba(255, 255, 255, 0.72); font-size: 1.05rem; max-width: 620px; margin: 0 auto; line-height: 1.6;">
-            Honest experiences from students, faculty, parents, and clubs who make Grabbo their everyday campus home.
-          </p>
-        </div>
-        <div class="testimonials-marquee-container" id="dynamic-testimonials-grid">
-          <div style="color: rgba(255, 255, 255, 0.7); text-align: center; width: 100%; padding: 20px;">
-            Loading campus testimonials...
-          </div>
-        </div>
       </section>
 
       <!-- Marquee Section -->
@@ -570,7 +593,7 @@
       <div id="catalog-view" class="view-section hidden">
         <div class="catalog-container" style="position: relative;">
           <div class="catalog-header">
-            <h2 class="section-title">Our <span class="gradient-text">Collection</span></h2>
+            <h2 class="section-title">Products <span class="gradient-text">&amp; Prices</span></h2>
             <button id="back-to-home" class="btn-primary small-btn">← Back to Home</button>
           </div>
           

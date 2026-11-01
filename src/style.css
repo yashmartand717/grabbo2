@@ -2894,3 +2894,82 @@ a, button, .catalog-card, .btn-primary {
     font-size: 0.95rem;
   }
 }
+
+/* --- Store Intro (what and where, right below the hero) --- */
+.store-intro {
+  max-width: 820px;
+  margin: 0 auto 70px;
+  padding: 36px 6%;
+  text-align: center;
+  background: rgba(18, 17, 16, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+}
+@media (max-width: 900px) {
+  .store-intro { margin: 0 16px 50px; }
+}
+.store-intro-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+.store-intro-text {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 26px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+.store-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.store-intro-actions .btn-primary {
+  min-height: 44px;
+  text-decoration: none;
+}
+.store-intro-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff !important;
+  box-shadow: none;
+}
+
+/* Hero poster: the first frame shows while the frame sequence script loads.
+   Same placement as getFrameRect() in src/main.js before any scrolling. */
+#bg-canvas {
+  background: var(--bg-dark) url('/hero-frames/ezgif-frame-001.webp') center / cover no-repeat;
+}
+@media (max-width: 900px) and (orientation: portrait) {
+  #bg-canvas {
+    background-image: url('/hero-frames-mobile/frame-001.webp');
+    background-size: 106.4% auto; /* full width plus PORTRAIT_SIDE_CROP on each side */
+    background-position: center 45%; /* PORTRAIT_CENTER_Y */
+  }
+}
+
+/* Touch targets: at least 44px tall on phones (WCAG 2.5.5 / Google mobile guidance) */
+@media (max-width: 900px) {
+  .nav-links a:not(.btn-primary),
+  .footer-legal-links a,
+  .footer-info-item a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .nav-links a.btn-primary,
+  .footer-social-circle {
+    width: 44px;
+    height: 44px;
+  }
+  .footer-join-btn {
+    min-height: 44px;
+  }
+}

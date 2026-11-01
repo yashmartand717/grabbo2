@@ -44,12 +44,15 @@ const loadFrame = (index, priority = 'auto') => {
   }
 };
 
-// Immediately load initial frame & the first 12 frames for a smooth first scroll
+// Load the first frame now; frames 1-11 (for a smooth first scroll) wait until the page is idle
+// so they don't compete with the first paint (see images[0].onload)
 const initialFrames = 12;
 loadFrame(0, 'high');
-for (let i = 1; i < Math.min(initialFrames, frameCount); i++) {
-  loadFrame(i);
-}
+const loadInitialFrames = () => {
+  for (let i = 1; i < Math.min(initialFrames, frameCount); i++) {
+    loadFrame(i);
+  }
+};
 
 // Then a coarse pass (every 10th frame) so any scroll position has a nearby frame to show.
 // The rest load on demand around the scroll position (see renderFrame), so visitors who
@@ -273,8 +276,16 @@ window.addEventListener('resize', resizeCanvas);
 // Initial render once the first image is loaded
 images[0].onload = () => {
   resizeCanvas(); // This will trigger a renderFrame(0) and updateStorefrontSignPosition()
-  preloadRemainingFrames();
+  if ('requestIdleCallback' in window) requestIdleCallback(loadInitialFrames, { timeout: 3000 });
+  else setTimeout(loadInitialFrames, 1500);
 };
+
+// The coarse pass only starts once the visitor scrolls, so visitors who never scroll
+// download just the first frames
+window.addEventListener('scroll', () => {
+  loadInitialFrames();
+  preloadRemainingFrames();
+}, { once: true, passive: true });
 
 // Listen to scroll to update frame
 window.addEventListener('scroll', () => {
