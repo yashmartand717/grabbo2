@@ -190,7 +190,7 @@ export default defineConfig({
         target: 'https://api.met.no',
         changeOrigin: true,
         headers: { 'User-Agent': 'grabbo-web/1.0 grabbo.snu@gmail.com' },
-        rewrite: () => '/weatherapi/locationforecast/2.0/compact?lat=28.5254&lon=77.5755'
+        rewrite: () => '/weatherapi/locationforecast/2.0/compact?lat=28.5269&lon=77.5754'
       }
     }
   }

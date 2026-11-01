@@ -15,7 +15,7 @@
     },
     {
       "source": "/api/weather",
-      "destination": "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=28.5254&lon=77.5755"
+      "destination": "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=28.5269&lon=77.5754"
     }
   ],
   "headers": [
