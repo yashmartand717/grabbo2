@@ -6,7 +6,11 @@
       "destination": "https://news.google.com/rss/search"
     },
     {
-      "source": "/:view(products|about|events|story)",
+      "source": "/:page(products|about|events|privacy)",
+      "destination": "/:page/index.html"
+    },
+    {
+      "source": "/story",
       "destination": "/index.html"
     },
     {

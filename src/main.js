@@ -2,16 +2,21 @@
 import './style.css';
 import anime from 'animejs';
 import { products, events, testimonials, newsSources, weatherSuggestions } from './content.js';
+import { SITE_URL, pageMeta } from './seo.js';
 
 // --- Scroll Sequence Animation ---
 const canvas = document.getElementById('bg-canvas');
 const context = canvas.getContext('2d');
 
-// 300-frame Storefront Interior Sequence
-const frameCount = 300;
+// Storefront Interior Sequence: 300 full 2560x1440 frames on desktop; portrait phones get
+// 150 lighter full-width frames (every 2nd frame, scaled to 1920x1080)
+const useMobileFrames = window.matchMedia('(max-width: 900px) and (orientation: portrait)').matches;
+const frameCount = useMobileFrames ? 150 : 300;
 const currentFrame = index => {
   const frameNumber = (index + 1).toString().padStart(3, '0');
-  return `/hero-frames/ezgif-frame-${frameNumber}.webp`;
+  return useMobileFrames
+    ? `/hero-frames-mobile/frame-${frameNumber}.webp`
+    : `/hero-frames/ezgif-frame-${frameNumber}.webp`;
 };
 
 const images = [];
@@ -39,17 +44,19 @@ const loadFrame = (index, priority = 'auto') => {
   }
 };
 
-// Immediately load initial frame & initial 30 frames for smooth first experience
+// Immediately load initial frame & the first 12 frames for a smooth first scroll
+const initialFrames = 12;
 loadFrame(0, 'high');
-for (let i = 1; i < Math.min(30, frameCount); i++) {
+for (let i = 1; i < Math.min(initialFrames, frameCount); i++) {
   loadFrame(i);
 }
 
-// Then a coarse pass over the whole sequence (every 10th, 5th, 2nd frame, then the rest)
-// so any scroll position has a nearby frame to show early
+// Then a coarse pass (every 10th frame) so any scroll position has a nearby frame to show.
+// The rest load on demand around the scroll position (see renderFrame), so visitors who
+// don't scroll through the whole page don't download the whole sequence (~86 MB on desktop)
 const preloadOrder = [];
-for (const step of [10, 5, 2, 1]) {
-  for (let i = 30; i < frameCount; i += step) {
+for (const step of [10]) {
+  for (let i = initialFrames; i < frameCount; i += step) {
     preloadOrder.push(i);
   }
 }
@@ -77,12 +84,107 @@ let canvasWidth = window.innerWidth;
 let canvasHeight = window.innerHeight;
 let scrollProgressIndex = 0;
 
+// Portrait screens show the whole storefront across the screen width, then zoom in to
+// fill the screen over the first screen of scrolling (0 = whole storefront, 1 = filled)
+const PORTRAIT_SIDE_CROP = 0.03; // empty margin left and right of the building, per side
+const PORTRAIT_CENTER_Y = 0.45;  // storefront centre, as a fraction of the screen height
+let portraitZoom = 0;
+
+const isPortraitCanvas = () => canvasWidth / canvasHeight < 1;
+
+// Where a frame of the given size is drawn on the canvas
+const getFrameRect = (imgWidth, imgHeight) => {
+  const imgRatio = imgWidth / imgHeight;
+  const canvasRatio = canvasWidth / canvasHeight;
+
+  // Cover the canvas without zooming on scroll (landscape screens always use this)
+  let coverWidth, coverHeight;
+  if (canvasRatio > imgRatio) {
+    coverWidth = canvasWidth;
+    coverHeight = canvasWidth / imgRatio;
+  } else {
+    coverWidth = canvasHeight * imgRatio;
+    coverHeight = canvasHeight;
+  }
+  if (!isPortraitCanvas()) {
+    return { x: (canvasWidth - coverWidth) / 2, y: (canvasHeight - coverHeight) / 2, w: coverWidth, h: coverHeight };
+  }
+
+  const fitWidth = canvasWidth / (1 - 2 * PORTRAIT_SIDE_CROP);
+  const t = portraitZoom * portraitZoom * (3 - 2 * portraitZoom); // smoothstep
+  const w = fitWidth + (coverWidth - fitWidth) * t;
+  const h = w / imgRatio;
+  const fitY = canvasHeight * PORTRAIT_CENTER_Y - h / 2;
+  const coverY = (canvasHeight - h) / 2;
+  return { x: (canvasWidth - w) / 2, y: fitY + (coverY - fitY) * t, w, h };
+};
+
+// Average colour of a horizontal strip of a frame, used to extend the sky and the
+// parking lot above and below the storefront on portrait screens
+const edgeSampler = document.createElement('canvas');
+edgeSampler.width = 16;
+edgeSampler.height = 4;
+const edgeContext = edgeSampler.getContext('2d', { willReadFrequently: true });
+edgeContext.imageSmoothingQuality = 'high';
+const edgeColorCache = new Map();
+
+const getEdgeColors = (index) => {
+  if (edgeColorCache.has(index)) return edgeColorCache.get(index);
+  const img = images[index];
+  const average = (sy, sh) => {
+    edgeContext.clearRect(0, 0, 16, 4);
+    edgeContext.drawImage(img, 0, sy, img.width, sh, 0, 0, 16, 4);
+    const data = edgeContext.getImageData(0, 0, 16, 4).data;
+    const sum = [0, 0, 0];
+    for (let i = 0; i < data.length; i += 4) {
+      sum[0] += data[i];
+      sum[1] += data[i + 1];
+      sum[2] += data[i + 2];
+    }
+    const pixels = data.length / 4;
+    return sum.map(value => Math.round(value / pixels)).join(', ');
+  };
+  const colors = {
+    top: average(0, img.height * 0.03),
+    bottom: average(img.height * 0.94, img.height * 0.06)
+  };
+  edgeColorCache.set(index, colors);
+  return colors;
+};
+
+// Fills the canvas above and below the frame with its edge colours, fading into the frame
+const drawPortraitSurround = (index, rect) => {
+  const { top, bottom } = getEdgeColors(index);
+  const frameBottom = rect.y + rect.h;
+
+  if (rect.y > 0) {
+    context.fillStyle = `rgb(${top})`;
+    context.fillRect(0, 0, canvasWidth, Math.ceil(rect.y));
+    const fade = context.createLinearGradient(0, rect.y, 0, rect.y + rect.h * 0.12);
+    fade.addColorStop(0, `rgba(${top}, 1)`);
+    fade.addColorStop(1, `rgba(${top}, 0)`);
+    context.fillStyle = fade;
+    context.fillRect(0, rect.y, canvasWidth, rect.h * 0.12);
+  }
+
+  if (frameBottom < canvasHeight) {
+    context.fillStyle = `rgb(${bottom})`;
+    context.fillRect(0, Math.floor(frameBottom), canvasWidth, canvasHeight - Math.floor(frameBottom));
+    const fade = context.createLinearGradient(0, frameBottom - rect.h * 0.15, 0, frameBottom);
+    fade.addColorStop(0, `rgba(${bottom}, 0)`);
+    fade.addColorStop(1, `rgba(${bottom}, 1)`);
+    context.fillStyle = fade;
+    context.fillRect(0, frameBottom - rect.h * 0.15, canvasWidth, rect.h * 0.15);
+  }
+};
+
 const renderFrame = (index) => {
-  // Ensure current and adjacent frames are prioritized immediately
+  // Ensure current and adjacent frames are prioritized immediately, plus a short lookahead
   loadFrame(index, 'high');
   loadFrame(index + 1, 'high');
-  loadFrame(index + 2);
+  for (let i = 2; i <= 8; i++) loadFrame(index + i);
   loadFrame(index - 1);
+  loadFrame(index - 2);
 
   // Draw the requested frame, or the nearest loaded one so the animation never freezes
   let drawIndex = -1;
@@ -95,27 +197,12 @@ const renderFrame = (index) => {
     const img = images[drawIndex];
     drawnIndex = drawIndex;
 
-    // Draw image covering the canvas without zooming on scroll
-    const imgRatio = img.width / img.height;
-    const canvasRatio = canvasWidth / canvasHeight;
-    
-    let drawWidth, drawHeight, offsetX, offsetY;
-    
-    if (canvasRatio > imgRatio) {
-      drawWidth = canvasWidth;
-      drawHeight = canvasWidth / imgRatio;
-      offsetX = 0;
-      offsetY = (canvasHeight - drawHeight) / 2;
-    } else {
-      drawWidth = canvasHeight * imgRatio;
-      drawHeight = canvasHeight;
-      offsetX = (canvasWidth - drawWidth) / 2;
-      offsetY = 0;
-    }
-    
+    const rect = getFrameRect(img.width, img.height);
+
     // Clear using actual DOM scaled size just in case, or reset transform
     context.clearRect(0, 0, canvasWidth, canvasHeight);
-    context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+    context.drawImage(img, rect.x, rect.y, rect.w, rect.h);
+    if (isPortraitCanvas()) drawPortraitSurround(drawIndex, rect);
   }
 };
 
@@ -137,30 +224,13 @@ const updateStorefrontSignPosition = () => {
     storefrontSignBtn.classList.remove('hidden-hotspot');
   }
 
-  const imgWidth = 2560;
-  const imgHeight = 1440;
-  const imgRatio = imgWidth / imgHeight;
-  const canvasRatio = canvasWidth / canvasHeight;
-
-  let drawWidth, drawHeight, offsetX, offsetY;
-
-  if (canvasRatio > imgRatio) {
-    drawWidth = canvasWidth;
-    drawHeight = canvasWidth / imgRatio;
-    offsetX = 0;
-    offsetY = (canvasHeight - drawHeight) / 2;
-  } else {
-    drawWidth = canvasHeight * imgRatio;
-    drawHeight = canvasHeight;
-    offsetX = (canvasWidth - drawWidth) / 2;
-    offsetY = 0;
-  }
+  const rect = getFrameRect(2560, 1440);
 
   // Exact coordinates of the main storefront fascia board in 2560x1440 (tightly framing GRABBO inside banner)
-  const signLeft = offsetX + (630 / imgWidth) * drawWidth;
-  const signTop = offsetY + (240 / imgHeight) * drawHeight;
-  const signWidth = ((1740 - 630) / imgWidth) * drawWidth;
-  const signHeight = ((475 - 240) / imgHeight) * drawHeight;
+  const signLeft = rect.x + (630 / 2560) * rect.w;
+  const signTop = rect.y + (240 / 1440) * rect.h;
+  const signWidth = ((1740 - 630) / 2560) * rect.w;
+  const signHeight = ((475 - 240) / 1440) * rect.h;
 
   storefrontSignBtn.style.left = `${Math.round(signLeft)}px`;
   storefrontSignBtn.style.top = `${Math.round(signTop)}px`;
@@ -168,18 +238,27 @@ const updateStorefrontSignPosition = () => {
   storefrontSignBtn.style.height = `${Math.round(signHeight)}px`;
 };
 
+let canvasSized = false;
+
 const resizeCanvas = () => {
-  canvasWidth = window.innerWidth;
-  canvasHeight = window.innerHeight;
-  
-  const dpr = window.devicePixelRatio || 1;
-  
+  // CSS sizes the canvas to the large viewport (100lvh), so mobile address-bar
+  // show/hide doesn't change it; skip those resizes to avoid clearing and redrawing
+  const width = canvas.clientWidth || window.innerWidth;
+  const height = canvas.clientHeight || window.innerHeight;
+  if (canvasSized && width === canvasWidth && height === canvasHeight) {
+    updateStorefrontSignPosition();
+    return;
+  }
+  canvasSized = true;
+  canvasWidth = width;
+  canvasHeight = height;
+
+  // Capped at 2: phone 3x screens add memory and draw cost without visible gain here
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
   canvas.width = canvasWidth * dpr;
   canvas.height = canvasHeight * dpr;
-  
-  canvas.style.width = `${canvasWidth}px`;
-  canvas.style.height = `${canvasHeight}px`;
-  
+
   // Scale the context to match the device pixel ratio
   context.scale(dpr, dpr);
   context.imageSmoothingEnabled = true;
@@ -214,12 +293,17 @@ window.addEventListener('scroll', () => {
   
   // Dim background canvas dynamically on scroll
   const brightness = 1 - (scrollFraction * 0.8);
-  canvas.style.filter = `brightness(${brightness})`;
+  canvas.style.opacity = brightness;
 
   
-  if (scrollProgressIndex !== frameIndex) {
+  // Portrait screens: zoom from the whole storefront to full screen over the first screen of scrolling
+  const zoom = Math.min(1, scrollTop / canvasHeight);
+  const zoomChanged = isPortraitCanvas() && zoom !== portraitZoom;
+  portraitZoom = zoom;
+
+  if (scrollProgressIndex !== frameIndex || zoomChanged) {
     scrollProgressIndex = frameIndex;
-    requestAnimationFrame(() => renderFrame(frameIndex));
+    requestAnimationFrame(() => renderFrame(scrollProgressIndex));
   }
   updateStorefrontSignPosition();
 });
@@ -327,32 +411,10 @@ const currentRoute = () => {
   return Object.keys(ROUTES).find(view => ROUTES[view] === path) || 'home';
 };
 
-// Per-view title, description and canonical URL for search engines (Google runs this JS when indexing)
-const SITE_URL = 'https://www.grabbo.store';
-const PAGE_META = {
-  home: {
-    title: 'Grabbo @ SNU - Premium Essentials & Experience Center',
-    description: 'Grabbo @ Shiv Nadar University - In-campus departmental store and experience center offering everyday essentials, fresh café bites, beverages, late-night snacks, and health precautions at Shopping Arcade.'
-  },
-  products: {
-    title: 'Products - Snacks, Beverages, Coffee & Health Essentials | Grabbo @ SNU',
-    description: 'Browse Grabbo\'s collection at Shiv Nadar University: health precautions, beverages and shakes, bakery, café coffee and snacks, with prices.'
-  },
-  about: {
-    title: 'About Grabbo - Campus Store at Shiv Nadar University',
-    description: 'The story, mission and vision behind Grabbo, the in-campus departmental store and experience center at the Shiv Nadar University Shopping Arcade.'
-  },
-  events: {
-    title: 'Events & Offers | Grabbo @ SNU',
-    description: 'Upcoming events, offers and past campus collaborations from Grabbo at Shiv Nadar University, including Jalsa and TEDx.'
-  }
-};
-PAGE_META.story = PAGE_META.home;
-
+// Keeps the title, description and canonical URL in step with the visible view
 const applyPageMeta = (view) => {
-  const meta = PAGE_META[view] || PAGE_META.home;
-  // The Story view is the home page scrolled down, so it shares the home canonical
-  const url = SITE_URL + (view === 'story' ? '/' : ROUTES[view] || '/');
+  const meta = pageMeta[view] || pageMeta.home;
+  const url = SITE_URL + meta.path;
   document.title = meta.title;
   document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
   document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
@@ -388,7 +450,7 @@ function showCatalog(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('products');
   
-  canvas.style.filter = 'brightness(0.25)';
+  canvas.style.opacity = 0.25;
   window.scrollTo(0, 0);
   
   // Fade out home, about and events
@@ -412,8 +474,9 @@ function showCatalog(e, updateHistory = true) {
     catalogView.classList.remove('hidden');
     catalogView.classList.add('active');
 
-    // Check if grid is empty, render default if so
-    if (catalogGrid.children.length === 0) {
+    // Render the default tab if no tab has been rendered yet (the grid may hold the
+    // build-time product list, which is replaced here)
+    if (!catalogGrid.dataset.category) {
       renderCatalog('precautions');
     }
 
@@ -434,7 +497,7 @@ function hideCatalog(e, updateHistory = true) {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   let scrollFraction = maxScroll > 0 ? scrollTop / maxScroll : 0;
-  canvas.style.filter = `brightness(${1 - (scrollFraction * 0.8)})`;
+  canvas.style.opacity = 1 - (scrollFraction * 0.8);
   
   setTimeout(() => {
     catalogView.classList.add('hidden');
@@ -459,19 +522,24 @@ function hideCatalog(e, updateHistory = true) {
 
 
 
+// Every product is rendered and other tabs' cards are hidden, so the whole catalog stays
+// in the page for search engines
 function renderCatalog(category) {
   catalogGrid.innerHTML = '';
+  catalogGrid.dataset.category = category;
   const categoryProducts = products.filter(prod => prod.category === category);
+  const visibleCards = [];
 
   if (categoryProducts.length === 0) {
     catalogGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: #fff; font-size: 1.2rem; background: rgba(22, 20, 18, 0.9); border-radius: 20px;">No products found in this category.</div>`;
-    return;
   }
 
-  categoryProducts.forEach((prod, i) => {
+  products.forEach((prod, i) => {
     const card = document.createElement('div');
     card.className = 'catalog-card';
     card.style.opacity = '1';
+    if (prod.category === category) visibleCards.push(card);
+    else card.style.display = 'none';
 
     const imgContainer = document.createElement('div');
     imgContainer.className = 'catalog-card-img';
@@ -527,9 +595,9 @@ function renderCatalog(category) {
     catalogGrid.appendChild(card);
   });
 
-  if (typeof anime !== 'undefined') {
+  if (typeof anime !== 'undefined' && visibleCards.length) {
     anime({
-      targets: '.catalog-card',
+      targets: visibleCards,
       opacity: [0, 1],
       translateY: [15, 0],
       duration: 400,
@@ -547,7 +615,7 @@ function showAbout(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('about');
   
-  canvas.style.filter = 'brightness(0.3)';
+  canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
   
   homeView.style.opacity = '0';
@@ -583,7 +651,7 @@ function showEvents(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('events');
   
-  canvas.style.filter = 'brightness(0.3)';
+  canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
   
   homeView.style.opacity = '0';
@@ -762,28 +830,11 @@ canvas.addEventListener('click', (e) => {
   const clickX = e.clientX - rect.left;
   const clickY = e.clientY - rect.top;
 
-  const imgWidth = 2560;
-  const imgHeight = 1440;
-  const imgRatio = imgWidth / imgHeight;
-  const canvasRatio = canvasWidth / canvasHeight;
-
-  let drawWidth, drawHeight, offsetX, offsetY;
-  if (canvasRatio > imgRatio) {
-    drawWidth = canvasWidth;
-    drawHeight = canvasWidth / imgRatio;
-    offsetX = 0;
-    offsetY = (canvasHeight - drawHeight) / 2;
-  } else {
-    drawWidth = canvasHeight * imgRatio;
-    drawHeight = canvasHeight;
-    offsetX = (canvasWidth - drawWidth) / 2;
-    offsetY = 0;
-  }
-
-  const signLeft = offsetX + (630 / imgWidth) * drawWidth;
-  const signTop = offsetY + (240 / imgHeight) * drawHeight;
-  const signWidth = ((1740 - 630) / imgWidth) * drawWidth;
-  const signHeight = ((475 - 240) / imgHeight) * drawHeight;
+  const frameRect = getFrameRect(2560, 1440);
+  const signLeft = frameRect.x + (630 / 2560) * frameRect.w;
+  const signTop = frameRect.y + (240 / 1440) * frameRect.h;
+  const signWidth = ((1740 - 630) / 2560) * frameRect.w;
+  const signHeight = ((475 - 240) / 1440) * frameRect.h;
 
   if (
     clickX >= signLeft &&
@@ -1390,15 +1441,18 @@ if (initialRoute === 'products') {
   setTimeout(() => scrollToStory(null, false), 400);
 }
 
-// --- Footer Newsletter Subscription (CSP-compliant) ---
+// --- Footer Mailing List (CSP-compliant) ---
+// The site has no backend to store emails, so "Join" opens a pre-filled email to Grabbo
 const subscribeForm = document.getElementById('footer-subscribe-form');
 if (subscribeForm) {
   subscribeForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const emailInput = subscribeForm.querySelector('input[type="email"]');
-    if (emailInput && emailInput.value.trim()) {
-      alert(`Thank you for subscribing (${emailInput.value.trim()})! You'll receive updates on Grabbo releases and campus events.`);
-      subscribeForm.reset();
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (email) {
+      const subject = encodeURIComponent('Add me to the Grabbo mailing list');
+      const body = encodeURIComponent(`Hi Grabbo,\n\nPlease add ${email} to your mailing list for releases and campus events.\n`);
+      window.location.href = `mailto:grabbo.snu@gmail.com?subject=${subject}&body=${body}`;
     }
   });
 }

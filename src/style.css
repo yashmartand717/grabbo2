@@ -33,6 +33,9 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -61,8 +64,9 @@ textarea,
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  height: 100lvh; /* large viewport: stays put while mobile address bars show/hide */
   z-index: -1;
 }
 
@@ -258,6 +262,7 @@ textarea,
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 100px);
+  min-height: calc(100svh - 100px);
   padding: 0 5%;
   text-align: center;
   max-width: 1400px;
@@ -779,9 +784,14 @@ textarea,
   will-change: transform;
 }
 
-.news-marquee-container:hover .news-marquee-group,
+/* :hover only on real pointers; on touch it sticks after a tap and freezes the marquee */
 .news-marquee-container:active .news-marquee-group {
   animation-play-state: paused;
+}
+@media (hover: hover) {
+  .news-marquee-container:hover .news-marquee-group {
+    animation-play-state: paused;
+  }
 }
 
 .news-marquee-group .news-card {
@@ -1079,9 +1089,13 @@ textarea,
   will-change: transform;
 }
 
-.testimonials-marquee-container:hover .testimonials-marquee-group,
 .testimonials-marquee-container:active .testimonials-marquee-group {
   animation-play-state: paused;
+}
+@media (hover: hover) {
+  .testimonials-marquee-container:hover .testimonials-marquee-group {
+    animation-play-state: paused;
+  }
 }
 
 .testimonial-card {
@@ -1403,6 +1417,9 @@ footer.site-footer {
   width: 100%;
   padding-right: 12px;
 }
+@media (hover: none) and (pointer: coarse) {
+  .footer-email-input { font-size: 16px; }
+}
 
 .footer-email-input::placeholder {
   color: rgba(255, 255, 255, 0.4);
@@ -1501,8 +1518,22 @@ footer.site-footer {
     max-width: 92%;
     margin-bottom: 25px;
   }
-  .navbar { flex-direction: column; gap: 20px; padding: 20px 5%; }
-  .nav-links { flex-wrap: wrap; justify-content: center; }
+  /* One compact row: logo | Story Products Events (Instagram icon) */
+  .navbar { flex-direction: row; gap: 10px; padding: 10px 16px; }
+  .logo-wrapper { gap: 8px !important; flex-shrink: 0; }
+  .logo-wrapper img { width: 34px !important; height: 34px !important; }
+  .logo { font-size: 1.35rem; }
+  .nav-links { flex-wrap: nowrap; justify-content: flex-end; gap: 14px; }
+  .nav-links a { font-size: 0.85rem; padding: 6px 0; white-space: nowrap; }
+  .nav-links a.btn-primary { padding: 0; width: 36px; height: 36px; flex-shrink: 0; }
+  .nav-follow-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
   .category-tabs { flex-wrap: wrap; gap: 8px; }
   .catalog-container { padding: 15px 5% 40px; }
   .catalog-header { margin-bottom: 20px; }
@@ -2767,23 +2798,29 @@ a, button, .catalog-card, .btn-primary {
 
 @media (max-width: 768px) {
   .hero {
-    min-height: calc(100vh - 80px);
-    padding: 0 20px;
+    /* svh = visible height with browser toolbars shown, so Explore Now stays on screen.
+       56px = compact navbar. The storefront is drawn in the upper half of the canvas on
+       portrait screens (src/main.js), so the title and button sit below it, over the parking lot */
+    min-height: calc(100vh - 56px);
+    min-height: calc(100svh - 56px);
+    padding: 0 20px 28px;
+    justify-content: flex-end;
   }
   .hero-brand-title {
-    font-size: clamp(2.4rem, 10vw, 3.8rem);
+    font-size: clamp(2.1rem, 9.5vw, 3.4rem);
     letter-spacing: 0.05em;
   }
   .hero-brand-subtitle {
-    font-size: clamp(1.35rem, 5.5vw, 2rem);
+    font-size: clamp(1.15rem, 5vw, 1.8rem);
     margin: 2px 0 0 0;
   }
   .explore-btn {
-    bottom: 24px;
+    position: static;
+    margin: 20px auto 0;
   }
   .btn-large {
-    padding: 13px 32px;
-    font-size: 1.02rem;
+    padding: 12px 28px;
+    font-size: 1rem;
   }
   .section-title {
     font-size: clamp(1.75rem, 6.5vw, 2.3rem);
@@ -2801,3 +2838,59 @@ a, button, .catalog-card, .btn-primary {
   }
 }
 
+
+/* Touch devices: lighter glass blur. Large blurs over the animated background canvas
+   are re-rendered every frame while scrolling, which janks mid-range phones */
+@media (hover: none) and (pointer: coarse) {
+  .product-card,
+  .weather-banner,
+  .author-section,
+  .testimonial-card,
+  footer.site-footer,
+  .catalog-card,
+  .about-card,
+  .events-container {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* Text for screen readers and search engines only (e.g. the full name in the hero H1) */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Very narrow phones: logo icon only, so the navbar stays on one row */
+@media (max-width: 380px) {
+  .logo-wrapper .logo { display: none !important; }
+  .nav-links { gap: 12px; }
+}
+
+/* Phones held sideways: the desktop hero is too tall for ~400px of height, so the
+   button follows the text instead of being pinned to the bottom (desktops are taller than 500px) */
+@media (orientation: landscape) and (max-height: 500px) {
+  .navbar { padding: 12px 5%; }
+  .hero {
+    min-height: calc(100vh - 64px);
+    min-height: calc(100svh - 64px);
+    justify-content: center;
+  }
+  .hero-brand-title { font-size: clamp(2.2rem, 6vw, 3.4rem); }
+  .hero-brand-subtitle { font-size: clamp(1.1rem, 3.2vw, 1.8rem); }
+  .explore-btn {
+    position: static;
+    margin: 16px auto 0;
+  }
+  .btn-large {
+    padding: 10px 26px;
+    font-size: 0.95rem;
+  }
+}
