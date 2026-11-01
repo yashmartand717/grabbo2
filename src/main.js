@@ -327,10 +327,45 @@ const currentRoute = () => {
   return Object.keys(ROUTES).find(view => ROUTES[view] === path) || 'home';
 };
 
+// Per-view title, description and canonical URL for search engines (Google runs this JS when indexing)
+const SITE_URL = 'https://www.grabbo.store';
+const PAGE_META = {
+  home: {
+    title: 'Grabbo @ SNU - Premium Essentials & Experience Center',
+    description: 'Grabbo @ Shiv Nadar University - In-campus departmental store and experience center offering everyday essentials, fresh café bites, beverages, late-night snacks, and health precautions at Shopping Arcade.'
+  },
+  products: {
+    title: 'Products - Snacks, Beverages, Coffee & Health Essentials | Grabbo @ SNU',
+    description: 'Browse Grabbo\'s collection at Shiv Nadar University: health precautions, beverages and shakes, bakery, café coffee and snacks, with prices.'
+  },
+  about: {
+    title: 'About Grabbo - Campus Store at Shiv Nadar University',
+    description: 'The story, mission and vision behind Grabbo, the in-campus departmental store and experience center at the Shiv Nadar University Shopping Arcade.'
+  },
+  events: {
+    title: 'Events & Offers | Grabbo @ SNU',
+    description: 'Upcoming events, offers and past campus collaborations from Grabbo at Shiv Nadar University, including Jalsa and TEDx.'
+  }
+};
+PAGE_META.story = PAGE_META.home;
+
+const applyPageMeta = (view) => {
+  const meta = PAGE_META[view] || PAGE_META.home;
+  // The Story view is the home page scrolled down, so it shares the home canonical
+  const url = SITE_URL + (view === 'story' ? '/' : ROUTES[view] || '/');
+  document.title = meta.title;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
+  document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
+  document.querySelector('meta[property="og:url"]')?.setAttribute('content', url);
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', meta.title);
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.description);
+};
+
 const navigateTo = (view) => {
   if (window.location.pathname !== ROUTES[view]) {
     history.pushState({ view }, '', ROUTES[view]);
   }
+  applyPageMeta(view);
 };
 
 const homeView = document.getElementById('home-view');
@@ -1324,6 +1359,7 @@ if (logoHomeBtn) {
 // Popstate listener handles browser Back & Forward navigation seamlessly
 window.addEventListener('popstate', () => {
   const route = currentRoute();
+  applyPageMeta(route);
   if (route === 'products') {
     showCatalog(null, false);
   } else if (route === 'about') {
@@ -1343,6 +1379,7 @@ if (legacyView) {
   history.replaceState({ view: legacyView }, '', ROUTES[legacyView]);
 }
 const initialRoute = currentRoute();
+applyPageMeta(initialRoute);
 if (initialRoute === 'products') {
   showCatalog(null, false);
 } else if (initialRoute === 'about') {
