@@ -2895,7 +2895,7 @@ a, button, .catalog-card, .btn-primary {
   }
 }
 
-/* --- Store Intro (what and where, right below the hero) --- */
+/* --- Store Intro (what and where, above the marquee) --- */
 .store-intro {
   max-width: 820px;
   margin: 0 auto 70px;

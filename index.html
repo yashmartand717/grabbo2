@@ -132,21 +132,24 @@
           <button class="btn-large explore-btn">Explore Now</button>
         </header>
 
-      <!-- What and where, in plain text for visitors, search engines and AI assistants.
-           Add the opening hours here once confirmed (and in the JSON-LD above). -->
-      <section id="store-intro" class="store-intro">
-        <span class="author-badge">CAMPUS STORE &amp; CAFÉ</span>
-        <h2 class="store-intro-title">Your convenience store at Shiv Nadar University</h2>
-        <p class="store-intro-text">
-          Grabbo is the in-campus convenience store and café at the Shopping Arcade, Shiv Nadar University, Greater Noida (U.P. 201314).
-          We stock snacks, beverages, coffee, bakery, pantry staples and health essentials, run a heat &amp; eat café,
-          and deliver to student hostels and campus residences.
-        </p>
-        <div class="store-intro-actions">
-          <a href="tel:+919999725000" class="btn-primary">Call +91 9999725000</a>
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=28.5254%2C77.5755" target="_blank" rel="noopener noreferrer" class="btn-primary store-intro-btn-secondary">Get Directions</a>
-          <a href="/products" class="btn-primary store-intro-btn-secondary">Products &amp; Prices</a>
+      <!-- Weather at SNU: food picks for the current campus weather (picks in src/content.js) -->
+      <section id="weather-picks" class="weather-section">
+        <div class="weather-banner">
+          <div class="weather-now">
+            <span class="author-badge">WEATHER AT SNU</span>
+            <div class="weather-reading">
+              <span class="weather-icon" id="weather-icon" aria-hidden="true">🌤️</span>
+              <span class="weather-temp" id="weather-temp">--°C</span>
+            </div>
+            <p class="weather-condition" id="weather-condition">Checking the weather on campus...</p>
+          </div>
+          <div class="weather-picks-body">
+            <h2 class="weather-title" id="weather-title">Today's Picks</h2>
+            <p class="weather-subtitle" id="weather-subtitle"></p>
+            <div class="weather-products" id="weather-products"></div>
+          </div>
         </div>
+        <p class="weather-credit" id="weather-credit">Weather data from <a href="https://www.met.no/en" target="_blank" rel="noopener noreferrer">MET Norway</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>)</p>
       </section>
 
       <!-- Author & Founder Section (The Story) -->
@@ -210,24 +213,21 @@
         <p class="news-disclaimer">Headlines link to the original publishers. Grabbo is not affiliated with these outlets. Tips are general information, not medical advice.</p>
       </section>
 
-      <!-- Weather at SNU: food picks for the current campus weather (picks in src/content.js) -->
-      <section id="weather-picks" class="weather-section">
-        <div class="weather-banner">
-          <div class="weather-now">
-            <span class="author-badge">WEATHER AT SNU</span>
-            <div class="weather-reading">
-              <span class="weather-icon" id="weather-icon" aria-hidden="true">🌤️</span>
-              <span class="weather-temp" id="weather-temp">--°C</span>
-            </div>
-            <p class="weather-condition" id="weather-condition">Checking the weather on campus...</p>
-          </div>
-          <div class="weather-picks-body">
-            <h2 class="weather-title" id="weather-title">Today's Picks</h2>
-            <p class="weather-subtitle" id="weather-subtitle"></p>
-            <div class="weather-products" id="weather-products"></div>
-          </div>
+      <!-- What and where, in plain text for visitors, search engines and AI assistants.
+           Add the opening hours here once confirmed (and in the JSON-LD above). -->
+      <section id="store-intro" class="store-intro">
+        <span class="author-badge">CAMPUS STORE &amp; CAFÉ</span>
+        <h2 class="store-intro-title">Your convenience store at Shiv Nadar University</h2>
+        <p class="store-intro-text">
+          Grabbo is the in-campus convenience store and café at the Shopping Arcade, Shiv Nadar University, Greater Noida (U.P. 201314).
+          We stock snacks, beverages, coffee, bakery, pantry staples and health essentials, run a heat &amp; eat café,
+          and deliver to student hostels and campus residences.
+        </p>
+        <div class="store-intro-actions">
+          <a href="tel:+919999725000" class="btn-primary">Call +91 9999725000</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=28.5254%2C77.5755" target="_blank" rel="noopener noreferrer" class="btn-primary store-intro-btn-secondary">Get Directions</a>
+          <a href="/products" class="btn-primary store-intro-btn-secondary">Products &amp; Prices</a>
         </div>
-        <p class="weather-credit" id="weather-credit">Weather data from <a href="https://www.met.no/en" target="_blank" rel="noopener noreferrer">MET Norway</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>)</p>
       </section>
 
       <!-- Marquee Section -->
