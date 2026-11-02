@@ -254,28 +254,17 @@ textarea,
   visibility: hidden !important;
 }
 
-/* Hero Section: a tall scroll track whose stage stays pinned while scrolling walks the
-   camera through the doors (src/main.js). The last quarter of the track is overlapped by
-   the next section, which rises over the stage and fades in */
+/* Hero Section: one screen tall; the navbar floats over it on the home page */
 .hero {
-  --hero-scroll: 150vh; /* scroll distance the stage stays pinned for */
   position: relative;
-  height: calc(100vh + var(--hero-scroll));
-  margin-bottom: calc(var(--hero-scroll) * -0.25);
+  height: 100vh;
+  height: 100svh;
   text-align: center;
 }
 
-.hero + * {
-  position: relative;
-  z-index: 1;
-}
-
 .hero-stage {
-  position: sticky;
-  top: 0;
-  z-index: 0;
-  height: 100vh;
-  height: 100svh;
+  position: relative;
+  height: 100%;
 }
 
 .hero-copy {
@@ -286,7 +275,6 @@ textarea,
   align-items: center;
   justify-content: center;
   padding: 0 5%;
-  will-change: transform, opacity;
 }
 
 /* Dark ground under the title and button; extends below the stage to the bottom of the
@@ -301,14 +289,13 @@ textarea,
   pointer-events: none;
 }
 
-/* Home: the navbar floats over the pinned hero and fades out with the title */
+/* Home: the navbar floats over the hero and scrolls away with it */
 .content-overlay:has(#home-view.active) > .navbar {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: 20;
-  will-change: transform, opacity;
 }
 
 .hero-content {
@@ -2834,20 +2821,15 @@ a, button, .catalog-card, .btn-primary {
 }
 
 @media (max-width: 768px) {
-  .hero {
-    --hero-scroll: 120svh;
-    height: calc(100svh + var(--hero-scroll));
-  }
-  /* Portrait screens draw the storefront in the upper middle of the canvas (src/main.js),
-     which sets --hero-copy-top to just under its reflection. The cap keeps Explore Now on
-     screen (svh = visible height with browser toolbars shown) */
+  /* Title and button sit at the bottom of the screen (svh = visible height with browser
+     toolbars shown); portrait screens stand the storefront just above them (src/main.js) */
   .hero-copy {
-    justify-content: flex-start;
-    padding: min(var(--hero-copy-top, 58svh), 100svh - 230px) 20px 0;
+    justify-content: flex-end;
+    padding: 0 20px max(44px, calc(env(safe-area-inset-bottom) + 28px));
   }
   .hero-shade {
-    height: 62%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.4) 50%, transparent);
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35) 60%, transparent);
   }
   .hero-brand-title {
     font-size: clamp(2.1rem, 9.5vw, 3.4rem);
@@ -2944,10 +2926,6 @@ a, button, .catalog-card, .btn-primary {
    button follows the text instead of being pinned to the bottom (desktops are taller than 500px) */
 @media (orientation: landscape) and (max-height: 500px) {
   .navbar { padding: 12px 5%; }
-  .hero {
-    --hero-scroll: 120svh;
-    height: calc(100svh + var(--hero-scroll));
-  }
   .hero-brand-title { font-size: clamp(2.2rem, 6vw, 3.4rem); }
   .hero-brand-subtitle { font-size: clamp(1.1rem, 3.2vw, 1.8rem); }
   .explore-btn {
