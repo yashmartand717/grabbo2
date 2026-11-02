@@ -90,12 +90,17 @@ let scrollProgressIndex = 0;
 // Portrait screens show the frame across the screen width (the building fills ~92% of it),
 // then the camera zooms toward the entrance doors until the frame fills the screen
 // (0 = whole storefront, 1 = filled). Landscape screens are always filled.
-const PORTRAIT_CENTER_Y = 0.44; // storefront centre, as a fraction of the screen height
-const DOOR_X = 0.5;             // centre of the glass entrance doors, as fractions of a frame
+let portraitCenterY = 0.5;      // storefront centre, as a fraction of the screen height (see placeStorefront)
+const DOOR_X = 0.5;            // centre of the glass entrance doors, as fractions of a frame
 const DOOR_Y = 0.57;
 let portraitZoom = 0;
 
 const isPortraitCanvas = () => canvasWidth / canvasHeight < 1;
+
+// Width of the frame before zooming: the screen width, enlarged on tall phones (up to 1.25x,
+// trimming the building's outer corners but never the sign or doors) so less sky is left over
+const getPortraitFitWidth = () =>
+  canvasWidth * Math.min(1.25, Math.max(1, canvasHeight / canvasWidth / 1.8));
 
 // Where a frame of the given size is drawn on the canvas
 const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
@@ -117,11 +122,11 @@ const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
 
   // Scale geometrically so the zoom feels like walking at a steady pace, keeping the doors
   // centred horizontally while they glide from their start height to where the filled frame has them
-  const fitWidth = canvasWidth;
+  const fitWidth = getPortraitFitWidth();
   const fitHeight = fitWidth / imgRatio;
   const w = fitWidth * Math.pow(coverWidth / fitWidth, zoom);
   const h = w / imgRatio;
-  const fitDoorY = canvasHeight * PORTRAIT_CENTER_Y + (DOOR_Y - 0.5) * fitHeight;
+  const fitDoorY = canvasHeight * portraitCenterY + (DOOR_Y - 0.5) * fitHeight;
   const coverDoorY = DOOR_Y * coverHeight;
   const doorY = fitDoorY + (coverDoorY - fitDoorY) * zoom;
   return { x: canvasWidth / 2 - DOOR_X * w, y: doorY - DOOR_Y * h, w, h };
@@ -284,20 +289,34 @@ const resizeCanvas = () => {
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = 'high';
 
-  // Portrait screens: start the hero title just under the storefront's reflection (see .hero-copy)
-  const heroEl = document.querySelector('.hero');
-  if (heroEl) {
-    if (isPortraitCanvas()) {
-      const store = getFrameRect(1920, 1080, 0);
-      heroEl.style.setProperty('--hero-copy-top', `${Math.round(store.y + store.h * 0.94)}px`);
-    } else {
-      heroEl.style.removeProperty('--hero-copy-top');
-    }
-  }
-
+  placeStorefront();
   renderFrame(scrollProgressIndex);
   updateStorefrontSignPosition();
 };
+
+// Portrait screens: the hero title and button sit at the bottom of the screen (.hero-copy), so
+// stand the storefront's reflection just above the title. Taller screens get more night sky
+// above it instead of empty ground below the button.
+const NAV_CLEARANCE = 84; // px kept clear for the floating navbar above the storefront
+const placeStorefront = () => {
+  const content = document.querySelector('.hero-content');
+  if (!isPortraitCanvas() || !content || !content.offsetHeight) return;
+  const frameHeight = getPortraitFitWidth() * 1080 / 1920;
+  // offsetTop is measured in the pinned stage, which starts at the top of the screen like the canvas
+  const reflectionY = content.offsetTop - 6;
+  const centerY = Math.max(reflectionY - frameHeight * 0.44, NAV_CLEARANCE + frameHeight / 2);
+  portraitCenterY = centerY / canvasHeight;
+};
+
+// The title's height changes once its web fonts load
+if (document.fonts) {
+  document.fonts.ready.then(() => {
+    if (!canvasSized) return;
+    placeStorefront();
+    renderFrame(scrollProgressIndex);
+    updateStorefrontSignPosition();
+  });
+}
 
 window.addEventListener('resize', resizeCanvas);
 
