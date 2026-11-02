@@ -96,10 +96,8 @@ const isPortraitCanvas = () => canvasWidth / canvasHeight < 1;
 
 // Width of the frame before zooming: the screen width, enlarged on tall phones (up to 1.25x,
 // trimming the building's outer corners but never the sign or doors) so less sky is left over
-// The building (its middle ~62%, from the left to the right edge of the glass front) fills the
-// screen width; the sides of the frame are cropped
-const PORTRAIT_STORE_WIDTH = 0.62;
-const getPortraitFitWidth = () => canvasWidth / PORTRAIT_STORE_WIDTH;
+// The whole frame, with the full building, spans the screen width
+const getPortraitFitWidth = () => canvasWidth;
 
 // Where a frame of the given size is drawn on the canvas
 const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
@@ -291,8 +289,9 @@ const resizeCanvas = () => {
 
 // Portrait screens: the storefront stands at the bottom of the screen with the frame's
 // pavement running to the bottom edge (no empty ground below it), and the hero title and
-// button sit in the night sky just above the storefront's sign (see .hero-copy)
+// button sit in the night sky, midway between the navbar and the storefront's sign (see .hero-copy)
 const STORE_TOP = 0.14; // top of the storefront's sign, as a fraction of the frame height
+const NAV_BOTTOM = 84;  // px, bottom of the floating navbar
 const placeStorefront = () => {
   const hero = document.querySelector('.hero');
   if (!hero) return;
@@ -304,7 +303,12 @@ const placeStorefront = () => {
   portraitCenterY = (canvasHeight - frameHeight / 2) / canvasHeight;
   // The hero is the visible height (svh) and the canvas the large one (lvh); both start at the top
   const storeTop = canvasHeight - frameHeight * (1 - STORE_TOP);
-  const gap = 20;
+  const title = document.querySelector('.hero-content');
+  const button = document.querySelector('.hero .explore-btn');
+  const copyHeight = title && button
+    ? button.getBoundingClientRect().bottom - title.getBoundingClientRect().top
+    : 200;
+  const gap = Math.max(20, (storeTop - NAV_BOTTOM - copyHeight) / 2);
   hero.style.setProperty('--hero-copy-bottom', `${Math.round(hero.offsetHeight - storeTop + gap)}px`);
 };
 
