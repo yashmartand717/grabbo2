@@ -254,19 +254,61 @@ textarea,
   visibility: hidden !important;
 }
 
-/* Hero Section */
+/* Hero Section: a tall scroll track whose stage stays pinned while scrolling walks the
+   camera through the doors (src/main.js). The last quarter of the track is overlapped by
+   the next section, which rises over the stage and fades in */
 .hero {
+  --hero-scroll: 150vh; /* scroll distance the stage stays pinned for */
   position: relative;
+  height: calc(100vh + var(--hero-scroll));
+  margin-bottom: calc(var(--hero-scroll) * -0.25);
+  text-align: center;
+}
+
+.hero + * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100vh;
+  height: 100svh;
+}
+
+.hero-copy {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 100px);
-  min-height: calc(100svh - 100px);
   padding: 0 5%;
-  text-align: center;
-  max-width: 1400px;
-  margin: 0 auto;
+  will-change: transform, opacity;
+}
+
+/* Dark ground under the title and button; extends below the stage to the bottom of the
+   screen while mobile toolbars are hidden (stage = small viewport, canvas = large) */
+.hero-shade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100svh - 100lvh);
+  height: 45%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25) 45%, transparent);
+  pointer-events: none;
+}
+
+/* Home: the navbar floats over the pinned hero and fades out with the title */
+.content-overlay:has(#home-view.active) > .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  will-change: transform, opacity;
 }
 
 .hero-content {
@@ -1507,11 +1549,6 @@ footer.site-footer {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .hero {
-    min-height: 100vh;
-    padding: 0 5% 95px;
-    justify-content: flex-end;
-  }
   .hero-title { font-size: 3rem; }
   .hero-subtitle {
     font-size: 1.25rem;
@@ -2798,13 +2835,19 @@ a, button, .catalog-card, .btn-primary {
 
 @media (max-width: 768px) {
   .hero {
-    /* svh = visible height with browser toolbars shown, so Explore Now stays on screen.
-       56px = compact navbar. The storefront is drawn in the upper half of the canvas on
-       portrait screens (src/main.js), so the title and button sit below it, over the parking lot */
-    min-height: calc(100vh - 56px);
-    min-height: calc(100svh - 56px);
-    padding: 0 20px 28px;
-    justify-content: flex-end;
+    --hero-scroll: 120svh;
+    height: calc(100svh + var(--hero-scroll));
+  }
+  /* Portrait screens draw the storefront in the upper middle of the canvas (src/main.js),
+     which sets --hero-copy-top to just under its reflection. The cap keeps Explore Now on
+     screen (svh = visible height with browser toolbars shown) */
+  .hero-copy {
+    justify-content: flex-start;
+    padding: min(var(--hero-copy-top, 58svh), 100svh - 230px) 20px 0;
+  }
+  .hero-shade {
+    height: 62%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.4) 50%, transparent);
   }
   .hero-brand-title {
     font-size: clamp(2.1rem, 9.5vw, 3.4rem);
@@ -2868,9 +2911,32 @@ a, button, .catalog-card, .btn-primary {
   border: 0;
 }
 
-/* Very narrow phones: logo icon only, so the navbar stays on one row */
-@media (max-width: 380px) {
+/* Phones: the navbar is a compact floating pill */
+@media (max-width: 640px) {
+  .navbar {
+    margin: 10px 12px 0;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: rgba(2, 6, 23, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .content-overlay:has(#home-view.active) > .navbar {
+    top: 10px;
+    margin-top: 0;
+  }
+  .nav-links { gap: 18px; }
+  .nav-links a.btn-primary { width: 34px; height: 34px; }
+}
+
+/* Most phones: logo icon only (it carries the GRABBO mark), so the links get breathing room */
+@media (max-width: 430px) {
   .logo-wrapper .logo { display: none !important; }
+  .nav-links { gap: 16px; }
+}
+
+@media (max-width: 360px) {
   .nav-links { gap: 12px; }
 }
 
@@ -2879,9 +2945,8 @@ a, button, .catalog-card, .btn-primary {
 @media (orientation: landscape) and (max-height: 500px) {
   .navbar { padding: 12px 5%; }
   .hero {
-    min-height: calc(100vh - 64px);
-    min-height: calc(100svh - 64px);
-    justify-content: center;
+    --hero-scroll: 120svh;
+    height: calc(100svh + var(--hero-scroll));
   }
   .hero-brand-title { font-size: clamp(2.2rem, 6vw, 3.4rem); }
   .hero-brand-subtitle { font-size: clamp(1.1rem, 3.2vw, 1.8rem); }

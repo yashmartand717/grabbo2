@@ -124,12 +124,18 @@
         <!-- Storefront Sign Hotspot (Clicks open About section) -->
         <button id="storefront-sign-btn" class="storefront-sign-hotspot" aria-label="About Grabbo - Storefront Sign"></button>
 
+        <!-- Tall scroll track; the stage stays pinned while scrolling walks the camera through the doors (src/main.js) -->
         <header class="hero">
-          <div class="hero-content">
-            <h1 class="hero-brand-title">GRABBO<span class="visually-hidden"> – Convenience Store &amp; Café at Shiv Nadar University</span></h1>
-            <p class="hero-brand-subtitle">Everyday Essentials</p>
+          <div class="hero-stage">
+            <div class="hero-shade" aria-hidden="true"></div>
+            <div class="hero-copy">
+              <div class="hero-content">
+                <h1 class="hero-brand-title">GRABBO<span class="visually-hidden"> – Convenience Store &amp; Café at Shiv Nadar University</span></h1>
+                <p class="hero-brand-subtitle">Everyday Essentials</p>
+              </div>
+              <button class="btn-large explore-btn">Explore Now</button>
+            </div>
           </div>
-          <button class="btn-large explore-btn">Explore Now</button>
         </header>
 
       <!-- Weather at SNU: food picks for the current campus weather (picks in src/content.js) -->
