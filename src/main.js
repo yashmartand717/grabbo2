@@ -126,8 +126,8 @@ const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
   return { x: (canvasWidth - w) / 2, y: fitY + (coverY - fitY) * t, w, h };
 };
 
-// Average colour of a horizontal strip of a frame, used to extend the sky and the
-// parking lot above and below the storefront on portrait screens
+// Average colour of the top strip of a frame, used to extend the sky above the
+// storefront on portrait screens
 const edgeSampler = document.createElement('canvas');
 edgeSampler.width = 16;
 edgeSampler.height = 4;
@@ -152,16 +152,17 @@ const getEdgeColors = (index) => {
     return sum.map(value => Math.round(value / pixels)).join(', ');
   };
   const colors = {
-    top: average(0, img.height * 0.03),
-    bottom: average(img.height * 0.94, img.height * 0.06)
+    top: average(0, img.height * 0.03)
   };
   edgeColorCache.set(index, colors);
   return colors;
 };
 
 // Fills the canvas above and below the frame with its edge colours, fading into the frame
+const PORTRAIT_GROUND = '8, 10, 14';
+
 const drawPortraitSurround = (index, rect) => {
-  const { top, bottom } = getEdgeColors(index);
+  const { top } = getEdgeColors(index);
   const frameBottom = rect.y + rect.h;
 
   if (rect.y > 0) {
@@ -180,20 +181,18 @@ const drawPortraitSurround = (index, rect) => {
     context.fillRect(0, 0, canvasWidth, Math.ceil(rect.y));
   }
 
+  // Below the frame: clean night ground. The pavement's own colour is a muddy brown (it
+  // reflects the shop lights), so the frame's edge fades into near-black instead
   if (frameBottom < canvasHeight) {
-    context.fillStyle = `rgb(${bottom})`;
+    context.fillStyle = `rgb(${PORTRAIT_GROUND})`;
     context.fillRect(0, Math.floor(frameBottom), canvasWidth, canvasHeight - Math.floor(frameBottom));
-    const fade = context.createLinearGradient(0, frameBottom - rect.h * 0.15, 0, frameBottom);
-    fade.addColorStop(0, `rgba(${bottom}, 0)`);
-    fade.addColorStop(1, `rgba(${bottom}, 1)`);
+    // A thin fade, so the frame's edge doesn't show as a line without smearing the pavement
+    const fadeHeight = rect.h * 0.06;
+    const fade = context.createLinearGradient(0, frameBottom - fadeHeight, 0, frameBottom);
+    fade.addColorStop(0, `rgba(${PORTRAIT_GROUND}, 0)`);
+    fade.addColorStop(1, `rgba(${PORTRAIT_GROUND}, 1)`);
     context.fillStyle = fade;
-    context.fillRect(0, frameBottom - rect.h * 0.15, canvasWidth, rect.h * 0.15);
-    // Let the extended ground fall off into darkness instead of a flat slab of pavement
-    const dusk = context.createLinearGradient(0, frameBottom, 0, canvasHeight);
-    dusk.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    dusk.addColorStop(1, 'rgba(0, 0, 0, 0.75)');
-    context.fillStyle = dusk;
-    context.fillRect(0, Math.floor(frameBottom), canvasWidth, canvasHeight - Math.floor(frameBottom));
+    context.fillRect(0, frameBottom - fadeHeight, canvasWidth, fadeHeight);
   }
 };
 
