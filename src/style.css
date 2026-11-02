@@ -2821,15 +2821,15 @@ a, button, .catalog-card, .btn-primary {
 }
 
 @media (max-width: 768px) {
-  /* Title and button sit at the bottom of the screen (svh = visible height with browser
-     toolbars shown); portrait screens stand the storefront just above them (src/main.js) */
+  /* Portrait screens draw the storefront at the bottom of the screen and set
+     --hero-copy-bottom so the title and button sit in the sky just above it (src/main.js) */
   .hero-copy {
     justify-content: flex-end;
-    padding: 0 20px max(44px, calc(env(safe-area-inset-bottom) + 28px));
+    padding: 0 20px var(--hero-copy-bottom, max(44px, calc(env(safe-area-inset-bottom) + 28px)));
   }
+  /* The title sits over the night sky, which needs no darkening; it would dim the storefront */
   .hero-shade {
-    height: 45%;
-    background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.7) 25%, rgba(0, 0, 0, 0.35) 65%, transparent);
+    display: none;
   }
   .hero-brand-title {
     font-size: clamp(2.1rem, 9.5vw, 3.4rem);

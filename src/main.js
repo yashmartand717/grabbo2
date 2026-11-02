@@ -96,8 +96,10 @@ const isPortraitCanvas = () => canvasWidth / canvasHeight < 1;
 
 // Width of the frame before zooming: the screen width, enlarged on tall phones (up to 1.25x,
 // trimming the building's outer corners but never the sign or doors) so less sky is left over
-const getPortraitFitWidth = () =>
-  canvasWidth * Math.min(1.25, Math.max(1, canvasHeight / canvasWidth / 1.8));
+// The building (its middle ~62%, from the left to the right edge of the glass front) fills the
+// screen width; the sides of the frame are cropped
+const PORTRAIT_STORE_WIDTH = 0.62;
+const getPortraitFitWidth = () => canvasWidth / PORTRAIT_STORE_WIDTH;
 
 // Where a frame of the given size is drawn on the canvas
 const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
@@ -287,18 +289,23 @@ const resizeCanvas = () => {
   updateStorefrontSignPosition();
 };
 
-// Portrait screens: the hero title and button sit at the bottom of the screen (.hero-copy), so
-// stand the storefront's reflection just above the title. Taller screens get more night sky
-// above it instead of empty ground below the button.
-const NAV_CLEARANCE = 84; // px kept clear for the floating navbar above the storefront
+// Portrait screens: the storefront stands at the bottom of the screen with the frame's
+// pavement running to the bottom edge (no empty ground below it), and the hero title and
+// button sit in the night sky just above the storefront's sign (see .hero-copy)
+const STORE_TOP = 0.14; // top of the storefront's sign, as a fraction of the frame height
 const placeStorefront = () => {
-  const content = document.querySelector('.hero-content');
-  if (!isPortraitCanvas() || !content || !content.offsetHeight) return;
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  if (!isPortraitCanvas()) {
+    hero.style.removeProperty('--hero-copy-bottom');
+    return;
+  }
   const frameHeight = getPortraitFitWidth() * 1080 / 1920;
-  // offsetTop is measured in the hero, which starts at the top of the page like the canvas
-  const reflectionY = content.offsetTop - 6;
-  const centerY = Math.max(reflectionY - frameHeight * 0.44, NAV_CLEARANCE + frameHeight / 2);
-  portraitCenterY = centerY / canvasHeight;
+  portraitCenterY = (canvasHeight - frameHeight / 2) / canvasHeight;
+  // The hero is the visible height (svh) and the canvas the large one (lvh); both start at the top
+  const storeTop = canvasHeight - frameHeight * (1 - STORE_TOP);
+  const gap = 20;
+  hero.style.setProperty('--hero-copy-bottom', `${Math.round(hero.offsetHeight - storeTop + gap)}px`);
 };
 
 // The title's height changes once its web fonts load
