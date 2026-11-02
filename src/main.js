@@ -186,11 +186,13 @@ const drawPortraitSurround = (index, rect) => {
   if (frameBottom < canvasHeight) {
     context.fillStyle = `rgb(${PORTRAIT_GROUND})`;
     context.fillRect(0, Math.floor(frameBottom), canvasWidth, canvasHeight - Math.floor(frameBottom));
-    const fade = context.createLinearGradient(0, frameBottom - rect.h * 0.15, 0, frameBottom);
+    // A thin fade, so the frame's edge doesn't show as a line without smearing the pavement
+    const fadeHeight = rect.h * 0.06;
+    const fade = context.createLinearGradient(0, frameBottom - fadeHeight, 0, frameBottom);
     fade.addColorStop(0, `rgba(${PORTRAIT_GROUND}, 0)`);
     fade.addColorStop(1, `rgba(${PORTRAIT_GROUND}, 1)`);
     context.fillStyle = fade;
-    context.fillRect(0, frameBottom - rect.h * 0.15, canvasWidth, rect.h * 0.15);
+    context.fillRect(0, frameBottom - fadeHeight, canvasWidth, fadeHeight);
   }
 };
 
