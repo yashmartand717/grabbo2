@@ -277,15 +277,15 @@ textarea,
   padding: 0 5%;
 }
 
-/* Dark ground under the title and button; extends below the stage to the bottom of the
-   screen while mobile toolbars are hidden (stage = small viewport, canvas = large) */
+/* Darkens the ground behind the title and button so they stay readable */
 .hero-shade {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(100svh - 100lvh);
+  bottom: 0;
   height: 45%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25) 45%, transparent);
+  /* Fades out at the bottom too, so no edge shows where the hero ends as it scrolls away */
+  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.45) 22%, rgba(0, 0, 0, 0.2) 60%, transparent);
   pointer-events: none;
 }
 
@@ -2828,8 +2828,8 @@ a, button, .catalog-card, .btn-primary {
     padding: 0 20px max(44px, calc(env(safe-area-inset-bottom) + 28px));
   }
   .hero-shade {
-    height: 40%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35) 60%, transparent);
+    height: 45%;
+    background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.7) 25%, rgba(0, 0, 0, 0.35) 65%, transparent);
   }
   .hero-brand-title {
     font-size: clamp(2.1rem, 9.5vw, 3.4rem);
