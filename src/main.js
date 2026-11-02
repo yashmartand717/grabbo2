@@ -87,16 +87,18 @@ let canvasWidth = window.innerWidth;
 let canvasHeight = window.innerHeight;
 let scrollProgressIndex = 0;
 
-// Portrait screens show the whole storefront across the screen width, then zoom in to
-// fill the screen over the first screen of scrolling (0 = whole storefront, 1 = filled)
-const PORTRAIT_SIDE_CROP = 0.03; // empty margin left and right of the building, per side
-const PORTRAIT_CENTER_Y = 0.45;  // storefront centre, as a fraction of the screen height
+// Portrait screens show the frame across the screen width (the building fills ~92% of it),
+// then the camera zooms toward the entrance doors until the frame fills the screen
+// (0 = whole storefront, 1 = filled). Landscape screens are always filled.
+const PORTRAIT_CENTER_Y = 0.44; // storefront centre, as a fraction of the screen height
+const DOOR_X = 0.5;             // centre of the glass entrance doors, as fractions of a frame
+const DOOR_Y = 0.57;
 let portraitZoom = 0;
 
 const isPortraitCanvas = () => canvasWidth / canvasHeight < 1;
 
 // Where a frame of the given size is drawn on the canvas
-const getFrameRect = (imgWidth, imgHeight) => {
+const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
   const imgRatio = imgWidth / imgHeight;
   const canvasRatio = canvasWidth / canvasHeight;
 
@@ -113,13 +115,16 @@ const getFrameRect = (imgWidth, imgHeight) => {
     return { x: (canvasWidth - coverWidth) / 2, y: (canvasHeight - coverHeight) / 2, w: coverWidth, h: coverHeight };
   }
 
-  const fitWidth = canvasWidth / (1 - 2 * PORTRAIT_SIDE_CROP);
-  const t = portraitZoom * portraitZoom * (3 - 2 * portraitZoom); // smoothstep
-  const w = fitWidth + (coverWidth - fitWidth) * t;
+  // Scale geometrically so the zoom feels like walking at a steady pace, keeping the doors
+  // centred horizontally while they glide from their start height to where the filled frame has them
+  const fitWidth = canvasWidth;
+  const fitHeight = fitWidth / imgRatio;
+  const w = fitWidth * Math.pow(coverWidth / fitWidth, zoom);
   const h = w / imgRatio;
-  const fitY = canvasHeight * PORTRAIT_CENTER_Y - h / 2;
-  const coverY = (canvasHeight - h) / 2;
-  return { x: (canvasWidth - w) / 2, y: fitY + (coverY - fitY) * t, w, h };
+  const fitDoorY = canvasHeight * PORTRAIT_CENTER_Y + (DOOR_Y - 0.5) * fitHeight;
+  const coverDoorY = DOOR_Y * coverHeight;
+  const doorY = fitDoorY + (coverDoorY - fitDoorY) * zoom;
+  return { x: canvasWidth / 2 - DOOR_X * w, y: doorY - DOOR_Y * h, w, h };
 };
 
 // Average colour of a horizontal strip of a frame, used to extend the sky and the
@@ -168,6 +173,12 @@ const drawPortraitSurround = (index, rect) => {
     fade.addColorStop(1, `rgba(${top}, 0)`);
     context.fillStyle = fade;
     context.fillRect(0, rect.y, canvasWidth, rect.h * 0.12);
+    // Deepen the extended sky toward the top of the screen, like a night sky
+    const night = context.createLinearGradient(0, 0, 0, rect.y);
+    night.addColorStop(0, 'rgba(0, 0, 0, 0.6)');
+    night.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    context.fillStyle = night;
+    context.fillRect(0, 0, canvasWidth, Math.ceil(rect.y));
   }
 
   if (frameBottom < canvasHeight) {
@@ -178,6 +189,12 @@ const drawPortraitSurround = (index, rect) => {
     fade.addColorStop(1, `rgba(${bottom}, 1)`);
     context.fillStyle = fade;
     context.fillRect(0, frameBottom - rect.h * 0.15, canvasWidth, rect.h * 0.15);
+    // Let the extended ground fall off into darkness instead of a flat slab of pavement
+    const dusk = context.createLinearGradient(0, frameBottom, 0, canvasHeight);
+    dusk.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    dusk.addColorStop(1, 'rgba(0, 0, 0, 0.75)');
+    context.fillStyle = dusk;
+    context.fillRect(0, Math.floor(frameBottom), canvasWidth, canvasHeight - Math.floor(frameBottom));
   }
 };
 
@@ -266,7 +283,18 @@ const resizeCanvas = () => {
   context.scale(dpr, dpr);
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = 'high';
-  
+
+  // Portrait screens: start the hero title just under the storefront's reflection (see .hero-copy)
+  const heroEl = document.querySelector('.hero');
+  if (heroEl) {
+    if (isPortraitCanvas()) {
+      const store = getFrameRect(1920, 1080, 0);
+      heroEl.style.setProperty('--hero-copy-top', `${Math.round(store.y + store.h * 0.94)}px`);
+    } else {
+      heroEl.style.removeProperty('--hero-copy-top');
+    }
+  }
+
   renderFrame(scrollProgressIndex);
   updateStorefrontSignPosition();
 };
@@ -287,37 +315,112 @@ window.addEventListener('scroll', () => {
   preloadRemainingFrames();
 }, { once: true, passive: true });
 
-// Listen to scroll to update frame
-window.addEventListener('scroll', () => {
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  // Calculate max scroll for the page
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  
-  let scrollFraction = maxScroll > 0 ? scrollTop / maxScroll : 0;
-  if (scrollFraction > 1) scrollFraction = 1;
-  if (scrollFraction < 0) scrollFraction = 0;
-  
-  const frameIndex = Math.min(
-    frameCount - 1,
-    Math.floor(scrollFraction * frameCount)
-  );
-  
-  // Dim background canvas dynamically on scroll
-  const brightness = 1 - (scrollFraction * 0.8);
-  canvas.style.opacity = brightness;
+// --- Hero "Enter the Store" scroll choreography ---
+// On the home page the hero is a tall scroll track with a pinned stage (.hero-stage). Its
+// progress p (0 -> 1) plays the footage up to the camera passing the doors, in three stages:
+//   0.00-0.35  title, button and navbar fade out and glide down
+//   0.15-0.85  portrait screens zoom toward the doors (landscape footage already fills the screen)
+//   0.75-1.00  the next section rises over the stage and fades in as the camera passes the doors
+// The rest of the footage (the walk through the interior) plays over the rest of the page.
+const DOOR_PASSED = 104 / 150; // fraction of the footage where the camera is through the doors
+const heroTrack = document.querySelector('.hero');
+const heroCopy = document.querySelector('.hero-copy');
+const heroShade = document.querySelector('.hero-shade');
+const heroNext = heroTrack && heroTrack.nextElementSibling;
+const navbar = document.querySelector('.navbar');
+let navIntroDone = false; // the navbar's intro animation owns its styles until it finishes
 
-  
-  // Portrait screens: zoom from the whole storefront to full screen over the first screen of scrolling
-  const zoom = Math.min(1, scrollTop / canvasHeight);
+const clamp01 = value => Math.min(1, Math.max(0, value));
+const stage = (p, start, end) => clamp01((p - start) / (end - start));
+const smoothstep = t => t * t * (3 - 2 * t);
+
+const applyScroll = (scrollTop) => {
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const home = document.getElementById('home-view');
+  const onHome = heroTrack && home && home.classList.contains('active') && heroTrack.offsetHeight > 0;
+
+  let footage, zoom, dim;
+  if (onHome) {
+    const heroTop = heroTrack.getBoundingClientRect().top + scrollTop;
+    const heroScroll = heroTrack.offsetHeight - heroCopy.parentElement.offsetHeight;
+    const heroEnd = heroTop + heroScroll;
+    const p = heroScroll > 0 ? clamp01((scrollTop - heroTop) / heroScroll) : 1;
+    const rest = maxScroll > heroEnd ? clamp01((scrollTop - heroEnd) / (maxScroll - heroEnd)) : 1;
+
+    footage = p < 1 ? DOOR_PASSED * stage(p, 0.1, 1) : DOOR_PASSED + (1 - DOOR_PASSED) * rest;
+    zoom = smoothstep(stage(p, 0.15, 0.85));
+    dim = rest;
+
+    const exit = smoothstep(stage(p, 0, 0.35));
+    heroCopy.style.opacity = 1 - exit;
+    heroCopy.style.transform = `translate3d(0, ${(exit * 30).toFixed(2)}px, 0)`;
+    heroCopy.style.visibility = exit >= 1 ? 'hidden' : '';
+    heroShade.style.opacity = 1 - exit;
+    if (heroNext) heroNext.style.opacity = smoothstep(stage(p, 0.75, 1));
+    if (navbar && navIntroDone) {
+      navbar.style.opacity = 1 - exit;
+      navbar.style.transform = `translate3d(0, ${(exit * -16).toFixed(2)}px, 0)`;
+      navbar.style.visibility = exit >= 1 ? 'hidden' : '';
+    }
+  } else {
+    // Other views: footage and dimming follow the whole page, the zoom the first screen
+    footage = maxScroll > 0 ? clamp01(scrollTop / maxScroll) : 0;
+    zoom = smoothstep(Math.min(1, scrollTop / canvasHeight));
+    dim = footage;
+    if (navbar && navIntroDone) {
+      navbar.style.opacity = '';
+      navbar.style.transform = '';
+      navbar.style.visibility = '';
+    }
+  }
+
+  canvas.style.opacity = 1 - dim * 0.8;
+
+  const frameIndex = Math.min(frameCount - 1, Math.round(footage * (frameCount - 1)));
   const zoomChanged = isPortraitCanvas() && zoom !== portraitZoom;
   portraitZoom = zoom;
-
   if (scrollProgressIndex !== frameIndex || zoomChanged) {
     scrollProgressIndex = frameIndex;
-    requestAnimationFrame(() => renderFrame(scrollProgressIndex));
+    // Before the first frame arrives, resizeCanvas draws this position once it does
+    if (canvasSized) renderFrame(scrollProgressIndex);
   }
   updateStorefrontSignPosition();
-});
+};
+
+// The animation eases toward the scroll position each frame (frame-rate independent), so
+// touch flings and coarse wheel steps glide instead of jumping between frames
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const SCROLL_SMOOTHING = 0.1; // seconds to cover ~63% of the remaining distance
+let smoothScrollTop = window.scrollY;
+let lastTick = 0;
+let scrollRaf = 0;
+
+const tickScroll = (now) => {
+  const target = window.scrollY;
+  const dt = lastTick ? Math.min(0.05, (now - lastTick) / 1000) : 1 / 60;
+  lastTick = now;
+  const ease = reduceMotion.matches ? 1 : 1 - Math.exp(-dt / SCROLL_SMOOTHING);
+  smoothScrollTop += (target - smoothScrollTop) * ease;
+  // Jumps (view changes, scrollTo(0, 0)) snap, so the footage doesn't rewind through every frame
+  if (Math.abs(target - smoothScrollTop) < 0.5 || Math.abs(target - smoothScrollTop) > window.innerHeight * 1.5) {
+    smoothScrollTop = target;
+  }
+  applyScroll(smoothScrollTop);
+  if (smoothScrollTop !== target) {
+    scrollRaf = requestAnimationFrame(tickScroll);
+  } else {
+    scrollRaf = 0;
+    lastTick = 0;
+  }
+};
+
+const requestScrollUpdate = () => {
+  if (!scrollRaf) scrollRaf = requestAnimationFrame(tickScroll);
+};
+
+window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+window.addEventListener('resize', requestScrollUpdate);
+requestScrollUpdate();
 
 
 // --- Page Load Animations (Anime.js) ---
@@ -327,6 +430,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   anime.timeline({
     easing: 'easeOutExpo',
+    complete: () => {
+      navIntroDone = true;
+      requestScrollUpdate();
+    }
   })
   .add({
     targets: '.navbar',
