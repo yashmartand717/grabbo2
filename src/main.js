@@ -300,9 +300,12 @@ const placeStorefront = () => {
     return;
   }
   const frameHeight = getPortraitFitWidth() * 1080 / 1920;
-  portraitCenterY = (canvasHeight - frameHeight / 2) / canvasHeight;
-  // The hero is the visible height (svh) and the canvas the large one (lvh); both start at the top
-  const storeTop = canvasHeight - frameHeight * (1 - STORE_TOP);
+  // Stand the frame on the bottom of the hero, which is the height visible with the browser's
+  // toolbars shown (svh). The canvas is the larger height with them hidden (lvh), so its bottom
+  // edge is off screen while the toolbars show. Both start at the top of the page.
+  const frameBottom = Math.min(canvasHeight, hero.offsetHeight);
+  portraitCenterY = (frameBottom - frameHeight / 2) / canvasHeight;
+  const storeTop = frameBottom - frameHeight * (1 - STORE_TOP);
   const title = document.querySelector('.hero-content');
   const button = document.querySelector('.hero .explore-btn');
   const copyHeight = title && button
