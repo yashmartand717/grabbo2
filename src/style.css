@@ -2838,16 +2838,15 @@ a, button, .catalog-card, .btn-primary {
     --hero-scroll: 120svh;
     height: calc(100svh + var(--hero-scroll));
   }
-  /* Portrait screens draw the storefront in the upper middle of the canvas (src/main.js),
-     which sets --hero-copy-top to just under its reflection. The cap keeps Explore Now on
-     screen (svh = visible height with browser toolbars shown) */
+  /* Title and button sit at the bottom of the screen (svh = visible height with browser
+     toolbars shown); portrait screens stand the storefront just above them (src/main.js) */
   .hero-copy {
-    justify-content: flex-start;
-    padding: min(var(--hero-copy-top, 58svh), 100svh - 230px) 20px 0;
+    justify-content: flex-end;
+    padding: 0 20px max(44px, calc(env(safe-area-inset-bottom) + 28px));
   }
   .hero-shade {
-    height: 62%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.4) 50%, transparent);
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35) 60%, transparent);
   }
   .hero-brand-title {
     font-size: clamp(2.1rem, 9.5vw, 3.4rem);
