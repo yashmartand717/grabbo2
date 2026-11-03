@@ -1464,41 +1464,6 @@ footer.site-footer {
   max-width: 320px;
 }
 
-.footer-subscribe-form {
-  max-width: 360px;
-}
-
-.footer-input-row {
-  display: flex;
-  align-items: center;
-  position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-  padding-bottom: 6px;
-  transition: border-color 0.3s ease;
-}
-
-.footer-input-row:focus-within {
-  border-bottom-color: var(--primary);
-}
-
-.footer-email-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  width: 100%;
-  padding-right: 12px;
-}
-@media (hover: none) and (pointer: coarse) {
-  .footer-email-input { font-size: 16px; }
-}
-
-.footer-email-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
 .footer-join-btn {
   background: none;
   border: none;
@@ -1512,6 +1477,8 @@ footer.site-footer {
   padding: 4px 6px 4px 10px;
   border-bottom: 2px solid var(--primary);
   transition: all 0.3s ease;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .footer-join-btn:hover {
@@ -3019,10 +2986,14 @@ a, button, .catalog-card, .btn-primary {
   border: 0;
 }
 
-/* Very narrow phones: logo icon only, so the navbar stays on one row */
-@media (max-width: 380px) {
+/* Narrow phones: logo icon only, so the navbar (4 links + Instagram) stays on one row */
+@media (max-width: 440px) {
   .logo-wrapper .logo { display: none !important; }
   .nav-links { gap: 12px; }
+}
+@media (max-width: 340px) {
+  .nav-links { gap: 9px; }
+  .nav-links a { font-size: 0.8rem; }
 }
 
 /* Phones held sideways: the desktop hero is too tall for ~400px of height, so the
@@ -3094,6 +3065,112 @@ a, button, .catalog-card, .btn-primary {
   box-shadow: none;
 }
 
+/* --- Queries & Collaboration (form opens a pre-filled email) --- */
+.query-section {
+  max-width: 820px;
+  margin: 0 auto 70px;
+  padding: 36px 6%;
+  text-align: center;
+  background: rgba(18, 17, 16, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  scroll-margin-top: 90px;
+}
+@media (max-width: 900px) {
+  .query-section { margin: 0 16px 50px; padding: 30px 20px; }
+}
+.query-intro-text {
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 26px;
+}
+.query-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+.query-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .query-row { grid-template-columns: 1fr; }
+}
+.query-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.query-field span {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.query-field input,
+.query-field select,
+.query-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.query-field textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+.query-field select option {
+  background: var(--bg-dark);
+  color: #fff;
+}
+.query-field input::placeholder,
+.query-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.query-field input:focus,
+.query-field select:focus,
+.query-field textarea:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+@media (hover: none) and (pointer: coarse) {
+  .query-field input, .query-field select, .query-field textarea { font-size: 16px; }
+}
+.query-submit {
+  align-self: center;
+  min-height: 44px;
+  margin-top: 6px;
+  border: none;
+  cursor: pointer;
+}
+.query-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+}
+.query-status {
+  min-height: 1.4em;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+.query-status[data-state="success"] { color: var(--primary); }
+.query-status[data-state="error"] { color: #ff8a80; }
+
 /* Hero poster: the first frame shows while the frame sequence script loads.
    Same placement as getFrameRect() in src/main.js before any scrolling. */
 #bg-canvas {
@@ -3124,6 +3201,8 @@ a, button, .catalog-card, .btn-primary {
     height: 44px;
   }
   .footer-join-btn {
+    display: inline-flex;
+    align-items: center;
     min-height: 44px;
   }
 }
@@ -3157,8 +3236,7 @@ a, button, .catalog-card, .btn-primary {
 @media (max-width: 900px) {
   .explore-btn,
   .small-btn,
-  .tab-btn,
-  .footer-email-input {
+  .tab-btn {
     min-height: 44px;
   }
   .weather-credit a,

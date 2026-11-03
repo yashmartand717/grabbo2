@@ -114,6 +114,7 @@
           <a href="/story" class="nav-story-link">Story</a>
           <a href="/products">Products</a>
           <a href="/events">Events</a>
+          <a href="/#queries" class="nav-query-link">Query</a>
           <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="btn-primary nav-follow-btn" aria-label="Follow Grabbo on Instagram" style="display: inline-flex; align-items: center; gap: 6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg><span class="nav-follow-label">Follow Us</span></a>
         </div>
       </nav>
@@ -229,6 +230,51 @@
         </div>
       </section>
 
+      <!-- Queries & Collaboration: sent with EmailJS, or a pre-filled email if it isn't configured (see src/main.js) -->
+      <section id="queries" class="query-section" aria-labelledby="query-title">
+        <span class="author-badge">QUERIES &amp; COLLABORATION</span>
+        <h2 class="store-intro-title" id="query-title">Got a question or an idea? Let's talk.</h2>
+        <p class="query-intro-text">
+          Ask about products, orders or hostel delivery, pitch a collaboration, event or sponsorship, or join our mailing list
+          for exclusive releases. Fill this in and it comes straight to our inbox.
+        </p>
+        <form class="query-form" id="query-form" action="#">
+          <div class="query-row">
+            <label class="query-field">
+              <span>Name</span>
+              <input type="text" name="name" required autocomplete="name" placeholder="Your name">
+            </label>
+            <label class="query-field">
+              <span>Email</span>
+              <input type="email" name="email" required autocomplete="email" placeholder="you@snu.edu.in">
+            </label>
+          </div>
+          <div class="query-row">
+          <label class="query-field">
+            <span>Phone (optional)</span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" title="Digits, spaces, +, - and brackets only" placeholder="+91 98765 43210">
+          </label>
+          <label class="query-field">
+            <span>Topic</span>
+            <select name="topic" id="query-topic">
+              <option value="General query">General query</option>
+              <option value="Order / delivery">Order or hostel delivery</option>
+              <option value="Product request">Product request</option>
+              <option value="Collaboration">Collaboration or partnership</option>
+              <option value="Event / sponsorship">Event or sponsorship</option>
+              <option value="Mailing list">Join the mailing list</option>
+            </select>
+          </label>
+          </div>
+          <label class="query-field">
+            <span>Message</span>
+            <textarea name="message" rows="4" placeholder="Tell us what you need"></textarea>
+          </label>
+          <button type="submit" class="btn-primary query-submit">Send Query</button>
+          <p class="query-status" id="query-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
       <!-- Marquee Section -->
       <div class="marquee-container">
         <div class="marquee-group">
@@ -318,18 +364,13 @@
                 </div>
               </div>
 
-              <!-- Column 3: Collaboration & Newsletter -->
+              <!-- Column 3: Queries & Collaboration (form lives in #queries above) -->
               <div class="footer-col footer-col-collab">
-                <h3 class="footer-heading">Collaboration</h3>
+                <h3 class="footer-heading">Queries &amp; Collaboration</h3>
                 <p class="footer-collab-text">
-                  Follow us on Instagram for exclusive releases and events, or join our mailing list: enter your email and we'll open a pre-filled email to us.
+                  Questions, partnerships, events or the mailing list: it all goes through one form.
                 </p>
-                <form class="footer-subscribe-form" id="footer-subscribe-form" action="#">
-                  <div class="footer-input-row">
-                    <input type="email" placeholder="Email Address" required class="footer-email-input" aria-label="Email Address">
-                    <button type="submit" class="footer-join-btn">JOIN</button>
-                  </div>
-                </form>
+                <a href="#queries" class="footer-join-btn">ASK US →</a>
               </div>
             </div>
 
