@@ -1411,6 +1411,10 @@ window.addEventListener('popstate', () => {
   }
 });
 
+// About routing resets the cursor, so initialize its state before opening a deep link.
+const customCursor = document.getElementById('custom-cursor');
+let isHoveringSign = false;
+
 // Initial route inspection on page load (old "#view" links are rewritten to their clean path first)
 const legacyView = LEGACY_HASHES[window.location.hash];
 if (legacyView) {
@@ -1445,8 +1449,6 @@ if (subscribeForm) {
 }
 
 // --- Custom Cursor with Global Event Delegation ---
-const customCursor = document.getElementById('custom-cursor');
-let isHoveringSign = false;
 
 if (customCursor) {
   document.addEventListener('mousemove', (e) => {

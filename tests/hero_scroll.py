@@ -78,6 +78,18 @@ class HeroScrollTests(unittest.TestCase):
         self.assertNotEqual(initial["src"], moved["src"])
         self.assertEqual(initial, self.scroll(0))
 
+    def test_about_deep_link_opens_philosophy_between_vision_and_mission(self):
+        errors = []
+        self.page.on('pageerror', lambda error: errors.append(str(error)))
+        self.page.goto(os.environ.get('BASE_URL', 'http://127.0.0.1:5173/').rstrip('/') + '/about')
+        section = self.page.locator('#section-our-philosophy')
+        section.wait_for(state='visible')
+        headings = self.page.locator('#about-view .about-panel-title').all_text_contents()
+        self.assertEqual(headings.index('Our Vision') + 1, headings.index('Our Philosophy'))
+        self.assertEqual(headings.index('Our Philosophy') + 1, headings.index('Our Mission'))
+        self.assertEqual(section.locator('.philosophy-principle').count(), 4)
+        self.assertEqual(errors, [])
+
 
 if __name__ == "__main__":
     unittest.main()

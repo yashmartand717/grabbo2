@@ -2341,6 +2341,54 @@ a, button, .catalog-card, .btn-primary {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
+/* Philosophy: readable text from the brand's four guiding principles. */
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.philosophy-principle {
+  margin: 0;
+  padding: 28px 24px;
+  border: 1px solid rgba(253, 224, 37, 0.25);
+  border-top: 3px solid var(--primary);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(253, 224, 37, 0.09), rgba(255, 255, 255, 0.02));
+  text-align: center;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.philosophy-verse {
+  font-family: 'Nirmala UI', 'Kohinoor Devanagari', 'Mangal', sans-serif;
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.7;
+  color: var(--primary);
+}
+
+.philosophy-transliteration {
+  margin-top: 6px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.philosophy-meaning {
+  margin-top: 14px;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+@media (max-width: 768px) {
+  .philosophy-grid { grid-template-columns: 1fr; }
+  .philosophy-principle { padding: 24px 18px; }
+}
+
 /* Mission Card Layout */
 .mission-card-layout {
   display: grid;
