@@ -719,8 +719,11 @@ const scrollSectionIntoView = (target) => {
 function scrollToStory(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('story');
-  
-  const storyTarget = document.getElementById('story') || document.getElementById('author-section');
+  scrollToHomeSection(document.getElementById('story') || document.getElementById('author-section'));
+}
+
+// Shows the home view if another view is open, then scrolls to a section on it
+function scrollToHomeSection(storyTarget) {
   if (!storyTarget) return;
 
   const isHomeActive = homeView && homeView.classList.contains('active') && !homeView.classList.contains('hidden');
@@ -753,6 +756,15 @@ function scrollToStory(e, updateHistory = true) {
 
 document.querySelectorAll('a[href="/story"], .nav-story-link').forEach(btn => {
   btn.addEventListener('click', (e) => scrollToStory(e, true));
+});
+
+// Navbar "Query" link and footer "Ask us" -> Scrolls down to the Queries & Collaboration form
+document.querySelectorAll('.nav-query-link, a[href="#queries"]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigateTo('home');
+    scrollToHomeSection(document.getElementById('queries'));
+  });
 });
 
 // Navbar "About" link fallback -> Opens About view
@@ -1432,18 +1444,84 @@ if (initialRoute === 'products') {
   setTimeout(() => scrollToStory(null, false), 400);
 }
 
-// --- Footer Mailing List (CSP-compliant) ---
-// The site has no backend to store emails, so "Join" opens a pre-filled email to Grabbo
-const subscribeForm = document.getElementById('footer-subscribe-form');
-if (subscribeForm) {
-  subscribeForm.addEventListener('submit', (e) => {
+// --- Queries & Collaboration form ---
+// Sent with EmailJS (https://www.emailjs.com) when the VITE_EMAILJS_* keys are set (see .env.example).
+// Without them, "Send Query" falls back to opening a pre-filled email to Grabbo.
+const EMAILJS = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+};
+// Every query is delivered here (the EmailJS template's "To Email" is {{to_email}})
+const QUERY_INBOX = 'grabbo37@gmail.com';
+const emailjsReady = Boolean(EMAILJS.serviceId && EMAILJS.templateId && EMAILJS.publicKey);
+
+const sendWithEmailJS = async (params) => {
+  const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      service_id: EMAILJS.serviceId,
+      template_id: EMAILJS.templateId,
+      user_id: EMAILJS.publicKey,
+      template_params: params
+    })
+  });
+  if (!res.ok) throw new Error(`EmailJS ${res.status}: ${await res.text()}`);
+};
+
+const queryForm = document.getElementById('query-form');
+const queryStatus = document.getElementById('query-status');
+const querySubmit = queryForm?.querySelector('.query-submit');
+const setQueryStatus = (text, state) => {
+  if (!queryStatus) return;
+  queryStatus.textContent = text;
+  queryStatus.dataset.state = state || '';
+};
+
+if (queryForm) {
+  queryForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const emailInput = subscribeForm.querySelector('input[type="email"]');
-    const email = emailInput ? emailInput.value.trim() : '';
-    if (email) {
-      const subject = encodeURIComponent('Add me to the Grabbo mailing list');
-      const body = encodeURIComponent(`Hi Grabbo,\n\nPlease add ${email} to your mailing list for releases and campus events.\n`);
-      window.location.href = `mailto:grabbo.snu@gmail.com?subject=${subject}&body=${body}`;
+    const data = new FormData(queryForm);
+    const name = String(data.get('name') || '').trim();
+    const email = String(data.get('email') || '').trim();
+    const phone = String(data.get('phone') || '').trim();
+    const topic = String(data.get('topic') || 'General query');
+    const message = String(data.get('message') || '').trim();
+    if (!name || !email) return;
+
+    const intro = topic === 'Mailing list'
+      ? `Please add ${email} to your mailing list for releases and campus events.`
+      : message || '(no message)';
+    const subject = `[${topic}] Query from ${name}`;
+    const body = `Hi Grabbo,\n\n${intro}\n\n${topic === 'Mailing list' && message ? message + '\n\n' : ''}Name: ${name}\nEmail: ${email}\n${phone ? `Phone: ${phone}\n` : ''}`;
+
+    if (!emailjsReady) {
+      window.location.href = `mailto:${QUERY_INBOX}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return;
+    }
+
+    if (querySubmit) querySubmit.disabled = true;
+    setQueryStatus('Sending…', 'pending');
+    try {
+      // These names are the {{variables}} available in the EmailJS template
+      await sendWithEmailJS({
+        name,
+        email,
+        phone: phone || 'Not given',
+        topic,
+        message: message || '(no message)',
+        subject,
+        reply_to: email,
+        to_email: QUERY_INBOX
+      });
+      queryForm.reset();
+      setQueryStatus(`Thanks, ${name}! We got your query and will reply to ${email} soon.`, 'success');
+    } catch (err) {
+      console.error(err);
+      setQueryStatus(`Sorry, that didn\'t go through. Please try again, or email us at ${QUERY_INBOX}.`, 'error');
+    } finally {
+      if (querySubmit) querySubmit.disabled = false;
     }
   });
 }
@@ -1467,7 +1545,7 @@ if (customCursor) {
   // Global delegation ensures all dynamically rendered cards (catalog, news, testimonials) trigger cursor morph
   document.addEventListener('mouseover', (e) => {
     if (isHoveringSign) return;
-    const interactive = e.target.closest('a, button:not(#storefront-sign-btn), .catalog-card, .event-card, .news-card, .testimonial-card, .tab-btn, .store-photo-card, .vision-visual-card, .mission-visual-card, input');
+    const interactive = e.target.closest('a, button:not(#storefront-sign-btn), .catalog-card, .event-card, .news-card, .testimonial-card, .tab-btn, .store-photo-card, .vision-visual-card, .mission-visual-card, input, select, textarea');
     if (interactive) {
       customCursor.classList.add('hover');
     }
@@ -1475,7 +1553,7 @@ if (customCursor) {
 
   document.addEventListener('mouseout', (e) => {
     if (isHoveringSign) return;
-    const interactive = e.target.closest('a, button:not(#storefront-sign-btn), .catalog-card, .event-card, .news-card, .testimonial-card, .tab-btn, .store-photo-card, .vision-visual-card, .mission-visual-card, input');
+    const interactive = e.target.closest('a, button:not(#storefront-sign-btn), .catalog-card, .event-card, .news-card, .testimonial-card, .tab-btn, .store-photo-card, .vision-visual-card, .mission-visual-card, input, select, textarea');
     if (interactive) {
       customCursor.classList.remove('hover');
     }
