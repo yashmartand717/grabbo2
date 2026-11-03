@@ -88,6 +88,12 @@ class HeroScrollTests(unittest.TestCase):
         self.assertEqual(headings.index('Our Vision') + 1, headings.index('Our Philosophy'))
         self.assertEqual(headings.index('Our Philosophy') + 1, headings.index('Our Mission'))
         self.assertEqual(section.locator('.philosophy-principle').count(), 4)
+        photo = section.locator('.philosophy-photo img')
+        photo.scroll_into_view_if_needed()
+        self.page.wait_for_function("""() => {
+            const image = document.querySelector('.philosophy-photo img');
+            return image && image.complete && image.naturalWidth > 0;
+        }""")
         self.assertEqual(errors, [])
 
 
