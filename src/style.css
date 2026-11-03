@@ -1,3 +1,77 @@
+/* Self-hosted Google Fonts (latin + latin-ext, variable weights). Files in public/fonts */
+/* Inter normal latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url(/fonts/inter-normal-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Inter normal latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url(/fonts/inter-normal-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Outfit normal latin-ext */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url(/fonts/outfit-normal-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Outfit normal latin */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url(/fonts/outfit-normal-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Playfair Display italic latin-ext */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(/fonts/playfair-display-italic-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Playfair Display italic latin */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(/fonts/playfair-display-italic-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Playfair Display normal latin-ext */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url(/fonts/playfair-display-normal-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Playfair Display normal latin */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url(/fonts/playfair-display-normal-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --primary: #FDE025; /* Bright Yellow from logo */
   --primary-dark: #D4B913;
@@ -254,48 +328,19 @@ textarea,
   visibility: hidden !important;
 }
 
-/* Hero Section: one screen tall; the navbar floats over it on the home page */
+/* Hero Section */
 .hero {
   position: relative;
-  height: 100vh;
-  height: 100svh;
-  text-align: center;
-}
-
-.hero-stage {
-  position: relative;
-  height: 100%;
-}
-
-.hero-copy {
-  position: absolute;
-  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: calc(100vh - 100px);
+  min-height: calc(100svh - 100px);
   padding: 0 5%;
-}
-
-/* Darkens the ground behind the title and button so they stay readable */
-.hero-shade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 45%;
-  /* Fades out at the bottom too, so no edge shows where the hero ends as it scrolls away */
-  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.45) 22%, rgba(0, 0, 0, 0.2) 60%, transparent);
-  pointer-events: none;
-}
-
-/* Home: the navbar floats over the hero and scrolls away with it */
-.content-overlay:has(#home-view.active) > .navbar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
+  text-align: center;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .hero-content {
@@ -523,7 +568,7 @@ textarea,
   background: rgba(253, 224, 37, 0.12);
   border: 1px solid rgba(253, 224, 37, 0.35);
   color: var(--primary);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -598,7 +643,7 @@ textarea,
 
 .news-disclaimer {
   font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.78);
   text-align: center;
@@ -746,7 +791,7 @@ textarea,
 
 .weather-credit {
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.78);
   text-align: center;
   width: fit-content;
@@ -927,7 +972,7 @@ textarea,
 
 .author-badge {
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1023,7 +1068,7 @@ textarea,
 
 .founder-placeholder-sub {
   font-family: var(--font-body);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.45);
   font-weight: 500;
@@ -1049,7 +1094,7 @@ textarea,
 
 .founder-role {
   font-family: var(--font-display);
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1186,7 +1231,7 @@ textarea,
 
 .testimonial-badge {
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1347,7 +1392,7 @@ footer.site-footer {
   justify-content: center;
   color: #ffffff;
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-decoration: none;
   background: rgba(255, 255, 255, 0.04);
@@ -1488,7 +1533,7 @@ footer.site-footer {
 
 .footer-copyright {
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.42);
   text-transform: uppercase;
@@ -1501,7 +1546,7 @@ footer.site-footer {
 
 .footer-legal-links a {
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.42);
   text-decoration: none;
@@ -1536,6 +1581,11 @@ footer.site-footer {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .hero {
+    min-height: 100vh;
+    padding: 0 5% 95px;
+    justify-content: flex-end;
+  }
   .hero-title { font-size: 3rem; }
   .hero-subtitle {
     font-size: 1.25rem;
@@ -1777,7 +1827,7 @@ footer.site-footer {
 }
 .catalog-stock-tag {
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 4px 10px;
@@ -1797,7 +1847,7 @@ footer.site-footer {
   background: rgba(18, 17, 15, 0.9);
   border: 1px solid rgba(253, 224, 37, 0.45);
   color: var(--primary);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 12px;
@@ -2183,7 +2233,7 @@ a, button, .catalog-card, .btn-primary {
 .about-section-badge {
   font-family: var(--font-display);
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -2559,7 +2609,7 @@ a, button, .catalog-card, .btn-primary {
 
 .event-status-pill {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   padding: 5px 12px;
@@ -2629,7 +2679,7 @@ a, button, .catalog-card, .btn-primary {
 
 .event-category-tag {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.55);
   font-weight: 700;
   text-transform: uppercase;
@@ -2821,23 +2871,28 @@ a, button, .catalog-card, .btn-primary {
 }
 
 @media (max-width: 768px) {
-  /* Portrait screens draw the storefront at the bottom of the screen and set
-     --hero-copy-bottom so the title and button sit in the sky just above it (src/main.js) */
-  .hero-copy {
-    justify-content: flex-end;
-    padding: 0 20px var(--hero-copy-bottom, max(44px, calc(env(safe-area-inset-bottom) + 28px)));
+  .hero {
+    /* Overlay the lower part of the real image. Reserve room for the heading,
+       subtitle and button above its bottom edge, rather than adding a panel. */
+    min-height: 0;
+    padding: max(140px, calc(45vh + 45vw - 230px)) 20px 16px;
+    padding-top: max(140px, calc(45lvh + 45vw - 230px));
+    justify-content: flex-start;
   }
-  /* The title sits over the night sky, which needs no darkening; it would dim the storefront */
-  .hero-shade {
-    display: none;
+  .hero + .weather-section {
+    margin-top: 0;
   }
   .hero-brand-title {
-    font-size: clamp(2.1rem, 9.5vw, 3.4rem);
+    font-size: clamp(2rem, 8vw, 2.8rem);
     letter-spacing: 0.05em;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    filter: none;
   }
   .hero-brand-subtitle {
     font-size: clamp(1.15rem, 5vw, 1.8rem);
     margin: 2px 0 0 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    filter: none;
   }
   .explore-btn {
     position: static;
@@ -2893,32 +2948,9 @@ a, button, .catalog-card, .btn-primary {
   border: 0;
 }
 
-/* Phones: the navbar is a compact floating pill */
-@media (max-width: 640px) {
-  .navbar {
-    margin: 10px 12px 0;
-    padding: 12px 16px;
-    border-radius: 999px;
-    background: rgba(2, 6, 23, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-  .content-overlay:has(#home-view.active) > .navbar {
-    top: 10px;
-    margin-top: 0;
-  }
-  .nav-links { gap: 18px; }
-  .nav-links a.btn-primary { width: 34px; height: 34px; }
-}
-
-/* Most phones: logo icon only (it carries the GRABBO mark), so the links get breathing room */
-@media (max-width: 430px) {
+/* Very narrow phones: logo icon only, so the navbar stays on one row */
+@media (max-width: 380px) {
   .logo-wrapper .logo { display: none !important; }
-  .nav-links { gap: 16px; }
-}
-
-@media (max-width: 360px) {
   .nav-links { gap: 12px; }
 }
 
@@ -2926,6 +2958,12 @@ a, button, .catalog-card, .btn-primary {
    button follows the text instead of being pinned to the bottom (desktops are taller than 500px) */
 @media (orientation: landscape) and (max-height: 500px) {
   .navbar { padding: 12px 5%; }
+  .hero {
+    min-height: calc(100vh - 64px);
+    min-height: calc(100svh - 64px);
+    padding: 0 20px 28px;
+    justify-content: center;
+  }
   .hero-brand-title { font-size: clamp(2.2rem, 6vw, 3.4rem); }
   .hero-brand-subtitle { font-size: clamp(1.1rem, 3.2vw, 1.8rem); }
   .explore-btn {
@@ -2993,8 +3031,10 @@ a, button, .catalog-card, .btn-primary {
 @media (max-width: 900px) and (orientation: portrait) {
   #bg-canvas {
     background-image: url('/hero-frames-mobile/frame-001.webp');
-    background-size: 106.4% auto; /* full width plus PORTRAIT_SIDE_CROP on each side */
-    background-position: center 45%; /* PORTRAIT_CENTER_Y */
+    background-size: 160% auto; /* PORTRAIT_START_WIDTH */
+    /* Center the image at 45% of the viewport, matching getFrameRect(). */
+    background-position: center calc(45vh - 45vw);
+    background-position: center calc(45lvh - 45vw);
   }
 }
 
@@ -3014,5 +3054,45 @@ a, button, .catalog-card, .btn-primary {
   }
   .footer-join-btn {
     min-height: 44px;
+  }
+}
+
+/* Phones: drop effects that are expensive to repaint while the hero canvas redraws on scroll.
+   The glass cards are already 85-94% opaque, so the blur adds little here. */
+@media (max-width: 900px) {
+  .noise-overlay { display: none; }
+  .product-card, .weather-banner, .author-section, .testimonial-card, footer.site-footer,
+  .tab-btn, .catalog-card, .suggestion-badge, .marquee-container, .about-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Hero entrance: same timing and easing (easeOutExpo) as the former anime.js timeline.
+   "backwards" fill only, so hover transforms still work once the animation ends. */
+@keyframes hero-rise-20 { from { opacity: 0; transform: translateY(-20px); } }
+@keyframes hero-rise-30 { from { opacity: 0; transform: translateY(30px); } }
+@keyframes hero-rise-sub { from { opacity: 0; transform: translateY(20px); } }
+@keyframes hero-pop { from { opacity: 0; transform: scale(0.9); } }
+.navbar { animation: hero-rise-20 1000ms cubic-bezier(0.19, 1, 0.22, 1) 200ms backwards; }
+.hero-brand-title { animation: hero-rise-30 1000ms cubic-bezier(0.19, 1, 0.22, 1) 600ms backwards; }
+.hero-brand-subtitle { animation: hero-rise-sub 800ms cubic-bezier(0.19, 1, 0.22, 1) 1000ms backwards; }
+.explore-btn { animation: hero-pop 600ms cubic-bezier(0.19, 1, 0.22, 1) 1400ms backwards; }
+@media (prefers-reduced-motion: reduce) {
+  .navbar, .hero-brand-title, .hero-brand-subtitle, .explore-btn { animation: none; }
+}
+
+/* More phone touch targets (found with a 360px audit) */
+@media (max-width: 900px) {
+  .explore-btn,
+  .small-btn,
+  .tab-btn,
+  .footer-email-input {
+    min-height: 44px;
+  }
+  .weather-credit a,
+  .events-empty-note a {
+    display: inline-block;
+    padding: 12px 2px;
   }
 }

@@ -25,6 +25,7 @@ dist-ssr
 
 # Scratch scripts
 *.py
+!tests/*.py
 *.cjs
 test.jpg
 

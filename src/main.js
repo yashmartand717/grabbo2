@@ -87,20 +87,15 @@ let canvasWidth = window.innerWidth;
 let canvasHeight = window.innerHeight;
 let scrollProgressIndex = 0;
 
-// Portrait screens show the whole storefront across the screen width, then zoom in to
-// fill the screen over the first screen of scrolling (0 = whole storefront, 1 = filled)
-let portraitCenterY = 0.5; // storefront centre, as a fraction of the screen height (see placeStorefront)
+// Start closer on portrait screens, then follow the swipe directly into the store.
+const PORTRAIT_START_WIDTH = 1.6; // keep in sync with the CSS first-frame poster
+const PORTRAIT_CENTER_Y = 0.45;  // storefront centre, as a fraction of the screen height
 let portraitZoom = 0;
 
 const isPortraitCanvas = () => canvasWidth / canvasHeight < 1;
 
-// Width of the frame before zooming: the screen width, enlarged on tall phones (up to 1.25x,
-// trimming the building's outer corners but never the sign or doors) so less sky is left over
-// The whole frame, with the full building, spans the screen width
-const getPortraitFitWidth = () => canvasWidth;
-
 // Where a frame of the given size is drawn on the canvas
-const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
+const getFrameRect = (imgWidth, imgHeight) => {
   const imgRatio = imgWidth / imgHeight;
   const canvasRatio = canvasWidth / canvasHeight;
 
@@ -117,17 +112,17 @@ const getFrameRect = (imgWidth, imgHeight, zoom = portraitZoom) => {
     return { x: (canvasWidth - coverWidth) / 2, y: (canvasHeight - coverHeight) / 2, w: coverWidth, h: coverHeight };
   }
 
-  const fitWidth = getPortraitFitWidth();
-  const t = zoom * zoom * (3 - 2 * zoom); // smoothstep
+  const fitWidth = Math.min(coverWidth, canvasWidth * PORTRAIT_START_WIDTH);
+  const t = portraitZoom;
   const w = fitWidth + (coverWidth - fitWidth) * t;
   const h = w / imgRatio;
-  const fitY = canvasHeight * portraitCenterY - h / 2;
+  const fitY = canvasHeight * PORTRAIT_CENTER_Y - h / 2;
   const coverY = (canvasHeight - h) / 2;
   return { x: (canvasWidth - w) / 2, y: fitY + (coverY - fitY) * t, w, h };
 };
 
-// Average colour of the top strip of a frame, used to extend the sky above the
-// storefront on portrait screens
+// Average colour of a horizontal strip of a frame, used to extend the sky and the
+// parking lot above and below the storefront on portrait screens
 const edgeSampler = document.createElement('canvas');
 edgeSampler.width = 16;
 edgeSampler.height = 4;
@@ -152,15 +147,14 @@ const getEdgeColors = (index) => {
     return sum.map(value => Math.round(value / pixels)).join(', ');
   };
   const colors = {
-    top: average(0, img.height * 0.03)
+    top: average(0, img.height * 0.03),
+    bottom: average(img.height * 0.94, img.height * 0.06)
   };
   edgeColorCache.set(index, colors);
   return colors;
 };
 
 // Fills the canvas above and below the frame with its edge colours, fading into the frame
-const PORTRAIT_GROUND = '8, 10, 14';
-
 const drawPortraitSurround = (index, rect) => {
   const { top } = getEdgeColors(index);
   const frameBottom = rect.y + rect.h;
@@ -173,26 +167,17 @@ const drawPortraitSurround = (index, rect) => {
     fade.addColorStop(1, `rgba(${top}, 0)`);
     context.fillStyle = fade;
     context.fillRect(0, rect.y, canvasWidth, rect.h * 0.12);
-    // Deepen the extended sky toward the top of the screen, like a night sky
-    const night = context.createLinearGradient(0, 0, 0, rect.y);
-    night.addColorStop(0, 'rgba(0, 0, 0, 0.6)');
-    night.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    context.fillStyle = night;
-    context.fillRect(0, 0, canvasWidth, Math.ceil(rect.y));
   }
 
-  // Below the frame: clean night ground. The pavement's own colour is a muddy brown (it
-  // reflects the shop lights), so the frame's edge fades into near-black instead
   if (frameBottom < canvasHeight) {
-    context.fillStyle = `rgb(${PORTRAIT_GROUND})`;
+    // The photo ends here; do not manufacture more pavement beneath it.
+    context.fillStyle = '#121110';
     context.fillRect(0, Math.floor(frameBottom), canvasWidth, canvasHeight - Math.floor(frameBottom));
-    // A thin fade, so the frame's edge doesn't show as a line without smearing the pavement
-    const fadeHeight = rect.h * 0.06;
-    const fade = context.createLinearGradient(0, frameBottom - fadeHeight, 0, frameBottom);
-    fade.addColorStop(0, `rgba(${PORTRAIT_GROUND}, 0)`);
-    fade.addColorStop(1, `rgba(${PORTRAIT_GROUND}, 1)`);
+    const fade = context.createLinearGradient(0, frameBottom - rect.h * 0.15, 0, frameBottom);
+    fade.addColorStop(0, 'rgba(18, 17, 16, 0)');
+    fade.addColorStop(1, '#121110');
     context.fillStyle = fade;
-    context.fillRect(0, frameBottom - fadeHeight, canvasWidth, fadeHeight);
+    context.fillRect(0, frameBottom - rect.h * 0.15, canvasWidth, rect.h * 0.15);
   }
 };
 
@@ -282,48 +267,10 @@ const resizeCanvas = () => {
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = 'high';
 
-  placeStorefront();
+  updateScrollAnimation();
   renderFrame(scrollProgressIndex);
   updateStorefrontSignPosition();
 };
-
-// Portrait screens: the storefront stands at the bottom of the screen with the frame's
-// pavement running to the bottom edge (no empty ground below it), and the hero title and
-// button sit in the night sky, midway between the navbar and the storefront's sign (see .hero-copy)
-const STORE_TOP = 0.14; // top of the storefront's sign, as a fraction of the frame height
-const NAV_BOTTOM = 84;  // px, bottom of the floating navbar
-const placeStorefront = () => {
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-  if (!isPortraitCanvas()) {
-    hero.style.removeProperty('--hero-copy-bottom');
-    return;
-  }
-  const frameHeight = getPortraitFitWidth() * 1080 / 1920;
-  // Stand the frame on the bottom of the hero, which is the height visible with the browser's
-  // toolbars shown (svh). The canvas is the larger height with them hidden (lvh), so its bottom
-  // edge is off screen while the toolbars show. Both start at the top of the page.
-  const frameBottom = Math.min(canvasHeight, hero.offsetHeight);
-  portraitCenterY = (frameBottom - frameHeight / 2) / canvasHeight;
-  const storeTop = frameBottom - frameHeight * (1 - STORE_TOP);
-  const title = document.querySelector('.hero-content');
-  const button = document.querySelector('.hero .explore-btn');
-  const copyHeight = title && button
-    ? button.getBoundingClientRect().bottom - title.getBoundingClientRect().top
-    : 200;
-  const gap = Math.max(20, (storeTop - NAV_BOTTOM - copyHeight) / 2);
-  hero.style.setProperty('--hero-copy-bottom', `${Math.round(hero.offsetHeight - storeTop + gap)}px`);
-};
-
-// The title's height changes once its web fonts load
-if (document.fonts) {
-  document.fonts.ready.then(() => {
-    if (!canvasSized) return;
-    placeStorefront();
-    renderFrame(scrollProgressIndex);
-    updateStorefrontSignPosition();
-  });
-}
 
 window.addEventListener('resize', resizeCanvas);
 
@@ -341,8 +288,9 @@ window.addEventListener('scroll', () => {
   preloadRemainingFrames();
 }, { once: true, passive: true });
 
-// Listen to scroll to update frame
-window.addEventListener('scroll', () => {
+// A single pending paint always uses the latest scroll position, even during fast swipes.
+let scrollRenderPending = false;
+const updateScrollAnimation = () => {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   // Calculate max scroll for the page
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -351,68 +299,43 @@ window.addEventListener('scroll', () => {
   if (scrollFraction > 1) scrollFraction = 1;
   if (scrollFraction < 0) scrollFraction = 0;
   
-  const frameIndex = Math.min(
-    frameCount - 1,
-    Math.floor(scrollFraction * frameCount)
-  );
+  // Mobile content grows as cards/news load. Use a stable two-screen distance so
+  // the same swipe always reaches the same frame, independent of page length.
+  const sequenceFraction = isPortraitCanvas()
+    ? Math.max(0, Math.min(1, scrollTop / (canvasHeight * 2)))
+    : scrollFraction;
+  const frameIndex = isPortraitCanvas()
+    ? Math.round(sequenceFraction * (frameCount - 1))
+    : Math.min(frameCount - 1, Math.floor(scrollFraction * frameCount));
   
   // Dim background canvas dynamically on scroll
   const brightness = 1 - (scrollFraction * 0.8);
   canvas.style.opacity = brightness;
 
   
-  // Portrait screens: zoom from the whole storefront to full screen over the first screen of scrolling
-  const zoom = Math.min(1, scrollTop / canvasHeight);
+  // Linear zoom has no ease-in dead zone at the beginning of the first swipe.
+  const zoom = Math.max(0, Math.min(1, scrollTop / canvasHeight));
   const zoomChanged = isPortraitCanvas() && zoom !== portraitZoom;
   portraitZoom = zoom;
 
   if (scrollProgressIndex !== frameIndex || zoomChanged) {
     scrollProgressIndex = frameIndex;
-    requestAnimationFrame(() => renderFrame(scrollProgressIndex));
+    if (!scrollRenderPending) {
+      scrollRenderPending = true;
+      requestAnimationFrame(() => {
+        scrollRenderPending = false;
+        renderFrame(scrollProgressIndex);
+      });
+    }
   }
   updateStorefrontSignPosition();
-});
+};
+window.addEventListener('scroll', updateScrollAnimation, { passive: true });
 
 
-// --- Page Load Animations (Anime.js) ---
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Initial Hero Animation
-
-  anime.timeline({
-    easing: 'easeOutExpo',
-  })
-  .add({
-    targets: '.navbar',
-    translateY: [-20, 0],
-    opacity: [0, 1],
-    duration: 1000,
-    delay: 200
-  })
-  .add({
-    targets: '.hero-brand-title, .hero-title',
-    translateY: [30, 0],
-    opacity: [0, 1],
-    duration: 1000,
-  }, '-=600')
-  .add({
-    targets: '.hero-brand-subtitle, .hero-subtitle',
-    translateY: [20, 0],
-    opacity: [0, 1],
-    duration: 800,
-  }, '-=600')
-  .add({
-    targets: '.explore-btn',
-    scale: [0.9, 1],
-    opacity: [0, 1],
-    duration: 600,
-  }, '-=400');
-
-  
-
-
-
-});
+// --- Page Load Animations ---
+// The hero entrance (navbar, title, subtitle, Explore button) is a CSS animation in style.css
+// ("Hero entrance"), so it runs on the compositor instead of the main thread during page load.
 
 
 
@@ -1104,7 +1027,6 @@ async function fetchHealthNews() {
         sourceLink.rel = 'noopener noreferrer';
         sourceLink.className = 'news-card-link';
         sourceLink.textContent = `${item.source} ↗`;
-        sourceLink.setAttribute('aria-label', `Read the full story on ${item.source.split(' • ')[0]}`);
         sourceEl.appendChild(sourceLink);
       } else {
         sourceEl.textContent = item.source;
@@ -1396,7 +1318,7 @@ function createWeatherProductCard(prod) {
     <span class="weather-product-price"></span>
   `;
   const img = card.querySelector('img');
-  img.src = prod.image;
+  img.src = prod.image.replace('/products/', '/products/thumbs/'); // 240px copies made for these small cards
   img.alt = prod.name;
   img.onerror = () => {
     img.src = '/logo.png';
