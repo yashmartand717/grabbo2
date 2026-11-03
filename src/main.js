@@ -1445,24 +1445,29 @@ if (initialRoute === 'products') {
 }
 
 // --- Queries & Collaboration form ---
-// Sent straight to Grabbo's inbox with FormSubmit (https://formsubmit.co), no keys needed.
-// The very first submission emails QUERY_INBOX an "Activate Form" link; click it once and
-// every query after that is delivered. FormSubmit then offers a random alias to use instead
-// of the address below, which keeps it out of the page source.
+// Sent with EmailJS (https://www.emailjs.com). These IDs are public by design; the VITE_EMAILJS_*
+// variables (see .env.example) can override them. If any is empty, "Send Query" opens a pre-filled email instead.
+const EMAILJS = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_9dha86m',
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_yl2x5dc',
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'L9aCpqQ90KTRu-ZCb'
+};
+// Every query is delivered here (the EmailJS template's "To Email" is {{to_email}})
 const QUERY_INBOX = 'grabbo37@gmail.com';
-const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${QUERY_INBOX}`;
+const emailjsReady = Boolean(EMAILJS.serviceId && EMAILJS.templateId && EMAILJS.publicKey);
 
-const sendWithFormSubmit = async (fields) => {
-  const res = await fetch(FORMSUBMIT_URL, {
+const sendWithEmailJS = async (params) => {
+  const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(fields)
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      service_id: EMAILJS.serviceId,
+      template_id: EMAILJS.templateId,
+      user_id: EMAILJS.publicKey,
+      template_params: params
+    })
   });
-  const result = await res.json().catch(() => ({}));
-  // FormSubmit answers { success: "true" | "false", message }
-  if (!res.ok || String(result.success) !== 'true') {
-    throw new Error(`FormSubmit ${res.status}: ${result.message || 'unknown error'}`);
-  }
+  if (!res.ok) throw new Error(`EmailJS ${res.status}: ${await res.text()}`);
 };
 
 const queryForm = document.getElementById('query-form');
@@ -1488,21 +1493,29 @@ if (queryForm) {
     const intro = topic === 'Mailing list'
       ? `Please add ${email} to your mailing list for releases and campus events.`
       : message || '(no message)';
+    const subject = `[${topic}] Query from ${name}`;
+    const body = `Hi Grabbo,\n\n${intro}\n\n${topic === 'Mailing list' && message ? message + '\n\n' : ''}Name: ${name}\nEmail: ${email}\n${phone ? `Phone: ${phone}\n` : ''}`;
+
+    if (!emailjsReady) {
+      window.location.href = `mailto:${QUERY_INBOX}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return;
+    }
 
     if (querySubmit) querySubmit.disabled = true;
     setQueryStatus('Sending…', 'pending');
     try {
-      // Each field becomes a row in the email; "_" fields are FormSubmit settings
-      await sendWithFormSubmit({
-        Name: name,
-        Email: email,
-        Phone: phone || 'Not given',
-        Topic: topic,
-        Message: topic === 'Mailing list' && message ? `${intro}\n\n${message}` : intro,
-        _subject: `[${topic}] Query from ${name}`,
-        _replyto: email,
-        _template: 'table',
-        _captcha: 'false'
+      // These names are the {{variables}} available in the EmailJS template
+      await sendWithEmailJS({
+        name,
+        email,
+        phone: phone || 'Not given',
+        topic,
+        message: topic === 'Mailing list' && message ? `${intro}
+
+${message}` : intro,
+        subject,
+        reply_to: email,
+        to_email: QUERY_INBOX
       });
       queryForm.reset();
       setQueryStatus(`Thanks, ${name}! We got your query and will reply to ${email} soon.`, 'success');
