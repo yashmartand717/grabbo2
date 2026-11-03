@@ -1510,9 +1510,7 @@ if (queryForm) {
         email,
         phone: phone || 'Not given',
         topic,
-        message: topic === 'Mailing list' && message ? `${intro}
-
-${message}` : intro,
+        message: topic === 'Mailing list' && message ? `${intro}\n\n${message}` : intro,
         subject,
         reply_to: email,
         to_email: QUERY_INBOX
