@@ -14,7 +14,7 @@ const CATEGORY_LABELS = {
 }
 
 // Pages written at build time as <view>/index.html (dist/products/index.html is served at /products)
-const PAGES = { products: 'catalog-view', about: 'about-view', events: 'events-view' }
+const PAGES = { products: 'catalog-view', about: 'about-view', events: 'events-view', 'cafe-fomo': 'cafe-fomo-view' }
 
 const escapeHtml = value => String(value)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -66,7 +66,7 @@ const breadcrumbJsonLd = view => `    <script type="application/ld+json">
     </script>
   </head>`
 
-const BREADCRUMB_NAMES = { products: 'Products', about: 'About', events: 'Events' }
+const BREADCRUMB_NAMES = { products: 'Products', about: 'About', events: 'Events', 'cafe-fomo': 'Café FOMO' }
 
 const productCard = prod => `
             <div class="catalog-card">

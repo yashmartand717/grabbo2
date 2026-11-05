@@ -390,9 +390,9 @@ document.querySelectorAll('.product-card').forEach(card => {
 // Products, events and testimonials live in ./content.js
 
 // Clean URLs: each view has its own path (vercel.json serves index.html for them)
-const ROUTES = { home: '/', products: '/products', about: '/about', events: '/events', story: '/story' };
+const ROUTES = { home: '/', products: '/products', about: '/about', events: '/events', 'cafe-fomo': '/cafe-fomo', story: '/story' };
 // Old "#products"-style links are redirected to the matching path on load
-const LEGACY_HASHES = { '#home': 'home', '#products': 'products', '#about': 'about', '#events': 'events', '#story': 'story' };
+const LEGACY_HASHES = { '#home': 'home', '#products': 'products', '#about': 'about', '#events': 'events', '#cafe-fomo': 'cafe-fomo', '#story': 'story' };
 
 const currentRoute = () => {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
@@ -423,6 +423,7 @@ const aboutView = document.getElementById('about-view');
 const aboutBtn = document.querySelector('a[href="/about"]');
 const eventsView = document.getElementById('events-view');
 const eventsBtn = document.querySelector('a[href="/events"]');
+const cafeFomoView = document.getElementById('cafe-fomo-view');
 
 const catalogView = document.getElementById('catalog-view');
 
@@ -441,10 +442,11 @@ function showCatalog(e, updateHistory = true) {
   canvas.style.opacity = 0.25;
   window.scrollTo(0, 0);
   
-  // Fade out home, about and events
+  // Fade out home, about, events and cafe-fomo
   homeView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
+  if (cafeFomoView) cafeFomoView.style.opacity = '0';
   
   setTimeout(() => {
     homeView.classList.add('hidden');
@@ -456,6 +458,10 @@ function showCatalog(e, updateHistory = true) {
     if (eventsView) {
       eventsView.classList.add('hidden');
       eventsView.classList.remove('active');
+    }
+    if (cafeFomoView) {
+      cafeFomoView.classList.add('hidden');
+      cafeFomoView.classList.remove('active');
     }
 
     // Fade in catalog
@@ -480,6 +486,7 @@ function hideCatalog(e, updateHistory = true) {
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
+  if (cafeFomoView) cafeFomoView.style.opacity = '0';
   window.scrollTo(0, 0);
   
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -497,6 +504,10 @@ function hideCatalog(e, updateHistory = true) {
     if (eventsView) {
       eventsView.classList.add('hidden');
       eventsView.classList.remove('active');
+    }
+    if (cafeFomoView) {
+      cafeFomoView.classList.add('hidden');
+      cafeFomoView.classList.remove('active');
     }
 
     // Fade in home
@@ -609,6 +620,7 @@ function showAbout(e, updateHistory = true) {
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
+  if (cafeFomoView) cafeFomoView.style.opacity = '0';
   if (storefrontSignBtn) storefrontSignBtn.classList.add('hidden-hotspot');
   if (customCursor) {
     isHoveringSign = false;
@@ -626,6 +638,10 @@ function showAbout(e, updateHistory = true) {
     if (eventsView) {
       eventsView.classList.add('hidden');
       eventsView.classList.remove('active');
+    }
+    if (cafeFomoView) {
+      cafeFomoView.classList.add('hidden');
+      cafeFomoView.classList.remove('active');
     }
     
     aboutView.classList.remove('hidden');
@@ -645,6 +661,7 @@ function showEvents(e, updateHistory = true) {
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
+  if (cafeFomoView) cafeFomoView.style.opacity = '0';
 
   setTimeout(() => {
     homeView.classList.add('hidden');
@@ -655,10 +672,47 @@ function showEvents(e, updateHistory = true) {
       aboutView.classList.add('hidden');
       aboutView.classList.remove('active');
     }
+    if (cafeFomoView) {
+      cafeFomoView.classList.add('hidden');
+      cafeFomoView.classList.remove('active');
+    }
     
     eventsView.classList.remove('hidden');
     eventsView.classList.add('active');
     eventsView.style.opacity = '1';
+    window.scrollTo(0, 0);
+  }, 200);
+}
+
+function showCafeFomo(e, updateHistory = true) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (updateHistory) navigateTo('cafe-fomo');
+  
+  canvas.style.opacity = 0.3;
+  window.scrollTo(0, 0);
+  
+  homeView.style.opacity = '0';
+  catalogView.style.opacity = '0';
+  if (aboutView) aboutView.style.opacity = '0';
+  if (eventsView) eventsView.style.opacity = '0';
+
+  setTimeout(() => {
+    homeView.classList.add('hidden');
+    homeView.classList.remove('active');
+    catalogView.classList.add('hidden');
+    catalogView.classList.remove('active');
+    if (aboutView) {
+      aboutView.classList.add('hidden');
+      aboutView.classList.remove('active');
+    }
+    if (eventsView) {
+      eventsView.classList.add('hidden');
+      eventsView.classList.remove('active');
+    }
+    
+    cafeFomoView.classList.remove('hidden');
+    cafeFomoView.classList.add('active');
+    cafeFomoView.style.opacity = '1';
     window.scrollTo(0, 0);
   }, 200);
 }
@@ -679,10 +733,16 @@ document.querySelectorAll('a[href="/events"]').forEach(btn => {
   btn.addEventListener('click', (e) => showEvents(e, true));
 });
 
-// About & Events: clicking the dimmed area outside the card returns to Home
+// Navbar "Café FOMO" link -> Opens Café FOMO view
+document.querySelectorAll('a[href="/cafe-fomo"], .nav-cafefomo-link').forEach(btn => {
+  btn.addEventListener('click', (e) => showCafeFomo(e, true));
+});
+
+// About, Events & Café FOMO: clicking the dimmed area outside the card returns to Home
 const dismissibleViews = [
   { view: aboutView, card: '.about-card' },
-  { view: eventsView, card: '.events-container' }
+  { view: eventsView, card: '.events-container' },
+  { view: cafeFomoView, card: '.cafe-fomo-container' }
 ];
 // Navbar links and the logo do their own navigation; empty navbar space counts as outside
 const isOutsideCard = (target, card) => !target.closest(card) && !target.closest('.navbar a, .navbar button, #logo-home-btn');
@@ -701,10 +761,10 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Esc closes About, Events or Products
+// Esc closes About, Events, Café FOMO or Products
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  const anyOpen = [aboutView, eventsView, catalogView].some(view => view && view.classList.contains('active'));
+  const anyOpen = [aboutView, eventsView, cafeFomoView, catalogView].some(view => view && view.classList.contains('active'));
   if (anyOpen) hideCatalog(null, true);
 });
 
@@ -732,6 +792,7 @@ function scrollToHomeSection(storyTarget) {
     catalogView.style.opacity = '0';
     if (aboutView) aboutView.style.opacity = '0';
     if (eventsView) eventsView.style.opacity = '0';
+    if (cafeFomoView) cafeFomoView.style.opacity = '0';
     
     catalogView.classList.add('hidden');
     catalogView.classList.remove('active');
@@ -742,6 +803,10 @@ function scrollToHomeSection(storyTarget) {
     if (eventsView) {
       eventsView.classList.add('hidden');
       eventsView.classList.remove('active');
+    }
+    if (cafeFomoView) {
+      cafeFomoView.classList.add('hidden');
+      cafeFomoView.classList.remove('active');
     }
 
     homeView.classList.remove('hidden');
@@ -758,6 +823,39 @@ document.querySelectorAll('a[href="/story"], .nav-story-link').forEach(btn => {
   btn.addEventListener('click', (e) => scrollToStory(e, true));
 });
 
+const navbar = document.querySelector('.navbar');
+const navMenuToggle = document.querySelector('.nav-menu-toggle');
+const navMenu = document.getElementById('primary-nav-menu');
+const closeMobileNavMenu = () => {
+  navbar?.classList.remove('menu-open');
+  navMenuToggle?.setAttribute('aria-expanded', 'false');
+  navMenuToggle?.setAttribute('aria-label', 'Open navigation menu');
+};
+
+if (navbar && navMenuToggle && navMenu) {
+  navMenuToggle.addEventListener('click', () => {
+    const isOpen = navbar.classList.toggle('menu-open');
+    navMenuToggle.setAttribute('aria-expanded', String(isOpen));
+    navMenuToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+  });
+
+  navMenu.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('a')) closeMobileNavMenu();
+  });
+
+  navbar.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('#logo-home-btn')) closeMobileNavMenu();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (event.target instanceof Node && !navbar.contains(event.target)) closeMobileNavMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMobileNavMenu();
+  });
+}
+
 // Navbar "Query" link and footer "Ask us" -> Scrolls down to the Queries & Collaboration form
 document.querySelectorAll('.nav-query-link, a[href="#queries"]').forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -772,7 +870,7 @@ document.querySelectorAll('a[href="/about"]').forEach(btn => {
   btn.addEventListener('click', (e) => showAbout(e, true));
 });
 
-document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn, #back-to-home').forEach(btn => {
+document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn, .cafe-fomo-back-btn, #back-to-home').forEach(btn => {
   btn.addEventListener('click', (e) => hideCatalog(e, true));
 });
 
@@ -1416,6 +1514,8 @@ window.addEventListener('popstate', () => {
     showAbout(null, false);
   } else if (route === 'events') {
     showEvents(null, false);
+  } else if (route === 'cafe-fomo') {
+    showCafeFomo(null, false);
   } else if (route === 'story') {
     scrollToStory(null, false);
   } else {
@@ -1440,6 +1540,8 @@ if (initialRoute === 'products') {
   showAbout(null, false);
 } else if (initialRoute === 'events') {
   showEvents(null, false);
+} else if (initialRoute === 'cafe-fomo') {
+  showCafeFomo(null, false);
 } else if (initialRoute === 'story') {
   setTimeout(() => scrollToStory(null, false), 400);
 }
@@ -1559,5 +1661,4 @@ if (customCursor) {
     }
   });
 }
-
 

@@ -6,7 +6,7 @@
       "destination": "https://news.google.com/rss/search"
     },
     {
-      "source": "/:page(products|about|events|privacy)",
+      "source": "/:page(products|about|events|cafe-fomo|privacy)",
       "destination": "/:page/index.html"
     },
     {

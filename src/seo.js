@@ -24,6 +24,11 @@ export const pageMeta = {
     path: '/events',
     title: 'Events & Offers | Grabbo @ SNU',
     description: 'Upcoming events, offers and past campus collaborations from Grabbo at Shiv Nadar University, including JALSA and TEDx.'
+  },
+  'cafe-fomo': {
+    path: '/cafe-fomo',
+    title: 'CAFÉ FOMO – Feed Your FOMO | An Offline Hangout Venture by Grabbo',
+    description: 'CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe. Feed Your FOMO at our upcoming physical venture.'
   }
 };
 
