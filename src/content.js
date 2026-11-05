@@ -117,6 +117,7 @@ export const newsSources = [
   "hindustantimes.com",
   "timesofindia.indiatimes.com",
   "economictimes.indiatimes.com",
+  "economictimes.com",
   "ndtv.com",
   "indianexpress.com",
   "newindianexpress.com",
@@ -124,7 +125,14 @@ export const newsSources = [
   "theprint.in",
   "livemint.com",
   "business-standard.com",
-  "news18.com"
+  "news18.com",
+  "moneycontrol.com",
+  "timesnownews.com",
+  "deccanherald.com",
+  "tribuneindia.com",
+  "pib.gov.in",
+  "mohfw.gov.in",
+  "who.int"
 ];
 
 // Shown in the "What The Campus Says" scrolling section.

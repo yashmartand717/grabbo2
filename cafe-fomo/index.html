@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAFÉ FOMO – Feed Your FOMO | An Offline Hangout Venture by Grabbo</title>
+    <meta name="description" content="CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe at Shiv Nadar University Shopping Arcade. Feed Your FOMO." />
+    <link rel="canonical" href="https://www.grabbo.store/cafe-fomo" />
+    <meta name="theme-color" content="#121110" />
+    <meta property="og:site_name" content="Grabbo" />
+    <meta property="og:title" content="CAFÉ FOMO – Feed Your FOMO | An Offline Hangout Venture by Grabbo" />
+    <meta property="og:description" content="CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe at Shiv Nadar University Shopping Arcade." />
+    <meta property="og:url" content="https://www.grabbo.store/cafe-fomo" />
+    <meta property="og:image" content="https://www.grabbo.store/images/cafe-fomo-logo.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CafeOrCoffeeShop",
+        "@id": "https://www.grabbo.store/cafe-fomo#cafe",
+        "name": "CAFÉ FOMO",
+        "parentOrganization": {
+          "@type": "ConvenienceStore",
+          "name": "Grabbo",
+          "url": "https://www.grabbo.store/"
+        },
+        "description": "Artisanal brews, loaded comfort bites, momos, and offline community hangout hub by Grabbo at Shiv Nadar University.",
+        "url": "https://www.grabbo.store/cafe-fomo",
+        "telephone": "+91-9205599102",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Shopping Arcade, Shiv Nadar Institution of Eminence, G. T. Road, Dadri",
+          "addressLocality": "Greater Noida",
+          "addressRegion": "Uttar Pradesh",
+          "postalCode": "201314",
+          "addressCountry": "IN"
+        },
+        "currenciesAccepted": "INR"
+      }
+    </script>
+
+    <!-- Self-hosted fonts -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-latin.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/playfair-display-normal-latin.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-normal-latin.woff2" crossorigin>
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/style.css">
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+  </head>
+  <body class="cafe-fomo-standalone-page">
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <main class="content-overlay">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="/" class="logo-wrapper" id="logo-home-btn" style="text-decoration: none; color: #ffffff !important; display: flex; align-items: center; gap: 10px;">
+          <img src="/logo-96.webp" alt="Grabbo Logo" width="42" height="42" style="width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 2px 12px rgba(253,224,37,0.25); transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), box-shadow 0.35s ease; object-fit: cover;">
+          <div class="logo" style="margin: 0; display: flex; color: #ffffff !important;">
+            <span class="drop-letter" style="--delay: 0.1s; color: #ffffff !important;">G</span>
+            <span class="drop-letter" style="--delay: 0.15s; color: #ffffff !important;">r</span>
+            <span class="drop-letter" style="--delay: 0.2s; color: #ffffff !important;">a</span>
+            <span class="drop-letter" style="--delay: 0.25s; color: #ffffff !important;">b</span>
+            <span class="drop-letter" style="--delay: 0.3s; color: #ffffff !important;">b</span>
+            <span class="drop-letter" style="--delay: 0.35s; color: #ffffff !important;">o</span>
+          </div>
+        </a>
+        <div class="nav-menu" id="primary-nav-menu">
+          <div class="nav-links">
+            <a href="/#story" class="nav-story-link">Story</a>
+            <a href="/products">Products</a>
+            <a href="/events">Events</a>
+            <a href="/cafe-fomo" class="nav-cafefomo-link" style="color: var(--primary); text-shadow: 0 0 10px rgba(253,224,37,0.4);">Café FOMO</a>
+            <a href="/#queries" class="nav-query-link">Query</a>
+          </div>
+          <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="btn-primary nav-follow-btn" aria-label="Follow Grabbo on Instagram" style="display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            <span class="nav-follow-label">Follow Us</span>
+          </a>
+        </div>
+        <button class="nav-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-nav-menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18"></path>
+          </svg>
+        </button>
+      </nav>
+
+      <!-- DEDICATED CAFÉ FOMO VIEW -->
+      <div id="cafe-fomo-standalone-view" class="view-section active">
+        <div class="cafe-fomo-container">
+          <!-- Top Header with Back to Home button -->
+          <div class="cafe-fomo-header">
+            <div>
+              <span class="author-badge cafe-fomo-header-badge">UPCOMING VENTURE BY GRABBO</span>
+              <h1 class="section-title">CAFÉ <span class="gradient-text cafe-fomo-title-accent">FOMO</span></h1>
+            </div>
+            <a href="/" class="btn-primary small-btn cafe-fomo-back-btn">← Back to Home</a>
+          </div>
+
+          <!-- Hero Announcement Area -->
+          <div class="cafe-fomo-announcement">
+            <span class="cafe-fomo-badge">Brewing Soon ☕</span>
+            <div class="cafe-fomo-logo-wrap">
+              <img src="/images/cafe-fomo-logo.png" alt="CAFÉ FOMO - Feed Your FOMO" class="cafe-fomo-logo" width="300" height="300" loading="eager">
+            </div>
+            <h2 class="cafe-fomo-title">CAFÉ FOMO</h2>
+            <p class="cafe-fomo-tagline">“Feed Your FOMO”</p>
+            <p class="cafe-fomo-story">
+              From late-night study crunches to mid-day chill sessions, <strong>CAFÉ FOMO</strong> is Grabbo’s brand-new physical venture—an immersive campus hangout hub where artisanal brews, bold café bites, vibrant campus culture, and spontaneous conversations come alive. No rush, no routine. Just good energy and unforgettable campus memories.
+            </p>
+          </div>
+
+          <div class="cafe-fomo-divider"></div>
+
+          <!-- Signature Highlights (Showcase Only) -->
+          <div class="cafe-fomo-showcase-section">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <span class="cafe-fomo-section-label">WHAT TO EXPECT</span>
+              <h3 class="cafe-fomo-subheading">Signature Highlights</h3>
+              <p class="cafe-fomo-subheading-desc">Crafted exclusively for our offline campus community. Taste, feel, and experience the vibe.</p>
+            </div>
+
+            <div class="cafe-fomo-grid">
+              <div class="cafe-fomo-card">
+                <span class="cafe-fomo-card-icon" aria-hidden="true">☕</span>
+                <span class="cafe-fomo-tag">House Special</span>
+                <h3>Artisanal Brews &amp; Cold Coffees</h3>
+                <p>Small-batch pour overs, nitrogen cold brews, espresso tonics, and velvet flat whites crafted from single-origin beans.</p>
+              </div>
+
+              <div class="cafe-fomo-card">
+                <span class="cafe-fomo-card-icon" aria-hidden="true">🥐</span>
+                <span class="cafe-fomo-tag">Must Try</span>
+                <h3>Loaded Café Bites</h3>
+                <p>Crispy artisanal sourdough melts, warm flaky croissants, decadent cruffins, savory bagels, and handcrafted dips.</p>
+              </div>
+
+              <div class="cafe-fomo-card">
+                <span class="cafe-fomo-card-icon" aria-hidden="true">✨</span>
+                <span class="cafe-fomo-tag">Crowd Favorite</span>
+                <h3>Instagrammable Hangout Vibe</h3>
+                <p>Warm ambient lighting, comic accents, cozy communal corners, vinyl music beats, and aesthetic photo ops.</p>
+              </div>
+
+              <div class="cafe-fomo-card">
+                <span class="cafe-fomo-card-icon" aria-hidden="true">⚡</span>
+                <span class="cafe-fomo-tag">Limited Edition</span>
+                <h3>Exclusive Offline Drops</h3>
+                <p>Surprise off-menu seasonal tastings, limited Grabbo x Café FOMO merch, live student acoustic nights, and pop-up events.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cafe-fomo-divider"></div>
+
+          <!-- Official Menu Section -->
+          <div class="cafe-fomo-menu-section" id="cafe-fomo-menu">
+            <div style="text-align: center; margin-bottom: 28px;">
+              <span class="cafe-fomo-section-label">FEED YOUR FOMO</span>
+              <h3 class="cafe-fomo-subheading">Official Café FOMO Menu</h3>
+              <p class="cafe-fomo-subheading-desc">Freshly prepared comfort bites, steaming momos, loaded burgers, signature sips, and shakes.</p>
+            </div>
+
+            <!-- Menu Category Navigation Tabs -->
+            <div class="cafe-menu-tabs" role="tablist" aria-label="Café FOMO Menu Tabs">
+              <button class="cafe-menu-tab active" data-tab="all" role="tab" aria-selected="true">All Items</button>
+              <button class="cafe-menu-tab" data-tab="momos" role="tab" aria-selected="false">🥟 Momos</button>
+              <button class="cafe-menu-tab" data-tab="sandwiches" role="tab" aria-selected="false">🥪 Sandwiches</button>
+              <button class="cafe-menu-tab" data-tab="burgers" role="tab" aria-selected="false">🍔 Burgers</button>
+              <button class="cafe-menu-tab" data-tab="soups" role="tab" aria-selected="false">🥣 Soups</button>
+              <button class="cafe-menu-tab" data-tab="beverages" role="tab" aria-selected="false">☕ Chai &amp; Coffee</button>
+              <button class="cafe-menu-tab" data-tab="maggi-fries" role="tab" aria-selected="false">🍟 Maggi &amp; Fries</button>
+              <button class="cafe-menu-tab" data-tab="mocktails" role="tab" aria-selected="false">🍹 Mocktails</button>
+              <button class="cafe-menu-tab" data-tab="shakes" role="tab" aria-selected="false">🥤 Shakes</button>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="cafe-menu-grid">
+              <!-- Category 1: Momos -->
+              <div class="cafe-menu-card" data-category="momos">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Steamed &amp; Crispy</span>
+                    <h4>🥟 Momo Delights</h4>
+                  </div>
+                  <span class="cafe-menu-portion-hint">5 pcs / 10 pcs</span>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Steamed Momo – Veg</span>
+                    <span class="item-price">₹60 / ₹120</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Steamed Momo – Paneer</span>
+                    <span class="item-price">₹80 / ₹150</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Steamed Momo – Cheese Corn</span>
+                    <span class="item-price">₹100 / ₹180</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Crackling Momo – Cheese Corn</span>
+                    <span class="item-price">₹80 / ₹150</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Crackling Momo – Paneer</span>
+                    <span class="item-price">₹120 / ₹200</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Crackling Momo – Veg</span>
+                    <span class="item-price">₹100 / ₹180</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Creamy Sauce Veg Momo <span class="chef-special">Special</span></span>
+                    <span class="item-price">₹100 / ₹160</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Creamy Sauce Momo – Paneer</span>
+                    <span class="item-price">₹120 / ₹200</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Creamy Sauce Momo – Cheese Corn</span>
+                    <span class="item-price">₹150 / ₹220</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 2: Sandwiches -->
+              <div class="cafe-menu-card" data-category="sandwiches">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Grilled &amp; Toasted</span>
+                    <h4>🥪 Sandwiches</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Veg Grilled Sandwich</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Cheese Corn Sandwich</span>
+                    <span class="item-price">₹120</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Paneer Tikka Sandwich <span class="chef-special">Must Try</span></span>
+                    <span class="item-price">₹150</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 3: Burgers -->
+              <div class="cafe-menu-card" data-category="burgers">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Big Buns</span>
+                    <h4>🍔 Burgers</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Aloo Tikki Burger</span>
+                    <span class="item-price">₹60</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Iceland Burger</span>
+                    <span class="item-price">₹70</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Veg Spicy Burger</span>
+                    <span class="item-price">₹70</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Double Tikki Burger</span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Crispy Paneer Burger <span class="chef-special">Popular</span></span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Cheese Burger</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 4: Soups -->
+              <div class="cafe-menu-card" data-category="soups">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Warm &amp; Hearty</span>
+                    <h4>🥣 Soups</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Manchow Soup</span>
+                    <span class="item-price">₹50</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Tomato Soup</span>
+                    <span class="item-price">₹50</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Mix Veg Soup</span>
+                    <span class="item-price">₹70</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Sweet Corn Soup</span>
+                    <span class="item-price">₹70</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 5: Hot Beverages -->
+              <div class="cafe-menu-card" data-category="beverages">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Dostea &amp; Brews</span>
+                    <h4>☕ Hot Beverages</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Chai</span>
+                    <span class="item-price">₹25</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Kulhad Chai <span class="chef-special">Campus Fav</span></span>
+                    <span class="item-price">₹30</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Green Tea</span>
+                    <span class="item-price">₹25</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Lemon Tea</span>
+                    <span class="item-price">₹25</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Kadha <small>(Winter Special)</small></span>
+                    <span class="item-price">₹25</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Hot Coffee</span>
+                    <span class="item-price">₹40</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 6: Snacks, Maggi & Fries -->
+              <div class="cafe-menu-card" data-category="maggi-fries">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Chai Paas Hai</span>
+                    <h4>🍟 Snacks with Tea &amp; Maggi</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Bun Maska</span>
+                    <span class="item-price">₹40</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Plain Maggi</span>
+                    <span class="item-price">₹40</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Veg Maggi</span>
+                    <span class="item-price">₹60</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Veg Spicy Maggi</span>
+                    <span class="item-price">₹70</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Cheese Maggi <span class="chef-special">Popular</span></span>
+                    <span class="item-price">₹80</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Garlic Bread</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">French Fries</span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Peri Peri Fries</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Cheese Loaded Fries <span class="chef-special">Must Try</span></span>
+                    <span class="item-price">₹120</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 7: Mocktails -->
+              <div class="cafe-menu-card" data-category="mocktails">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Chilled &amp; Fizzy</span>
+                    <h4>🍹 Mocktails</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Virgin Mojito</span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Green Apple Mojito</span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Blue Lagoon <span class="chef-special">Signature</span></span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Pink Lady</span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Pinacolada</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Kaala Khatta</span>
+                    <span class="item-price">₹90</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category 8: Shakes & Cold Coffee -->
+              <div class="cafe-menu-card" data-category="shakes">
+                <div class="cafe-menu-card-header">
+                  <div class="cafe-menu-card-title-wrap">
+                    <span class="cafe-menu-badge">Thick &amp; Creamy</span>
+                    <h4>🥤 Shakes &amp; Coolers</h4>
+                  </div>
+                </div>
+                <div class="cafe-menu-items">
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Vanilla Shake</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Chocolate Shake</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Strawberry Shake</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Black Currant Shake</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Cold Coffee <span class="chef-special">Bestseller</span></span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                  <div class="cafe-menu-item highlight">
+                    <span class="item-name">Oreo Shake</span>
+                    <span class="item-price">₹120</span>
+                  </div>
+                  <div class="cafe-menu-item">
+                    <span class="item-name">Iced Tea</span>
+                    <span class="item-price">₹100</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact & Ordering Banner -->
+            <div class="cafe-menu-order-strip">
+              <div class="order-strip-text">
+                <span class="order-strip-icon">📞</span>
+                <div>
+                  <strong>Order at Counter or Direct Call:</strong>
+                  <span>+91 9205599102 · Shopping Arcade, SNU</span>
+                </div>
+              </div>
+              <a href="tel:+919205599102" class="cafe-fomo-btn cafe-fomo-btn-primary" style="padding: 10px 22px;">Call +91 9205599102</a>
+            </div>
+          </div>
+
+          <div class="cafe-fomo-divider"></div>
+
+          <!-- Vibe & Experience Bento Gallery -->
+          <div class="cafe-fomo-gallery-section">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <span class="cafe-fomo-section-label">ATMOSPHERE &amp; MOMENTS</span>
+              <h3 class="cafe-fomo-subheading">The CAFÉ FOMO Experience</h3>
+              <p class="cafe-fomo-subheading-desc">A sneak peek into the space, the sips, and the creative spirit brewing behind the scenes.</p>
+            </div>
+
+            <div class="cafe-fomo-bento">
+              <div class="cafe-fomo-bento-item bento-1">
+                <div class="bento-badge-tag">INTERIORS</div>
+                <div class="cafe-fomo-bento-label">Cozy Seating &amp; Warm Ambient Glow</div>
+              </div>
+              <div class="cafe-fomo-bento-item bento-2">
+                <div class="bento-badge-tag">POUR &amp; SIP</div>
+                <div class="cafe-fomo-bento-label">Signature Handcrafted Cups</div>
+              </div>
+              <div class="cafe-fomo-bento-item bento-3">
+                <div class="bento-badge-tag">COMMUNITY</div>
+                <div class="cafe-fomo-bento-label">Study Lounges &amp; Music Sessions</div>
+              </div>
+              <div class="cafe-fomo-bento-item bento-4">
+                <div class="bento-badge-tag">CAMPUS VIBES</div>
+                <div class="cafe-fomo-bento-label">The Offline Hangout Landmark</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cafe-fomo-divider"></div>
+
+          <!-- Offline Visit / Footfall CTA Card -->
+          <div class="cafe-fomo-visit">
+            <div class="cafe-fomo-visit-badge">IRL EXPERIENCE</div>
+            <h3>Visit Us In Real Life</h3>
+            <p class="cafe-fomo-visit-lead">CAFÉ FOMO is designed strictly as an offline experiential destination. Drop by, unwind with friends, grab a fresh brew, and feed your curiosity.</p>
+            
+            <div class="cafe-fomo-visit-info">
+              <div class="cafe-fomo-visit-block">
+                <h4>📍 Location</h4>
+                <p>Shopping Arcade, Shiv Nadar Institution of Eminence (SNU)<br>G.T. Road, Dadri, Greater Noida, U.P. 201314</p>
+              </div>
+              <div class="cafe-fomo-visit-block">
+                <h4>⏰ Opening Status</h4>
+                <p><strong>Brewing Soon!</strong><br>Opening dates, launch parties, and hours will be announced first on our campus channels.</p>
+              </div>
+            </div>
+
+            <div class="cafe-fomo-visit-actions">
+              <a href="https://maps.google.com/?q=28.527621311362424,77.57296806811677" target="_blank" rel="noopener noreferrer" class="cafe-fomo-btn cafe-fomo-btn-primary directions-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>Get Directions (Maps)</span>
+              </a>
+              <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="cafe-fomo-btn cafe-fomo-btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                <span>Follow @grabbo_snu</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="site-footer" style="position: relative; z-index: 10;">
+        <div class="footer-container">
+          <div class="footer-grid">
+            <!-- Column 1: Brand & Bio -->
+            <div class="footer-col footer-col-brand">
+              <div class="footer-brand-header">
+                <img src="/logo-96.webp" alt="Grabbo Logo" class="footer-brand-logo" width="48" height="48" loading="lazy">
+                <span class="footer-brand-name">GRABBO</span>
+              </div>
+              <p class="footer-tagline">
+                Elevating the everyday by turning simple essentials into an extraordinary, curated experience.
+              </p>
+              <div class="footer-social-row">
+                <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="footer-social-circle" aria-label="Instagram">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Column 2: Visit Us -->
+            <div class="footer-col footer-col-visit">
+              <h3 class="footer-heading">Visit Us</h3>
+              <div class="footer-info-list">
+                <div class="footer-info-item">
+                  <svg class="footer-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span>Shopping Arcade<br>Shiv Nadar Institution of Eminence,<br>G. T. Road, Dadri<br>Greater Noida, U.P.<br>India - 201314</span>
+                </div>
+                <div class="footer-info-item">
+                  <svg class="footer-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  <span><a href="tel:+919999725000">+91 9999725000</a> / <a href="tel:+919289300102">9289300102</a></span>
+                </div>
+                <div class="footer-info-item">
+                  <svg class="footer-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  </svg>
+                  <span>
+                    <a href="mailto:auctusresources@gmail.com">auctusresources@gmail.com</a><br>
+                    <a href="mailto:grabbo.snu@gmail.com">grabbo.snu@gmail.com</a>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 3: Queries & Collaboration -->
+            <div class="footer-col footer-col-collab">
+              <h3 class="footer-heading">Queries &amp; Collaboration</h3>
+              <p class="footer-collab-text">
+                Questions, partnerships or events: it all goes through one form.
+              </p>
+              <a href="/#queries" class="footer-join-btn">ASK US →</a>
+            </div>
+          </div>
+
+          <!-- Bottom Bar / Subfooter -->
+          <div class="footer-bottom">
+            <div class="footer-copyright">
+              © 2026 GRABBO CONVENIENCE. ALL RIGHTS RESERVED.
+            </div>
+            <div class="footer-legal-links">
+              <a href="/about">ABOUT</a>
+              <a href="/cafe-fomo">CAFÉ FOMO</a>
+              <a href="/privacy">PRIVACY</a>
+              <a href="/privacy#terms">TERMS</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/cafe-fomo.js"></script>
+  </body>
+</html>
+

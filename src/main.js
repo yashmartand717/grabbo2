@@ -294,11 +294,11 @@ const updateScrollAnimation = () => {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   // Calculate max scroll for the page
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  
+
   let scrollFraction = maxScroll > 0 ? scrollTop / maxScroll : 0;
   if (scrollFraction > 1) scrollFraction = 1;
   if (scrollFraction < 0) scrollFraction = 0;
-  
+
   // Mobile content grows as cards/news load. Use a stable two-screen distance so
   // the same swipe always reaches the same frame, independent of page length.
   const sequenceFraction = isPortraitCanvas()
@@ -307,12 +307,12 @@ const updateScrollAnimation = () => {
   const frameIndex = isPortraitCanvas()
     ? Math.round(sequenceFraction * (frameCount - 1))
     : Math.min(frameCount - 1, Math.floor(scrollFraction * frameCount));
-  
+
   // Dim background canvas dynamically on scroll
   const brightness = 1 - (scrollFraction * 0.8);
   canvas.style.opacity = brightness;
 
-  
+
   // Linear zoom has no ease-in dead zone at the beginning of the first swipe.
   const zoom = Math.max(0, Math.min(1, scrollTop / canvasHeight));
   const zoomChanged = isPortraitCanvas() && zoom !== portraitZoom;
@@ -390,7 +390,7 @@ document.querySelectorAll('.product-card').forEach(card => {
 // Products, events and testimonials live in ./content.js
 
 // Clean URLs: each view has its own path (vercel.json serves index.html for them)
-const ROUTES = { home: '/', products: '/products', about: '/about', events: '/events', 'cafe-fomo': '/cafe-fomo', story: '/story' };
+const ROUTES = { home: '/', products: '/products', about: '/about', events: '/events', story: '/story' };
 // Old "#products"-style links are redirected to the matching path on load
 const LEGACY_HASHES = { '#home': 'home', '#products': 'products', '#about': 'about', '#events': 'events', '#cafe-fomo': 'cafe-fomo', '#story': 'story' };
 
@@ -438,16 +438,16 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 function showCatalog(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('products');
-  
+
   canvas.style.opacity = 0.25;
   window.scrollTo(0, 0);
-  
+
   // Fade out home, about, events and cafe-fomo
   homeView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
   if (cafeFomoView) cafeFomoView.style.opacity = '0';
-  
+
   setTimeout(() => {
     homeView.classList.add('hidden');
     homeView.classList.remove('active');
@@ -488,18 +488,18 @@ function hideCatalog(e, updateHistory = true) {
   if (eventsView) eventsView.style.opacity = '0';
   if (cafeFomoView) cafeFomoView.style.opacity = '0';
   window.scrollTo(0, 0);
-  
+
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   let scrollFraction = maxScroll > 0 ? scrollTop / maxScroll : 0;
   canvas.style.opacity = 1 - (scrollFraction * 0.8);
-  
+
   setTimeout(() => {
     catalogView.classList.add('hidden');
     catalogView.classList.remove('active');
-    if (aboutView) { 
-      aboutView.classList.add('hidden'); 
-      aboutView.classList.remove('active'); 
+    if (aboutView) {
+      aboutView.classList.add('hidden');
+      aboutView.classList.remove('active');
     }
     if (eventsView) {
       eventsView.classList.add('hidden');
@@ -542,7 +542,7 @@ function renderCatalog(category) {
 
     const imgContainer = document.createElement('div');
     imgContainer.className = 'catalog-card-img';
-    
+
     const img = document.createElement('img');
     img.src = prod.image;
     img.alt = prod.name;
@@ -553,7 +553,7 @@ function renderCatalog(category) {
       img.style.objectFit = 'contain';
       img.style.padding = '25px';
     };
-    
+
     imgContainer.appendChild(img);
 
     if (prod.suggestion) {
@@ -563,16 +563,16 @@ function renderCatalog(category) {
       badge.append(` ${prod.suggestion}`);
       imgContainer.appendChild(badge);
     }
-    
+
     const detailsContainer = document.createElement('div');
     detailsContainer.className = 'catalog-card-details';
-    
+
     const title = document.createElement('h3');
     title.textContent = prod.name;
-    
+
     const desc = document.createElement('p');
     desc.textContent = prod.desc;
-    
+
     const meta = document.createElement('div');
     meta.className = 'catalog-card-meta';
     meta.innerHTML = `
@@ -587,7 +587,7 @@ function renderCatalog(category) {
     detailsContainer.appendChild(title);
     detailsContainer.appendChild(desc);
     detailsContainer.appendChild(meta);
-    
+
     card.appendChild(imgContainer);
     card.appendChild(detailsContainer);
 
@@ -613,10 +613,10 @@ function renderCatalog(category) {
 function showAbout(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('about');
-  
+
   canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
-  
+
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   if (eventsView) eventsView.style.opacity = '0';
@@ -643,7 +643,7 @@ function showAbout(e, updateHistory = true) {
       cafeFomoView.classList.add('hidden');
       cafeFomoView.classList.remove('active');
     }
-    
+
     aboutView.classList.remove('hidden');
     aboutView.classList.add('active');
     aboutView.style.opacity = '1';
@@ -654,10 +654,10 @@ function showAbout(e, updateHistory = true) {
 function showEvents(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('events');
-  
+
   canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
-  
+
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
@@ -676,7 +676,7 @@ function showEvents(e, updateHistory = true) {
       cafeFomoView.classList.add('hidden');
       cafeFomoView.classList.remove('active');
     }
-    
+
     eventsView.classList.remove('hidden');
     eventsView.classList.add('active');
     eventsView.style.opacity = '1';
@@ -687,10 +687,10 @@ function showEvents(e, updateHistory = true) {
 function showCafeFomo(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('cafe-fomo');
-  
+
   canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
-  
+
   homeView.style.opacity = '0';
   catalogView.style.opacity = '0';
   if (aboutView) aboutView.style.opacity = '0';
@@ -709,7 +709,7 @@ function showCafeFomo(e, updateHistory = true) {
       eventsView.classList.add('hidden');
       eventsView.classList.remove('active');
     }
-    
+
     cafeFomoView.classList.remove('hidden');
     cafeFomoView.classList.add('active');
     cafeFomoView.style.opacity = '1';
@@ -733,16 +733,13 @@ document.querySelectorAll('a[href="/events"]').forEach(btn => {
   btn.addEventListener('click', (e) => showEvents(e, true));
 });
 
-// Navbar "Café FOMO" link -> Opens Café FOMO view
-document.querySelectorAll('a[href="/cafe-fomo"], .nav-cafefomo-link').forEach(btn => {
-  btn.addEventListener('click', (e) => showCafeFomo(e, true));
-});
+// Café FOMO is a dedicated separate page (/cafe-fomo) -> allow natural browser navigation
+// (No click interception so the separate page opens cleanly)
 
-// About, Events & Café FOMO: clicking the dimmed area outside the card returns to Home
+// About & Events: clicking the dimmed area outside the card returns to Home
 const dismissibleViews = [
   { view: aboutView, card: '.about-card' },
-  { view: eventsView, card: '.events-container' },
-  { view: cafeFomoView, card: '.cafe-fomo-container' }
+  { view: eventsView, card: '.events-container' }
 ];
 // Navbar links and the logo do their own navigation; empty navbar space counts as outside
 const isOutsideCard = (target, card) => !target.closest(card) && !target.closest('.navbar a, .navbar button, #logo-home-btn');
@@ -787,13 +784,13 @@ function scrollToHomeSection(storyTarget) {
   if (!storyTarget) return;
 
   const isHomeActive = homeView && homeView.classList.contains('active') && !homeView.classList.contains('hidden');
-  
+
   if (!isHomeActive) {
     catalogView.style.opacity = '0';
     if (aboutView) aboutView.style.opacity = '0';
     if (eventsView) eventsView.style.opacity = '0';
     if (cafeFomoView) cafeFomoView.style.opacity = '0';
-    
+
     catalogView.classList.add('hidden');
     catalogView.classList.remove('active');
     if (aboutView) {
@@ -812,7 +809,7 @@ function scrollToHomeSection(storyTarget) {
     homeView.classList.remove('hidden');
     homeView.classList.add('active');
     homeView.style.opacity = '1';
-    
+
     setTimeout(() => scrollSectionIntoView(storyTarget), 150);
   } else {
     scrollSectionIntoView(storyTarget);
@@ -958,7 +955,7 @@ tabBtns.forEach(btn => {
 
     btn.classList.add('active');
 
-    
+
 
     // Render category
 
@@ -972,22 +969,22 @@ tabBtns.forEach(btn => {
 
 // --- Health News: outbreak headlines from trusted outlets (newsSources in content.js) ---
 const NEWS_LOOKBACK_DAYS = 14;
-const NEWS_QUERY = `(dengue OR malaria OR chikungunya OR H1N1 OR "swine flu" OR "viral fever" OR influenza OR covid OR typhoid OR cholera) (delhi OR noida OR "greater noida" OR gurugram OR ghaziabad OR ncr) when:${NEWS_LOOKBACK_DAYS}d`;
+const NEWS_QUERY = `(dengue OR malaria OR chikungunya OR H1N1 OR "swine flu" OR "viral fever" OR influenza OR covid OR typhoid OR cholera OR cough OR pollution OR aqi OR smog OR respiratory) (delhi OR noida OR "greater noida" OR gurugram OR ghaziabad OR ncr) when:${NEWS_LOOKBACK_DAYS}d`;
 const NEWS_URL = `/api/news/rss/search?q=${encodeURIComponent(NEWS_QUERY)}&hl=en-IN&gl=IN&ceid=IN:en`;
 const MAX_NEWS_CARDS = 8;
 const MIN_NEWS_CARDS = 3; // topped up with health tips below this
 const NCR_PATTERN = /delhi|noida|gurugram|gurgaon|ghaziabad|faridabad|\bncr\b/i;
-// Outside Delhi NCR (and for Covid/flu everywhere, which turn up in unrelated stories), a headline
-// must be about the illness spreading, not about policy, courts or money
-const HEALTH_CONTEXT = /\bcases?\b|outbreak|surge|spike|\brise\b|rising|infect|patients?|deaths?|\bdied\b|hospitali[sz]|alert|advisory|symptoms?|prevent|precaution|spread|\bwave\b|down with|fevers?/i;
-const OFF_TOPIC = /fraud|scam|insur|\bclaim|court|appeal|verdict|stock|shares|tariff|price|budget|tender/i;
+// Filter for genuine medical/health/spread context
+const HEALTH_CONTEXT = /\bcases?\b|outbreak|surge|spike|\brise\b|rising|infect|patients?|deaths?|\bdied\b|hospitali[sz]|alert|advisory|symptoms?|prevent|precaution|spread|\bwave\b|down with|fevers?|cough|respiratory|illness|illnesses|doctor|doctors|health|complication|complications|warn|warning|treatment|care|hospital|hospitals|aqi|pollution/i;
+const OFF_TOPIC = /fraud|scam|insur|\bclaim|court|appeal|verdict|stock|shares|tariff|price|budget|tender|criticism|diploma|refund|scoreboard|cricket|bjp|congress|rahul gandhi|modi|politics|minister/i;
 
 const NEWS_TOPICS = [
   { pattern: /dengue|chikungunya|malaria|mosquito|vector/i, label: 'Dengue & Malaria Alert', tip: 'Use mosquito repellent, wear full sleeves after sunset, and don\'t let water collect near your room.' },
   { pattern: /h1n1|swine flu|influenza|viral fever/i, label: 'Flu & Viral Alert', tip: 'Wear a mask in crowded places, wash hands often, and see a doctor if a fever lasts more than two days.' },
-  { pattern: /\bflu\b/i, label: 'Flu & Viral Alert', tip: 'Wear a mask in crowded places, wash hands often, and see a doctor if a fever lasts more than two days.', needsContext: true },
-  { pattern: /covid/i, label: 'Covid Update', tip: 'Mask up in crowded indoor spaces, sanitise your hands, and get tested if you have symptoms.', needsContext: true },
-  { pattern: /typhoid|cholera/i, label: 'Water-borne Alert', tip: 'Drink only purified water, avoid uncovered street food, and keep ORS handy.' }
+  { pattern: /\bflu\b/i, label: 'Flu & Viral Alert', tip: 'Wear a mask in crowded places, wash hands often, and see a doctor if a fever lasts more than two days.' },
+  { pattern: /covid/i, label: 'Covid Update', tip: 'Mask up in crowded indoor spaces, sanitise your hands, and get tested if you have symptoms.' },
+  { pattern: /typhoid|cholera/i, label: 'Water-borne Alert', tip: 'Drink only purified water, avoid uncovered street food, and keep ORS handy.' },
+  { pattern: /cough|pollution|aqi|smog|respiratory|breathing|asthma/i, label: 'Air Quality & Respiratory Alert', tip: 'Wear an N95 mask outdoors, avoid strenuous exercise during peak smog hours, and stay hydrated.' }
 ];
 
 const formatNewsDate = (date) => {
@@ -1038,13 +1035,35 @@ function parseHealthNews(xmlText) {
     if (seenTitles.has(titleKey)) return;
     seenTitles.add(titleKey);
 
-    // Link back to the publisher's article; feed URLs are third-party input, so only https is allowed
+    // Link back to the original article; validate scheme
     let link = '';
     try {
-      const url = new URL(item.querySelector('link')?.textContent.trim() || '');
-      if (url.protocol === 'https:') link = url.href;
+      const rawLink = item.querySelector('link')?.textContent.trim()
+        || item.getElementsByTagName('link')[0]?.textContent.trim()
+        || '';
+      if (rawLink) {
+        const url = new URL(rawLink);
+        if (url.protocol === 'https:' || url.protocol === 'http:') link = url.href;
+      }
     } catch (e) {
-      // no usable link: the headline is shown without one
+      // invalid url
+    }
+
+    // Secondary fallback: extract anchor href from <description>
+    if (!link) {
+      const descText = item.querySelector('description')?.textContent || '';
+      const hrefMatch = descText.match(/href="([^"]+)"/i);
+      if (hrefMatch && hrefMatch[1]) {
+        try {
+          const url = new URL(hrefMatch[1]);
+          if (url.protocol === 'https:' || url.protocol === 'http:') link = url.href;
+        } catch (e) {}
+      }
+    }
+
+    // Tertiary fallback: link to verified publisher domain
+    if (!link && source.getAttribute('url')) {
+      link = source.getAttribute('url');
     }
 
     cards.push({
@@ -1052,8 +1071,9 @@ function parseHealthNews(xmlText) {
       title,
       link,
       source: `${sourceName} • ${formatNewsDate(published)}`,
+      sourceName,
       desc: `Grabbo tip: ${topic.tip}`,
-      action: 'View Precautions & Essentials',
+      action: `Read on ${sourceName}`,
       category: 'precautions',
       isNCR,
       published
@@ -1069,88 +1089,77 @@ async function fetchHealthNews() {
   const newsGrid = document.getElementById('dynamic-news-grid');
   if (!newsGrid) return;
 
-  // Shown when there is little or no recent news; labelled as tips so they never pass as headlines
+  // Fallback advisories linking directly to verified global/national health bodies
   const fallbackAlerts = [
     {
-      badge: "Grabbo Health Tip",
+      badge: "Grabbo Health Advisory",
       title: "Seasonal Viral & H1N1 Flu Advisory",
-      desc: "Weather changes and seasonal humidity have led to an uptick in viral fevers and sore throats. Grabbo recommends keeping N95 masks, Crocin, and Vicks handy in your hostel room.",
-      action: "View Fever & Cold Essentials",
+      desc: "Weather transitions and seasonal humidity often cause surges in viral coughs and sore throats. Grabbo recommends keeping N95 masks, Crocin, and Vicks handy in your hostel room.",
+      source: "World Health Organization • Global Health Advisory",
+      sourceName: "WHO Advisory",
+      link: "https://www.who.int/news-room/fact-sheets/detail/influenza-(seasonal)",
+      action: "Read WHO Advisory",
       category: "precautions"
     },
     {
-      badge: "Grabbo Health Tip",
+      badge: "Grabbo Health Advisory",
       title: "Dengue & Mosquito Defense Measures",
-      desc: "Rainwater pooling after showers increases mosquito breeding. Protect yourself during evening study walks with Odomos mosquito repellent cream and protective lotions.",
-      action: "View Mosquito Defense",
+      desc: "Stagnant rainwater after seasonal showers increases vector-borne risks. Protect yourself during evening study walks with Odomos mosquito repellent cream and protective lotions.",
+      source: "World Health Organization • Vector Health Advisory",
+      sourceName: "WHO Advisory",
+      link: "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue",
+      action: "Read WHO Advisory",
       category: "precautions"
     },
     {
-      badge: "Grabbo Health Tip",
+      badge: "Grabbo Health Advisory",
       title: "Electrolyte Balance & Exhaustion Care",
       desc: "Humid campus days and long study sessions quickly drain vital salts and energy. Replenish with WHO-standard Electral ORS and cold energy drinks from Grabbo.",
-      action: "View Hydration & ORS",
+      source: "World Health Organization • Hydration & Health",
+      sourceName: "WHO Advisory",
+      link: "https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease",
+      action: "Read WHO Advisory",
       category: "precautions"
     }
   ];
 
   function createCardElement(item) {
-    const card = document.createElement('div');
+    // The entire card is an anchor linking directly to the external publisher article
+    const card = document.createElement('a');
     card.className = 'product-card news-card';
+    card.href = item.link || '#';
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
     card.setAttribute('data-category', item.category || 'precautions');
+    card.setAttribute('aria-label', `${item.title} - Read full article on ${item.sourceName || 'external publisher'}`);
 
-    // Static markup only; feed-supplied text is set via textContent (headlines are third-party input)
+    // Static markup only; feed-supplied text is set via textContent for security
     card.innerHTML = `
       <div class="news-card-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
         <span class="news-card-badge-text"></span>
       </div>
       <h3 class="news-card-title"></h3>
       <p class="news-card-source"></p>
       <p class="news-card-desc"></p>
-      <button type="button" class="news-card-action">
+      <div class="news-card-action">
         <span class="news-card-action-text"></span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+      </div>
     `;
-    card.querySelector('.news-card-badge-text').textContent = item.badge;
 
-    // Headline and source open the original article on the publisher's site
-    const titleEl = card.querySelector('.news-card-title');
+    card.querySelector('.news-card-badge-text').textContent = item.badge;
+    card.querySelector('.news-card-title').textContent = item.title;
+
     const sourceEl = card.querySelector('.news-card-source');
-    if (item.link) {
-      const titleLink = document.createElement('a');
-      titleLink.href = item.link;
-      titleLink.target = '_blank';
-      titleLink.rel = 'noopener noreferrer';
-      titleLink.className = 'news-card-link';
-      titleLink.textContent = item.title;
-      titleEl.appendChild(titleLink);
-    } else {
-      titleEl.textContent = item.title;
-    }
     if (item.source) {
-      if (item.link) {
-        const sourceLink = document.createElement('a');
-        sourceLink.href = item.link;
-        sourceLink.target = '_blank';
-        sourceLink.rel = 'noopener noreferrer';
-        sourceLink.className = 'news-card-link';
-        sourceLink.textContent = `${item.source} ↗`;
-        sourceEl.appendChild(sourceLink);
-      } else {
-        sourceEl.textContent = item.source;
-      }
+      sourceEl.textContent = `${item.source} ↗`;
     } else {
       sourceEl.remove();
     }
-    card.querySelector('.news-card-desc').textContent = item.desc;
-    card.querySelector('.news-card-action-text').textContent = item.action || 'View Essentials & Products';
 
-    // Grabbo's own suggestion, kept separate from the publisher's headline
-    card.querySelector('.news-card-action').addEventListener('click', () => {
-      openCatalogCategory(card.getAttribute('data-category') || 'precautions');
-    });
+    card.querySelector('.news-card-desc').textContent = item.desc;
+    card.querySelector('.news-card-action-text').textContent = item.action || `Read on ${item.sourceName || 'Publisher'}`;
 
     return card;
   }
@@ -1178,7 +1187,7 @@ async function fetchHealthNews() {
     list.forEach(item => {
       group2.appendChild(createCardElement(item));
     });
-    // The clone is decorative; keep its links and buttons out of keyboard navigation
+    // The clone is decorative; keep its links out of keyboard navigation
     group2.querySelectorAll('a, button').forEach(el => el.setAttribute('tabindex', '-1'));
 
     newsGrid.appendChild(group1);
@@ -1540,8 +1549,6 @@ if (initialRoute === 'products') {
   showAbout(null, false);
 } else if (initialRoute === 'events') {
   showEvents(null, false);
-} else if (initialRoute === 'cafe-fomo') {
-  showCafeFomo(null, false);
 } else if (initialRoute === 'story') {
   setTimeout(() => scrollToStory(null, false), 400);
 }
@@ -1592,11 +1599,9 @@ if (queryForm) {
     const message = String(data.get('message') || '').trim();
     if (!name || !email) return;
 
-    const intro = topic === 'Mailing list'
-      ? `Please add ${email} to your mailing list for releases and campus events.`
-      : message || '(no message)';
+    const intro = message || '(no message)';
     const subject = `[${topic}] Query from ${name}`;
-    const body = `Hi Grabbo,\n\n${intro}\n\n${topic === 'Mailing list' && message ? message + '\n\n' : ''}Name: ${name}\nEmail: ${email}\n${phone ? `Phone: ${phone}\n` : ''}`;
+    const body = `Hi Grabbo,\n\n${intro}\n\nName: ${name}\nEmail: ${email}\n${phone ? `Phone: ${phone}\n` : ''}`;
 
     if (!emailjsReady) {
       window.location.href = `mailto:${QUERY_INBOX}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -1612,7 +1617,7 @@ if (queryForm) {
         email,
         phone: phone || 'Not given',
         topic,
-        message: topic === 'Mailing list' && message ? `${intro}\n\n${message}` : intro,
+        message: intro,
         subject,
         reply_to: email,
         to_email: QUERY_INBOX

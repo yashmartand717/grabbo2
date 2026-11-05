@@ -7,7 +7,7 @@ export const SITE_URL = 'https://www.grabbo.store';
 export const pageMeta = {
   home: {
     path: '/',
-    title: 'Grabbo @ SNU – Convenience Store & Café at Shiv Nadar University',
+    title: 'GRABBO',
     description: 'Grabbo is the in-campus convenience store and café at the Shiv Nadar University Shopping Arcade, Greater Noida: snacks, beverages, coffee, bakery, health essentials and hostel delivery.'
   },
   products: {

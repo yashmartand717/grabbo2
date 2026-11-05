@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.agent/
+.agents/
 
 # Editor directories and files
 .vscode/*
@@ -28,6 +30,8 @@ dist-ssr
 !tests/*.py
 *.cjs
 test.jpg
+__pycache__/
+*.pyc
 
 # Archives, business documents and unused asset backups
 *.zip

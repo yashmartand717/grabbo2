@@ -235,6 +235,15 @@ textarea,
   max-width: 1400px;
   margin: 0 auto;
 }
+.logo-wrapper,
+.logo-wrapper:visited,
+.logo-wrapper:active,
+.logo-wrapper:hover,
+.logo-wrapper:focus {
+  text-decoration: none !important;
+  color: #ffffff !important;
+}
+
 .logo {
   font-family: var(--font-display);
   font-size: 2rem;
@@ -242,14 +251,16 @@ textarea,
   letter-spacing: -0.02em;
   display: flex;
   align-items: center;
+  color: #ffffff !important;
 }
 .logo .highlight {
-  color: var(--primary);
+  color: var(--primary) !important;
 }
 
 .drop-letter {
   display: inline-block;
   opacity: 0;
+  color: #ffffff !important;
   transform: translateY(-20px);
   animation: dropIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   animation-delay: var(--delay);
@@ -550,11 +561,33 @@ textarea,
 }
 
 /* Specific News & Precautions Card Styles */
+a.news-card,
 .news-card {
   min-height: 250px;
   justify-content: space-between;
   border: 1px solid rgba(253, 224, 37, 0.22);
   background: linear-gradient(155deg, rgba(28, 25, 22, 0.96), rgba(18, 16, 14, 0.96));
+  text-decoration: none !important;
+  color: inherit !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.news-card:hover,
+.news-card:focus-visible {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(253, 224, 37, 0.28);
+  border-color: rgba(253, 224, 37, 0.65);
+  text-decoration: none !important;
+}
+
+.news-card:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
 }
 
 .news-card::before {
@@ -591,25 +624,34 @@ textarea,
   font-family: var(--font-display);
   font-size: 1.22rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #ffffff !important;
   line-height: 1.35;
   letter-spacing: -0.01em;
   margin-bottom: 12px;
+  transition: color 0.3s ease;
+  text-decoration: none !important;
+}
+
+.news-card:hover .news-card-title {
+  color: var(--primary) !important;
 }
 
 .news-card-source {
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(253, 224, 37, 0.85) !important;
   margin: -4px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .news-card-desc {
   font-family: var(--font-body);
   font-size: 0.94rem;
-  color: rgba(255, 255, 255, 0.84);
+  color: rgba(255, 255, 255, 0.84) !important;
   line-height: 1.6;
   margin-bottom: 22px;
   flex-grow: 1;
@@ -633,10 +675,19 @@ textarea,
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.news-card-action:hover,
-.news-card-action:focus-visible {
+.news-card:hover .news-card-action,
+.news-card:focus-visible .news-card-action {
   transform: translateX(4px);
   color: #ffffff;
+}
+
+.news-card-action svg {
+  transition: transform 0.3s ease;
+}
+
+.news-card:hover .news-card-action svg,
+.news-card:focus-visible .news-card-action svg {
+  transform: translate(2px, -2px);
 }
 
 .news-card-link {
@@ -3297,9 +3348,172 @@ a, button, .catalog-card, .btn-primary {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   CAFÉ FOMO — Dedicated View (warm island on the dark Grabbo canvas)
+   CAFÉ FOMO — UI/UX Styles Matching Grabbo Core Aesthetics
    ═══════════════════════════════════════════════════════════════════ */
 
+/* ── 1. Homepage Spotlight Section ────────────────────────────────── */
+.fomo-spotlight-section {
+  margin: 60px auto;
+  max-width: 1200px;
+  width: 90%;
+  padding: 48px 46px;
+  background: rgba(20, 18, 15, 0.82);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(253, 224, 37, 0.28);
+  border-radius: 28px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85),
+              0 0 50px rgba(253, 224, 37, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.fomo-spotlight-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.fomo-spotlight-content {
+  flex: 1 1 520px;
+  text-align: left;
+}
+
+.fomo-spotlight-content .section-title {
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.fomo-spotlight-tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+  color: var(--primary);
+  margin-bottom: 14px;
+  text-shadow: 0 2px 10px rgba(253, 224, 37, 0.3);
+}
+
+.fomo-spotlight-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 24px;
+  max-width: 620px;
+}
+
+.fomo-spotlight-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.fomo-highlight-pill {
+  background: rgba(253, 224, 37, 0.08);
+  border: 1px solid rgba(253, 224, 37, 0.25);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+}
+
+.fomo-highlight-pill:hover {
+  background: rgba(253, 224, 37, 0.16);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.fomo-pill-icon {
+  font-size: 1.1rem;
+}
+
+.fomo-spotlight-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.fomo-spotlight-visual {
+  flex: 0 0 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(30, 28, 25, 0.65);
+  border: 1px solid rgba(253, 224, 37, 0.22);
+  border-radius: 24px;
+  padding: 32px 26px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.fomo-badge-bubble {
+  background: rgba(253, 224, 37, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(253, 224, 37, 0.35);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(253, 224, 37, 0.2);
+}
+
+.fomo-spotlight-logo-wrap {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 6px;
+  border: 2px solid rgba(253, 224, 37, 0.45);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(253, 224, 37, 0.25);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.fomo-spotlight-logo-wrap:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 35px rgba(253, 224, 37, 0.35);
+}
+
+.fomo-spotlight-logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.fomo-spotlight-subtext {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── 2. Dedicated View Container & Header ─────────────────────────── */
 #cafe-fomo-view.hidden {
   display: none !important;
   opacity: 0 !important;
@@ -3312,186 +3526,230 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .cafe-fomo-container {
-  background: #FFFDF9;
+  background: rgba(18, 17, 15, 0.94);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(253, 224, 37, 0.3);
   border-radius: 28px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 40px auto 60px;
-  padding: 50px 44px;
+  padding: 50px 48px;
   position: relative;
   box-sizing: border-box;
-  color: #1E1E1E;
+  color: #FFFFFF;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85),
+              0 0 50px rgba(253, 224, 37, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  text-align: left;
 }
 
 .cafe-fomo-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 35px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(253, 224, 37, 0.2);
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .cafe-fomo-header-badge {
-  display: block;
-  width: fit-content;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--primary);
   margin-bottom: 8px;
-  color: #FD6C37;
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
-  line-height: 1.4;
-  text-shadow: none;
+  text-shadow: 0 0 12px rgba(253, 224, 37, 0.4);
 }
 
 .cafe-fomo-header .section-title {
-  position: relative;
-  width: fit-content;
-  padding-bottom: 12px;
   margin: 0;
-  color: #FD6C37;
-  font-family: var(--font-serif);
-  font-size: clamp(2.15rem, 5vw, 3.2rem);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  text-shadow: 1px 2px 0 #292524, 0 5px 10px rgba(65, 43, 36, 0.55), 0 10px 18px rgba(65, 43, 36, 0.25);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  text-align: left;
+  line-height: 1.1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
 }
 
 .cafe-fomo-title-accent {
-  color: #FD6C37;
-  text-shadow: 1px 2px 0 #292524, 0 5px 16px rgba(91, 56, 44, 0.5);
-}
-
-.cafe-fomo-header .section-title::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 56px;
-  height: 3px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #FD6C37, rgba(121, 86, 78, 0.25));
+  background: linear-gradient(135deg, var(--primary), #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .cafe-fomo-back-btn {
-  background: #1E1E1E !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #FFFFFF !important;
-  border: 2px solid #1E1E1E;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(253, 224, 37, 0.35) !important;
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 10px 22px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .cafe-fomo-back-btn:hover {
-  background: #333333 !important;
-  color: #FFFFFF !important;
+  background: var(--primary) !important;
+  color: #121110 !important;
+  border-color: var(--primary) !important;
   transform: translateY(-2px);
-  box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(253, 224, 37, 0.35);
+}
+
+/* ── 3. Announcement & Story Area ─────────────────────────────────── */
+.cafe-fomo-announcement {
+  text-align: center;
+  margin-bottom: 45px;
 }
 
 .cafe-fomo-badge {
-  background: #FF6B2B;
-  color: #FFFFFF;
+  background: rgba(253, 224, 37, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(253, 224, 37, 0.35);
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 6px 16px;
+  padding: 6px 18px;
   border-radius: 30px;
-  border: 2px solid #1E1E1E;
-  box-shadow: 3px 3px 0 #1E1E1E;
   display: inline-block;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 20px rgba(253, 224, 37, 0.15);
+}
+
+.cafe-fomo-logo-wrap {
+  width: 170px;
+  height: 170px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 6px;
+  border: 2px solid rgba(253, 224, 37, 0.45);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(253, 224, 37, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cafe-fomo-logo {
-  max-width: 280px;
   width: 100%;
-  height: auto;
-  margin: 0 auto 10px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
   display: block;
-}
-
-.cafe-fomo-announcement {
-  text-align: center;
-  margin-bottom: 46px;
 }
 
 .cafe-fomo-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2rem, 5vw, 3rem);
-  color: #1E1E1E;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  color: #FFFFFF;
   letter-spacing: -0.02em;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   line-height: 1.15;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
 }
 
 .cafe-fomo-tagline {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  color: #5C3A21;
-  margin-bottom: 16px;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  color: var(--primary);
+  margin-bottom: 18px;
   line-height: 1.4;
+  text-shadow: 0 2px 12px rgba(253, 224, 37, 0.3);
 }
 
 .cafe-fomo-story {
   font-family: var(--font-body);
-  font-size: 1.02rem;
-  line-height: 1.7;
-  color: #4A2C2A;
-  max-width: 600px;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 680px;
   margin: 0 auto;
-  opacity: 0.88;
 }
 
 .cafe-fomo-divider {
-  width: 60px;
-  height: 3px;
-  background: #FF6B2B;
-  margin: 0 auto 40px;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  margin: 45px auto;
   border-radius: 2px;
 }
 
+/* ── 4. Showcase Highlights Grid ──────────────────────────────────── */
 .cafe-fomo-section-label {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #FF6B2B;
-  margin-bottom: 18px;
+  color: var(--primary);
+  margin-bottom: 12px;
   display: block;
+  text-shadow: 0 0 12px rgba(253, 224, 37, 0.35);
+}
+
+.cafe-fomo-subheading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+}
+
+.cafe-fomo-subheading-desc {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .cafe-fomo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
   margin-bottom: 50px;
+  margin-top: 30px;
 }
 
 .cafe-fomo-card {
-  background: #FFFFFF;
-  border: 2px solid #1E1E1E;
-  border-radius: 16px;
-  padding: 28px 22px;
-  box-shadow: 4px 4px 0 #1E1E1E;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+  background: rgba(30, 28, 25, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(253, 224, 37, 0.2);
+  border-radius: 20px;
+  padding: 30px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.35s ease, box-shadow 0.35s ease;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
 .cafe-fomo-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 6px 8px 0 #1E1E1E;
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(253, 224, 37, 0.15);
 }
 
 .cafe-fomo-card-icon {
-  font-size: 2.4rem;
-  margin-bottom: 12px;
+  font-size: 2.5rem;
+  margin-bottom: 14px;
   display: block;
   line-height: 1;
 }
@@ -3499,335 +3757,90 @@ a, button, .catalog-card, .btn-primary {
 .cafe-fomo-card h3 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.1rem;
-  color: #1E1E1E;
-  margin-bottom: 8px;
+  font-size: 1.18rem;
+  color: #FFFFFF;
+  margin-bottom: 10px;
   line-height: 1.3;
 }
 
 .cafe-fomo-card p {
   font-family: var(--font-body);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: #5C3A21;
-  margin-bottom: 14px;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 18px;
 }
 
 .cafe-fomo-tag {
   display: inline-block;
-  background: #FFF3EB;
-  color: #F26419;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1.5px solid #F26419;
-}
-
-.cafe-fomo-bento {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 180px 180px;
-  gap: 14px;
-  margin-bottom: 50px;
-}
-
-.cafe-fomo-bento-item {
-  border-radius: 16px;
-  border: 2px solid #1E1E1E;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.cafe-fomo-bento-item:nth-child(1) {
-  grid-column: span 2;
-  background: linear-gradient(135deg, #FF6B2B, #F26419);
-}
-
-.cafe-fomo-bento-item:nth-child(2) {
-  background: linear-gradient(135deg, #4A2C2A, #5C3A21);
-}
-
-.cafe-fomo-bento-item:nth-child(3) {
-  background: linear-gradient(135deg, #F26419, #FF8C42);
-}
-
-.cafe-fomo-bento-item:nth-child(4) {
-  grid-column: span 2;
-  background: linear-gradient(135deg, #5C3A21, #8B5E3C);
-}
-
-.cafe-fomo-bento-label {
-  color: #FFFFFF;
+  background: rgba(253, 224, 37, 0.12);
+  color: var(--primary);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  background: rgba(0, 0, 0, 0.25);
-  padding: 6px 14px;
-  border-radius: 10px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.cafe-fomo-visit {
-  background: #FFFFFF;
-  border: 2px solid #1E1E1E;
-  border-radius: 20px;
-  padding: 36px 30px;
-  box-shadow: 4px 4px 0 #1E1E1E;
-  text-align: center;
-}
-
-.cafe-fomo-visit h3 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.5rem;
-  color: #1E1E1E;
-  margin-bottom: 20px;
-}
-
-.cafe-fomo-visit-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 28px;
-  text-align: left;
-}
-
-.cafe-fomo-visit-block h4 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: #FF6B2B;
-  text-transform: uppercase;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
-  margin-bottom: 8px;
-}
-
-.cafe-fomo-visit-block p {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: #4A2C2A;
-  margin: 0;
-}
-
-.cafe-fomo-visit-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-
-.cafe-fomo-btn {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 12px 28px;
-  border-radius: 12px;
-  border: 2px solid #1E1E1E;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
-  line-height: 1.2;
-}
-
-.cafe-fomo-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 3px 5px 0 #1E1E1E;
-}
-
-.cafe-fomo-btn-primary {
-  background: #FF6B2B;
-  color: #FFFFFF;
-  box-shadow: 3px 3px 0 #1E1E1E;
-}
-
-.cafe-fomo-btn-primary:hover {
-  background: #f26419;
-  color: #FFFFFF;
-}
-
-.cafe-fomo-btn-secondary {
-  background: #FFFFFF;
-  color: #1E1E1E;
-  box-shadow: 3px 3px 0 #1E1E1E;
-}
-
-.cafe-fomo-btn-secondary:hover {
-  background: #FFFDF9;
-  color: #1E1E1E;
-}
-
-/* ───────────────────────────────────────────────────────────────────
-   CAFÉ FOMO — Responsive Queries
-   ─────────────────────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .cafe-fomo-container {
-    margin: 16px;
-    padding: 30px 18px;
-  }
-
-  .cafe-fomo-bento {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(4, 150px);
-  }
-
-  .cafe-fomo-bento-item,
-  .cafe-fomo-bento-item:nth-child(1),
-  .cafe-fomo-bento-item:nth-child(4) {
-    grid-column: span 1;
-  }
-}
-
-@media (max-width: 600px) {
-  .cafe-fomo-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .cafe-fomo-visit-info {
-    grid-template-columns: 1fr;
-  }
-
-  .cafe-fomo-visit-actions {
-    flex-direction: column;
-  }
-
-  .cafe-fomo-visit-actions .cafe-fomo-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 500px) {
-  .cafe-fomo-bento {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 160px);
-  }
-}
-
-.cafe-fomo-subheading {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3vw, 1.8rem);
-  font-weight: 800;
-  color: #1E1E1E;
-  margin-bottom: 6px;
-}
-
-.cafe-fomo-subheading-desc {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: #5C3A21;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.bento-badge-tag {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  background: rgba(0, 0, 0, 0.4);
-  color: #ffffff;
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  padding: 4px 10px;
-  border-radius: 6px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.cafe-fomo-visit-badge {
-  display: inline-block;
-  background: #FFF3EB;
-  color: #FF6B2B;
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  padding: 4px 12px;
+  text-transform: uppercase;
+  padding: 5px 14px;
   border-radius: 20px;
-  border: 1.5px solid #FF6B2B;
-  margin-bottom: 12px;
+  border: 1px solid rgba(253, 224, 37, 0.3);
 }
 
-.cafe-fomo-visit-lead {
-  font-family: var(--font-body);
-  font-size: 1.02rem;
-  line-height: 1.6;
-  color: #5C3A21;
-  max-width: 600px;
-  margin: 0 auto 24px;
-}
-
-/* ───────────────────────────────────────────────────────────────────
-   CAFÉ FOMO — Official Menu Section Styles
-   ─────────────────────────────────────────────────────────────────── */
+/* ── 5. Official Menu Section ─────────────────────────────────────── */
 .cafe-fomo-menu-section {
-  margin: 36px 0 20px;
+  margin: 40px 0 20px;
 }
 
 .cafe-menu-tabs {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 30px;
+  gap: 10px;
+  margin-bottom: 35px;
 }
 
 .cafe-menu-tab {
-  background: #FFF3EB;
-  color: #5C3A21;
-  border: 1.5px solid #FFD9C2;
-  border-radius: 999px;
-  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  padding: 9px 20px;
   font-family: var(--font-display);
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .cafe-menu-tab:hover {
-  background: #FFE2D1;
-  border-color: #FF6B2B;
-  color: #FF6B2B;
-  transform: translateY(-1px);
+  background: rgba(253, 224, 37, 0.15);
+  border-color: rgba(253, 224, 37, 0.4);
+  color: #FFFFFF;
+  transform: translateY(-2px);
 }
 
 .cafe-menu-tab.active {
-  background: #FF6B2B;
-  border-color: #FF6B2B;
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(255, 107, 43, 0.3);
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #121110;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(253, 224, 37, 0.35);
 }
 
 .cafe-menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-  margin-bottom: 32px;
+  gap: 22px;
+  margin-bottom: 36px;
 }
 
 .cafe-menu-card {
-  background: #FFFFFF;
-  border: 2px solid #F0E6DD;
+  background: rgba(28, 25, 22, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(253, 224, 37, 0.18);
   border-radius: 20px;
-  padding: 22px 20px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  padding: 24px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   position: relative;
   overflow: hidden;
@@ -3839,15 +3852,15 @@ a, button, .catalog-card, .btn-primary {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #FF6B2B, #F26419);
-  opacity: 0.8;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  opacity: 0.9;
 }
 
 .cafe-menu-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(255, 107, 43, 0.12);
-  border-color: #FFB38A;
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(253, 224, 37, 0.12);
 }
 
 .cafe-menu-card.hidden {
@@ -3858,16 +3871,16 @@ a, button, .catalog-card, .btn-primary {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1.5px dashed #EADBD0;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .cafe-menu-card-title-wrap h4 {
   font-family: var(--font-display);
-  font-size: 1.22rem;
-  font-weight: 800;
-  color: #1E1E1E;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
   margin: 4px 0 0 0;
 }
 
@@ -3876,21 +3889,22 @@ a, button, .catalog-card, .btn-primary {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #FF6B2B;
-  background: #FFF3EB;
-  padding: 3px 8px;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  background: rgba(253, 224, 37, 0.12);
+  padding: 3px 9px;
   border-radius: 6px;
   display: inline-block;
+  border: 1px solid rgba(253, 224, 37, 0.25);
 }
 
 .cafe-menu-portion-hint {
   font-family: var(--font-display);
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: #8C6A54;
-  background: #F7EFE9;
-  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 9px;
   border-radius: 6px;
   white-space: nowrap;
 }
@@ -3905,11 +3919,10 @@ a, button, .catalog-card, .btn-primary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.94rem;
-  color: #2D2522;
-  position: relative;
-  line-height: 1.4;
-  gap: 8px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
+  padding: 5px 0;
+  gap: 10px;
 }
 
 .cafe-menu-item.highlight {
@@ -3931,63 +3944,324 @@ a, button, .catalog-card, .btn-primary {
 
 .item-price {
   font-family: var(--font-display);
-  font-weight: 800;
-  color: #D34A10;
-  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 0.98rem;
   white-space: nowrap;
   flex-shrink: 0;
-  text-align: right;
-  margin-left: auto;
+  text-shadow: 0 0 10px rgba(253, 224, 37, 0.25);
 }
 
 .chef-special {
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
-  background: #FFE6D5;
-  color: #D34A10;
-  padding: 2px 6px;
+  background: rgba(253, 224, 37, 0.2);
+  color: var(--primary);
+  border: 1px solid rgba(253, 224, 37, 0.35);
+  padding: 2px 7px;
   border-radius: 4px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   display: inline-block;
 }
 
 .cafe-menu-order-strip {
-  background: linear-gradient(135deg, #FFF7F0 0%, #FFEFE6 100%);
-  border: 2px solid #FFD1B8;
-  border-radius: 18px;
-  padding: 16px 24px;
+  background: rgba(30, 28, 25, 0.7);
+  border: 1px solid rgba(253, 224, 37, 0.25);
+  border-radius: 20px;
+  padding: 20px 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .order-strip-text {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .order-strip-icon {
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   line-height: 1;
 }
 
 .order-strip-text strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.98rem;
-  color: #1E1E1E;
+  font-size: 1rem;
+  color: #FFFFFF;
 }
 
 .order-strip-text span {
-  font-size: 0.88rem;
-  color: #6C5547;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-@media (max-width: 768px) {
+/* ── 6. Bento Visual Gallery ──────────────────────────────────────── */
+.cafe-fomo-gallery-section {
+  margin: 40px 0;
+}
+
+.cafe-fomo-bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 190px 190px;
+  gap: 16px;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.cafe-fomo-bento-item {
+  border-radius: 18px;
+  border: 1px solid rgba(253, 224, 37, 0.22);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 18px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.cafe-fomo-bento-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(253, 224, 37, 0.2);
+}
+
+.cafe-fomo-bento-item:nth-child(1) {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(253, 224, 37, 0.25), rgba(18, 17, 15, 0.85)), url('/store/grabbo_store_front.jpg') center/cover;
+}
+
+.cafe-fomo-bento-item:nth-child(2) {
+  background: linear-gradient(135deg, rgba(212, 185, 19, 0.25), rgba(20, 18, 15, 0.9)), url('/images/cafe-fomo/menu-beverages-maggi.jpg') center/cover;
+}
+
+.cafe-fomo-bento-item:nth-child(3) {
+  background: linear-gradient(135deg, rgba(253, 224, 37, 0.2), rgba(25, 22, 18, 0.9)), url('/images/cafe-fomo/menu-momo-sandwich.jpg') center/cover;
+}
+
+.cafe-fomo-bento-item:nth-child(4) {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(106, 93, 68, 0.35), rgba(18, 17, 15, 0.9)), url('/store/grabbo_store_counter.jpg') center/cover;
+}
+
+.bento-badge-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(18, 17, 15, 0.75);
+  color: var(--primary);
+  border: 1px solid rgba(253, 224, 37, 0.3);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cafe-fomo-bento-label {
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  background: rgba(18, 17, 15, 0.78);
+  border: 1px solid rgba(253, 224, 37, 0.2);
+  padding: 8px 16px;
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ── 7. IRL Experience Card ───────────────────────────────────────── */
+.cafe-fomo-visit {
+  background: rgba(30, 28, 25, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(253, 224, 37, 0.25);
+  border-radius: 24px;
+  padding: 42px 36px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.cafe-fomo-visit-badge {
+  display: inline-block;
+  background: rgba(253, 224, 37, 0.12);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(253, 224, 37, 0.3);
+  margin-bottom: 14px;
+}
+
+.cafe-fomo-visit h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+}
+
+.cafe-fomo-visit-lead {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 650px;
+  margin: 0 auto 28px;
+}
+
+.cafe-fomo-visit-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.cafe-fomo-visit-block {
+  background: rgba(20, 18, 15, 0.6);
+  border: 1px solid rgba(253, 224, 37, 0.15);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+.cafe-fomo-visit-block h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 8px;
+}
+
+.cafe-fomo-visit-block p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+.cafe-fomo-visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.cafe-fomo-btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 12px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.cafe-fomo-btn-primary {
+  background: var(--primary);
+  color: #121110;
+  border: 1px solid var(--primary);
+  box-shadow: 0 4px 20px rgba(253, 224, 37, 0.3);
+}
+
+.cafe-fomo-btn-primary:hover {
+  background: #ffffff;
+  color: #121110;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+.cafe-fomo-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  border: 1px solid rgba(253, 224, 37, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.cafe-fomo-btn-secondary:hover {
+  background: rgba(253, 224, 37, 0.15);
+  border-color: var(--primary);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(253, 224, 37, 0.2);
+}
+
+/* ── 8. Responsive Media Queries ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .fomo-spotlight-section {
+    padding: 36px 24px;
+    margin: 40px auto;
+  }
+  .fomo-spotlight-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .fomo-spotlight-content {
+    text-align: center;
+  }
+  .fomo-spotlight-content .section-title {
+    text-align: center;
+  }
+  .fomo-spotlight-highlights {
+    justify-content: center;
+  }
+  .fomo-spotlight-actions {
+    justify-content: center;
+  }
+  .cafe-fomo-container {
+    margin: 20px 14px;
+    padding: 32px 20px;
+  }
+  .cafe-fomo-bento {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 160px);
+  }
+  .cafe-fomo-bento-item:nth-child(1),
+  .cafe-fomo-bento-item:nth-child(4) {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .cafe-fomo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cafe-fomo-visit-info {
+    grid-template-columns: 1fr;
+  }
+  .cafe-fomo-visit-actions {
+    flex-direction: column;
+  }
+  .cafe-fomo-visit-actions .cafe-fomo-btn {
+    width: 100%;
+  }
   .cafe-menu-grid {
     grid-template-columns: 1fr;
   }
@@ -3998,6 +4272,17 @@ a, button, .catalog-card, .btn-primary {
   .order-strip-text {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .cafe-fomo-bento {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 160px);
+  }
+  .fomo-spotlight-visual {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 

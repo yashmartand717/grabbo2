@@ -14,7 +14,7 @@ const CATEGORY_LABELS = {
 }
 
 // Pages written at build time as <view>/index.html (dist/products/index.html is served at /products)
-const PAGES = { products: 'catalog-view', about: 'about-view', events: 'events-view', 'cafe-fomo': 'cafe-fomo-view' }
+const PAGES = { products: 'catalog-view', about: 'about-view', events: 'events-view' }
 
 const escapeHtml = value => String(value)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -46,7 +46,7 @@ const showView = (html, viewId) => {
 // Gives the page its own H1: the hidden home hero heading becomes a <p>, and the view's
 // first section title becomes the H1
 const setPageHeading = (html, viewId) => {
-  html = replaceOnce(html, /<h1 class="hero-brand-title">GRABBO<span class="visually-hidden">[^<]*<\/span><\/h1>/,
+  html = replaceOnce(html, /<h1 class="hero-brand-title">GRABBO(?:<span class="visually-hidden">[^<]*<\/span>)?<\/h1>/,
     '<p class="hero-brand-title">GRABBO</p>', 'hero h1')
   const open = html.indexOf('<h2 class="section-title"', html.indexOf(`id="${viewId}"`))
   const close = html.indexOf('</h2>', open)
@@ -113,17 +113,30 @@ const fillEvents = html => {
   return html
 }
 
-const sitemapXml = () => `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${['home', ...Object.keys(PAGES)].map(view => `  <url><loc>${SITE_URL}${pageMeta[view].path}</loc></url>`).join('\n')}
-  <url><loc>${SITE_URL}/privacy</loc></url>
-</urlset>
-`
+const SITEMAP_CONFIG = {
+  home: { changefreq: 'weekly', priority: '1.0' },
+  'cafe-fomo': { changefreq: 'weekly', priority: '0.9' },
+  products: { changefreq: 'weekly', priority: '0.9' },
+  about: { changefreq: 'monthly', priority: '0.8' },
+  events: { changefreq: 'weekly', priority: '0.8' },
+  privacy: { changefreq: 'yearly', priority: '0.3' }
+}
+
+const sitemapXml = () => {
+  const today = new Date().toISOString().slice(0, 10)
+  const entries = ['home', 'cafe-fomo', ...Object.keys(PAGES)].map(view => {
+    const loc = `${SITE_URL}${pageMeta[view].path}`
+    const { changefreq, priority } = SITEMAP_CONFIG[view] || { changefreq: 'monthly', priority: '0.7' }
+    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`
+  })
+  entries.push(`  <url>\n    <loc>${SITE_URL}/privacy</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`)
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`
+}
 
 // Plain-text summary for AI assistants (https://llmstxt.org)
 const llmsTxt = () => {
   const lines = [
-    '# Grabbo @ SNU',
+    '# GRABBO',
     '',
     '> In-campus convenience store, café and experience center at the Shopping Arcade of Shiv Nadar University (Shiv Nadar Institution of Eminence), Greater Noida, Uttar Pradesh, India. Run by Auctus Resources since April 2021; founder Vijay Tiwary.',
     '',
@@ -135,7 +148,7 @@ const llmsTxt = () => {
     '',
     '## Pages',
     '',
-    ...['home', ...Object.keys(PAGES)].map(view => `- [${pageMeta[view].title}](${SITE_URL}${pageMeta[view].path}): ${pageMeta[view].description}`),
+    ...['home', 'cafe-fomo', ...Object.keys(PAGES)].map(view => `- [${pageMeta[view].title}](${SITE_URL}${pageMeta[view].path}): ${pageMeta[view].description}`),
     '',
     '## Products (prices in INR, available in store)',
   ]
@@ -175,8 +188,29 @@ const prerenderPages = () => {
   }
 }
 
+const devServerMultiPageRewrite = () => ({
+  name: 'grabbo-dev-multipage-rewrite',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      const pathname = req.url.split('?')[0].split('#')[0];
+      if (pathname === '/cafe-fomo') {
+        req.url = '/cafe-fomo/index.html' + (req.url.includes('?') ? '?' + req.url.split('?')[1] : '');
+      }
+      next();
+    });
+  }
+});
+
 export default defineConfig({
-  plugins: [prerenderPages()],
+  plugins: [devServerMultiPageRewrite(), prerenderPages()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(process.cwd(), 'index.html'),
+        cafeFomo: resolve(process.cwd(), 'cafe-fomo/index.html')
+      }
+    }
+  },
   server: {
     proxy: {
       // Only the RSS search endpoint is proxied (mirrors vercel.json)
