@@ -3772,3 +3772,232 @@ a, button, .catalog-card, .btn-primary {
   max-width: 600px;
   margin: 0 auto 24px;
 }
+
+/* ───────────────────────────────────────────────────────────────────
+   CAFÉ FOMO — Official Menu Section Styles
+   ─────────────────────────────────────────────────────────────────── */
+.cafe-fomo-menu-section {
+  margin: 36px 0 20px;
+}
+
+.cafe-menu-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.cafe-menu-tab {
+  background: #FFF3EB;
+  color: #5C3A21;
+  border: 1.5px solid #FFD9C2;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cafe-menu-tab:hover {
+  background: #FFE2D1;
+  border-color: #FF6B2B;
+  color: #FF6B2B;
+  transform: translateY(-1px);
+}
+
+.cafe-menu-tab.active {
+  background: #FF6B2B;
+  border-color: #FF6B2B;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(255, 107, 43, 0.3);
+}
+
+.cafe-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.cafe-menu-card {
+  background: #FFFFFF;
+  border: 2px solid #F0E6DD;
+  border-radius: 20px;
+  padding: 22px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cafe-menu-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #FF6B2B, #F26419);
+  opacity: 0.8;
+}
+
+.cafe-menu-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(255, 107, 43, 0.12);
+  border-color: #FFB38A;
+}
+
+.cafe-menu-card.hidden {
+  display: none !important;
+}
+
+.cafe-menu-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px dashed #EADBD0;
+}
+
+.cafe-menu-card-title-wrap h4 {
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: #1E1E1E;
+  margin: 4px 0 0 0;
+}
+
+.cafe-menu-badge {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #FF6B2B;
+  background: #FFF3EB;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.cafe-menu-portion-hint {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #8C6A54;
+  background: #F7EFE9;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.cafe-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cafe-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.94rem;
+  color: #2D2522;
+  position: relative;
+  line-height: 1.4;
+  gap: 8px;
+}
+
+.cafe-menu-item.highlight {
+  font-weight: 600;
+}
+
+.item-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.item-dots {
+  display: none;
+}
+
+.item-price {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #D34A10;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
+  margin-left: auto;
+}
+
+.chef-special {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #FFE6D5;
+  color: #D34A10;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  display: inline-block;
+}
+
+.cafe-menu-order-strip {
+  background: linear-gradient(135deg, #FFF7F0 0%, #FFEFE6 100%);
+  border: 2px solid #FFD1B8;
+  border-radius: 18px;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.order-strip-text {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-strip-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.order-strip-text strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  color: #1E1E1E;
+}
+
+.order-strip-text span {
+  font-size: 0.88rem;
+  color: #6C5547;
+}
+
+@media (max-width: 768px) {
+  .cafe-menu-grid {
+    grid-template-columns: 1fr;
+  }
+  .cafe-menu-order-strip {
+    flex-direction: column;
+    text-align: center;
+  }
+  .order-strip-text {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+

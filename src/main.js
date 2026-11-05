@@ -1662,3 +1662,39 @@ if (customCursor) {
   });
 }
 
+// OS-aware Maps link handler (directs to Apple Maps on iOS/macOS, Google Maps on Android/desktop)
+const isAppleDevice = /iPad|iPhone|iPod|Macintosh/i.test(navigator.userAgent) && !window.MSStream;
+if (isAppleDevice) {
+  document.querySelectorAll('a.directions-link').forEach((link) => {
+    link.href = 'https://maps.apple.com/?daddr=28.527621311362424,77.57296806811677&q=Grabbo+Store';
+  });
+}
+
+// Café FOMO Menu Tabs Filtering
+const cafeMenuTabs = document.querySelectorAll('.cafe-menu-tab');
+const cafeMenuCards = document.querySelectorAll('.cafe-menu-card');
+
+cafeMenuTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    const targetTab = tab.getAttribute('data-tab');
+
+    cafeMenuTabs.forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+
+    cafeMenuCards.forEach(card => {
+      const category = card.getAttribute('data-category');
+      if (targetTab === 'all' || category === targetTab) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+
+
+
