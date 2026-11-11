@@ -316,6 +316,7 @@ textarea,
   align-items: center;
   justify-content: center;
   line-height: 1.2;
+  text-decoration: none;
   box-shadow: 0 4px 15px rgba(253, 224, 37, 0.4);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -2598,6 +2599,7 @@ a, button, .catalog-card, .btn-primary {
   align-items: center !important;
   gap: 10px !important;
   border-radius: 50px !important;
+  text-decoration: none !important;
   box-shadow: 0 6px 25px rgba(253, 224, 37, 0.45) !important;
   cursor: pointer;
   transition: all 0.3s ease !important;
@@ -3289,6 +3291,12 @@ a, button, .catalog-card, .btn-primary {
 
 /* Touch targets: at least 44px tall on phones (WCAG 2.5.5 / Google mobile guidance) */
 @media (max-width: 900px) {
+  .logo-wrapper {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+
   .nav-links a:not(.btn-primary),
   .footer-legal-links a,
   .footer-info-item a {
@@ -3337,8 +3345,16 @@ a, button, .catalog-card, .btn-primary {
 @media (max-width: 900px) {
   .explore-btn,
   .small-btn,
-  .tab-btn {
+  .tab-btn,
+  .btn-primary,
+  .cafe-menu-tab,
+  .cafe-fomo-btn {
     min-height: 44px;
+  }
+  .cafe-fomo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .weather-credit a,
   .events-empty-note a {
@@ -3557,7 +3573,7 @@ a, button, .catalog-card, .btn-primary {
 .cafe-fomo-header-badge {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -3777,7 +3793,7 @@ a, button, .catalog-card, .btn-primary {
   color: var(--primary);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 5px 14px;
@@ -3876,6 +3892,7 @@ a, button, .catalog-card, .btn-primary {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.cafe-menu-card-title-wrap h3,
 .cafe-menu-card-title-wrap h4 {
   font-family: var(--font-display);
   font-size: 1.25rem;
@@ -3886,7 +3903,7 @@ a, button, .catalog-card, .btn-primary {
 
 .cafe-menu-badge {
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -3953,7 +3970,7 @@ a, button, .catalog-card, .btn-primary {
 }
 
 .chef-special {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   background: rgba(253, 224, 37, 0.2);
@@ -4060,7 +4077,7 @@ a, button, .catalog-card, .btn-primary {
   color: var(--primary);
   border: 1px solid rgba(253, 224, 37, 0.3);
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   padding: 4px 10px;
@@ -4109,6 +4126,7 @@ a, button, .catalog-card, .btn-primary {
   margin-bottom: 14px;
 }
 
+.cafe-fomo-visit h2,
 .cafe-fomo-visit h3 {
   font-family: var(--font-display);
   font-weight: 800;
@@ -4141,6 +4159,7 @@ a, button, .catalog-card, .btn-primary {
   padding: 20px 22px;
 }
 
+.cafe-fomo-visit-block h3,
 .cafe-fomo-visit-block h4 {
   font-family: var(--font-display);
   font-weight: 700;

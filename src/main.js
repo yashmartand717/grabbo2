@@ -1,7 +1,7 @@
 // Grabbo Web - Premium Campus Essentials @ SNU Shopping Arcade
 import './style.css';
 import anime from 'animejs';
-import { products, events, testimonials, newsSources, weatherSuggestions } from './content.js';
+import { products, events, testimonials, newsSources, weatherSuggestions, CATEGORY_LABELS, getImageDimensions } from './content.js';
 import { SITE_URL, pageMeta } from './seo.js';
 
 // --- Scroll Sequence Animation ---
@@ -435,6 +435,61 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 
 
 
+const getAllViews = () => [homeView, catalogView, aboutView, eventsView, cafeFomoView].filter(Boolean);
+
+function setViewState(view, isActive) {
+  if (!view) return;
+  view.classList.toggle('active', isActive);
+  view.classList.toggle('hidden', !isActive);
+  if (isActive) {
+    view.removeAttribute('aria-hidden');
+    view.inert = false;
+    view.style.opacity = '1';
+  } else {
+    view.setAttribute('aria-hidden', 'true');
+    view.inert = true;
+  }
+}
+
+function replaceHeadingTag(el, tag) {
+  if (!el || el.tagName.toLowerCase() === tag) return el;
+  const next = document.createElement(tag);
+  for (const attr of el.attributes) next.setAttribute(attr.name, attr.value);
+  next.innerHTML = el.innerHTML;
+  el.replaceWith(next);
+  return next;
+}
+
+function syncPrimaryHeading(activeView) {
+  const heroTitle = homeView?.querySelector('.hero-brand-title');
+  if (heroTitle) replaceHeadingTag(heroTitle, activeView === homeView ? 'h1' : 'p');
+  [catalogView, aboutView, eventsView].forEach(view => {
+    const title = view?.querySelector('.section-title');
+    if (title) replaceHeadingTag(title, view === activeView ? 'h1' : 'h2');
+  });
+}
+
+function switchToView(activeView, afterSwitch) {
+  getAllViews().forEach(view => {
+    if (view !== activeView) view.style.opacity = '0';
+  });
+  setTimeout(() => {
+    syncPrimaryHeading(activeView);
+    getAllViews().forEach(view => setViewState(view, view === activeView));
+    if (afterSwitch) afterSwitch();
+    window.scrollTo(0, 0);
+  }, 200);
+}
+
+function applyImageProps(img, src) {
+  const dims = getImageDimensions(src);
+  if (dims) {
+    img.width = dims[0];
+    img.height = dims[1];
+  }
+  img.decoding = 'async';
+}
+
 function showCatalog(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('products');
@@ -442,51 +497,19 @@ function showCatalog(e, updateHistory = true) {
   canvas.style.opacity = 0.25;
   window.scrollTo(0, 0);
 
-  // Fade out home, about, events and cafe-fomo
-  homeView.style.opacity = '0';
-  if (aboutView) aboutView.style.opacity = '0';
-  if (eventsView) eventsView.style.opacity = '0';
-  if (cafeFomoView) cafeFomoView.style.opacity = '0';
-
-  setTimeout(() => {
-    homeView.classList.add('hidden');
-    homeView.classList.remove('active');
-    if (aboutView) {
-      aboutView.classList.add('hidden');
-      aboutView.classList.remove('active');
-    }
-    if (eventsView) {
-      eventsView.classList.add('hidden');
-      eventsView.classList.remove('active');
-    }
-    if (cafeFomoView) {
-      cafeFomoView.classList.add('hidden');
-      cafeFomoView.classList.remove('active');
-    }
-
-    // Fade in catalog
-    catalogView.classList.remove('hidden');
-    catalogView.classList.add('active');
-
+  switchToView(catalogView, () => {
     // Render the default tab if no tab has been rendered yet (the grid may hold the
     // build-time product list, which is replaced here)
     if (!catalogGrid.dataset.category) {
       renderCatalog('precautions');
     }
-
-    catalogView.style.opacity = '1';
-    window.scrollTo(0, 0);
-  }, 200);
+  });
 }
 
 function hideCatalog(e, updateHistory = true) {
   if (e && e.preventDefault) e.preventDefault();
   if (updateHistory) navigateTo('home');
 
-  catalogView.style.opacity = '0';
-  if (aboutView) aboutView.style.opacity = '0';
-  if (eventsView) eventsView.style.opacity = '0';
-  if (cafeFomoView) cafeFomoView.style.opacity = '0';
   window.scrollTo(0, 0);
 
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -494,29 +517,9 @@ function hideCatalog(e, updateHistory = true) {
   let scrollFraction = maxScroll > 0 ? scrollTop / maxScroll : 0;
   canvas.style.opacity = 1 - (scrollFraction * 0.8);
 
-  setTimeout(() => {
-    catalogView.classList.add('hidden');
-    catalogView.classList.remove('active');
-    if (aboutView) {
-      aboutView.classList.add('hidden');
-      aboutView.classList.remove('active');
-    }
-    if (eventsView) {
-      eventsView.classList.add('hidden');
-      eventsView.classList.remove('active');
-    }
-    if (cafeFomoView) {
-      cafeFomoView.classList.add('hidden');
-      cafeFomoView.classList.remove('active');
-    }
-
-    // Fade in home
-    homeView.classList.remove('hidden');
-    homeView.classList.add('active');
-    homeView.style.opacity = '1';
-    window.scrollTo(0, 0);
+  switchToView(homeView, () => {
     setTimeout(updateStorefrontSignPosition, 250);
-  }, 200);
+  });
 }
 
 
@@ -526,6 +529,10 @@ function hideCatalog(e, updateHistory = true) {
 function renderCatalog(category) {
   catalogGrid.innerHTML = '';
   catalogGrid.dataset.category = category;
+  const categoryHeading = document.getElementById('catalog-category-heading');
+  if (categoryHeading) {
+    categoryHeading.textContent = CATEGORY_LABELS[category] || 'Product Catalog';
+  }
   const categoryProducts = products.filter(prod => prod.category === category);
   const visibleCards = [];
 
@@ -548,8 +555,11 @@ function renderCatalog(category) {
     img.alt = prod.name;
     img.className = 'product-image';
     img.loading = 'lazy';
+    applyImageProps(img, prod.image);
     img.onerror = () => {
-      img.src = '/logo.png';
+      img.src = '/logo-96.webp';
+      img.width = 96;
+      img.height = 96;
       img.style.objectFit = 'contain';
       img.style.padding = '25px';
     };
@@ -617,10 +627,6 @@ function showAbout(e, updateHistory = true) {
   canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
 
-  homeView.style.opacity = '0';
-  catalogView.style.opacity = '0';
-  if (eventsView) eventsView.style.opacity = '0';
-  if (cafeFomoView) cafeFomoView.style.opacity = '0';
   if (storefrontSignBtn) storefrontSignBtn.classList.add('hidden-hotspot');
   if (customCursor) {
     isHoveringSign = false;
@@ -630,25 +636,7 @@ function showAbout(e, updateHistory = true) {
     customCursor.style.transform = 'translate(-50%, -50%)';
   }
 
-  setTimeout(() => {
-    homeView.classList.add('hidden');
-    homeView.classList.remove('active');
-    catalogView.classList.add('hidden');
-    catalogView.classList.remove('active');
-    if (eventsView) {
-      eventsView.classList.add('hidden');
-      eventsView.classList.remove('active');
-    }
-    if (cafeFomoView) {
-      cafeFomoView.classList.add('hidden');
-      cafeFomoView.classList.remove('active');
-    }
-
-    aboutView.classList.remove('hidden');
-    aboutView.classList.add('active');
-    aboutView.style.opacity = '1';
-    window.scrollTo(0, 0);
-  }, 200);
+  switchToView(aboutView);
 }
 
 function showEvents(e, updateHistory = true) {
@@ -658,30 +646,7 @@ function showEvents(e, updateHistory = true) {
   canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
 
-  homeView.style.opacity = '0';
-  catalogView.style.opacity = '0';
-  if (aboutView) aboutView.style.opacity = '0';
-  if (cafeFomoView) cafeFomoView.style.opacity = '0';
-
-  setTimeout(() => {
-    homeView.classList.add('hidden');
-    homeView.classList.remove('active');
-    catalogView.classList.add('hidden');
-    catalogView.classList.remove('active');
-    if (aboutView) {
-      aboutView.classList.add('hidden');
-      aboutView.classList.remove('active');
-    }
-    if (cafeFomoView) {
-      cafeFomoView.classList.add('hidden');
-      cafeFomoView.classList.remove('active');
-    }
-
-    eventsView.classList.remove('hidden');
-    eventsView.classList.add('active');
-    eventsView.style.opacity = '1';
-    window.scrollTo(0, 0);
-  }, 200);
+  switchToView(eventsView);
 }
 
 function showCafeFomo(e, updateHistory = true) {
@@ -691,30 +656,7 @@ function showCafeFomo(e, updateHistory = true) {
   canvas.style.opacity = 0.3;
   window.scrollTo(0, 0);
 
-  homeView.style.opacity = '0';
-  catalogView.style.opacity = '0';
-  if (aboutView) aboutView.style.opacity = '0';
-  if (eventsView) eventsView.style.opacity = '0';
-
-  setTimeout(() => {
-    homeView.classList.add('hidden');
-    homeView.classList.remove('active');
-    catalogView.classList.add('hidden');
-    catalogView.classList.remove('active');
-    if (aboutView) {
-      aboutView.classList.add('hidden');
-      aboutView.classList.remove('active');
-    }
-    if (eventsView) {
-      eventsView.classList.add('hidden');
-      eventsView.classList.remove('active');
-    }
-
-    cafeFomoView.classList.remove('hidden');
-    cafeFomoView.classList.add('active');
-    cafeFomoView.style.opacity = '1';
-    window.scrollTo(0, 0);
-  }, 200);
+  switchToView(cafeFomoView);
 }
 
 // Starting screen "Explore Now" button -> Opens About view
@@ -786,29 +728,11 @@ function scrollToHomeSection(storyTarget) {
   const isHomeActive = homeView && homeView.classList.contains('active') && !homeView.classList.contains('hidden');
 
   if (!isHomeActive) {
-    catalogView.style.opacity = '0';
-    if (aboutView) aboutView.style.opacity = '0';
-    if (eventsView) eventsView.style.opacity = '0';
-    if (cafeFomoView) cafeFomoView.style.opacity = '0';
-
-    catalogView.classList.add('hidden');
-    catalogView.classList.remove('active');
-    if (aboutView) {
-      aboutView.classList.add('hidden');
-      aboutView.classList.remove('active');
-    }
-    if (eventsView) {
-      eventsView.classList.add('hidden');
-      eventsView.classList.remove('active');
-    }
-    if (cafeFomoView) {
-      cafeFomoView.classList.add('hidden');
-      cafeFomoView.classList.remove('active');
-    }
-
-    homeView.classList.remove('hidden');
-    homeView.classList.add('active');
-    homeView.style.opacity = '1';
+    syncPrimaryHeading(homeView);
+    getAllViews().forEach(view => {
+      if (view !== homeView) view.style.opacity = '0';
+      setViewState(view, view === homeView);
+    });
 
     setTimeout(() => scrollSectionIntoView(storyTarget), 150);
   } else {
@@ -816,7 +740,7 @@ function scrollToHomeSection(storyTarget) {
   }
 }
 
-document.querySelectorAll('a[href="/story"], .nav-story-link').forEach(btn => {
+document.querySelectorAll('a[href="/story"], a[href="/#story"], .nav-story-link').forEach(btn => {
   btn.addEventListener('click', (e) => scrollToStory(e, true));
 });
 
@@ -871,8 +795,8 @@ document.querySelectorAll('.close-overlay-btn, .about-back-btn, .events-back-btn
   btn.addEventListener('click', (e) => hideCatalog(e, true));
 });
 
-// Direct redirect button inside About view -> Opens Catalog view
-document.querySelectorAll('.about-explore-btn, .direct-catalog-btn, #about-redirect-catalog-btn').forEach(btn => {
+// Direct redirect button inside About view -> Opens Catalog view (skip href="/products" already bound above)
+document.querySelectorAll('.about-explore-btn:not([href="/products"]), .direct-catalog-btn:not([href="/products"]), #about-redirect-catalog-btn:not([href="/products"])').forEach(btn => {
   btn.addEventListener('click', (e) => showCatalog(e, true));
 });
 
@@ -1309,6 +1233,8 @@ function createEventCard(event, isPast = false) {
   const img = card.querySelector('.event-card-img img');
   img.src = event.image;
   img.alt = event.imageAlt || event.title;
+  img.loading = 'lazy';
+  applyImageProps(img, event.image);
   card.querySelector('.event-status-pill').textContent = event.status || '';
   card.querySelector('.event-category-tag').textContent = event.tag || '';
   card.querySelector('.event-title').textContent = event.title;
@@ -1437,10 +1363,14 @@ function createWeatherProductCard(prod) {
     <span class="weather-product-price"></span>
   `;
   const img = card.querySelector('img');
-  img.src = prod.image.replace('/products/', '/products/thumbs/'); // 240px copies made for these small cards
+  const thumbSrc = prod.image.replace('/products/', '/products/thumbs/'); // 240px copies made for these small cards
+  img.src = thumbSrc;
   img.alt = prod.name;
+  applyImageProps(img, thumbSrc);
   img.onerror = () => {
-    img.src = '/logo.png';
+    img.src = '/logo-96.webp';
+    img.width = 96;
+    img.height = 96;
   };
   card.querySelector('.weather-product-name').textContent = prod.name;
   card.querySelector('.weather-product-price').textContent = prod.price || 'In Store';
@@ -1549,7 +1479,7 @@ if (initialRoute === 'products') {
   showAbout(null, false);
 } else if (initialRoute === 'events') {
   showEvents(null, false);
-} else if (initialRoute === 'story') {
+} else if (initialRoute === 'story' || window.location.hash === '#story') {
   setTimeout(() => scrollToStory(null, false), 400);
 }
 

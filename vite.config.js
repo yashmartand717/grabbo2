@@ -1,16 +1,12 @@
 import { defineConfig } from 'vite'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { products, events } from './src/content.js'
+import { products, events, CATEGORY_LABELS, getImageDimensions } from './src/content.js'
 import { SITE_URL, pageMeta } from './src/seo.js'
 
-// Catalog tab names (match the tab buttons in index.html)
-const CATEGORY_LABELS = {
-  precautions: 'Precautions & Health',
-  beverages: 'Beverages & Shakes',
-  bakery: 'Bakery & Sweets',
-  coffee: 'Coffee & Pantry',
-  snacks: 'Snacks & Chips'
+const imgDimsAttr = src => {
+  const dims = getImageDimensions(src)
+  return dims ? ` width="${dims[0]}" height="${dims[1]}"` : ''
 }
 
 // Pages written at build time as <view>/index.html (dist/products/index.html is served at /products)
@@ -39,8 +35,8 @@ const setPageMeta = (html, view) => {
 
 // Shows the page's view instead of the home view, so the content is visible without JavaScript
 const showView = (html, viewId) => {
-  html = replaceOnce(html, /id="home-view" class="view-section active"/, 'id="home-view" class="view-section hidden"', 'home-view')
-  return replaceOnce(html, new RegExp(`id="${viewId}" class="view-section hidden"`), `id="${viewId}" class="view-section active"`, viewId)
+  html = replaceOnce(html, /id="home-view" class="view-section active"/, 'id="home-view" class="view-section hidden" aria-hidden="true" inert', 'home-view')
+  return replaceOnce(html, new RegExp(`id="${viewId}" class="view-section hidden" aria-hidden="true" inert`), `id="${viewId}" class="view-section active"`, viewId)
 }
 
 // Gives the page its own H1: the hidden home hero heading becomes a <p>, and the view's
@@ -54,23 +50,82 @@ const setPageHeading = (html, viewId) => {
   return html.slice(0, open) + '<h1' + html.slice(open + 3, close) + '</h1>' + html.slice(close + 5)
 }
 
-const breadcrumbJsonLd = view => `    <script type="application/ld+json">
-      ${JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-          { '@type': 'ListItem', position: 2, name: BREADCRUMB_NAMES[view], item: SITE_URL + pageMeta[view].path }
-        ]
-      })}
+const BREADCRUMB_NAMES = { products: 'Products', about: 'About', events: 'Events', 'cafe-fomo': 'Café FOMO' }
+
+const parsePriceInr = price => {
+  const m = typeof price === 'string' && price.match(/(\d+(?:\.\d+)?)/)
+  return m ? m[1] : null
+}
+
+const pageStructuredData = view => {
+  const breadcrumb = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: BREADCRUMB_NAMES[view], item: SITE_URL + pageMeta[view].path }
+    ]
+  }
+  const graph = [breadcrumb]
+  const pageUrl = SITE_URL + pageMeta[view].path
+
+  if (view === 'products') {
+    graph.push({
+      '@type': 'CollectionPage',
+      name: pageMeta.products.title,
+      description: pageMeta.products.description,
+      url: pageUrl,
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: products.length,
+        itemListElement: products.map((prod, index) => {
+          const numericPrice = parsePriceInr(prod.price)
+          const item = {
+            '@type': 'Product',
+            name: prod.name,
+            description: prod.desc,
+            image: prod.image.startsWith('http') ? prod.image : `${SITE_URL}${prod.image}`,
+            category: CATEGORY_LABELS[prod.category] || prod.category,
+            brand: { '@type': 'Brand', name: 'Grabbo Store' }
+          }
+          if (numericPrice) {
+            item.offers = {
+              '@type': 'Offer',
+              price: numericPrice,
+              priceCurrency: 'INR',
+              availability: 'https://schema.org/InStock',
+              url: pageUrl
+            }
+          }
+          return { '@type': 'ListItem', position: index + 1, item }
+        })
+      }
+    })
+  } else if (view === 'about') {
+    graph.push({
+      '@type': 'AboutPage',
+      name: pageMeta.about.title,
+      description: pageMeta.about.description,
+      url: pageUrl,
+      mainEntity: { '@id': `${SITE_URL}/#store` }
+    })
+  } else if (view === 'events') {
+    graph.push({
+      '@type': 'CollectionPage',
+      name: pageMeta.events.title,
+      description: pageMeta.events.description,
+      url: pageUrl
+    })
+  }
+
+  return `    <script type="application/ld+json">
+      ${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}
     </script>
   </head>`
-
-const BREADCRUMB_NAMES = { products: 'Products', about: 'About', events: 'Events', 'cafe-fomo': 'Café FOMO' }
+}
 
 const productCard = prod => `
             <div class="catalog-card">
-              <div class="catalog-card-img"><img src="${escapeHtml(prod.image)}" alt="${escapeHtml(prod.name)}" class="product-image" loading="lazy"></div>
+              <div class="catalog-card-img"><img src="${escapeHtml(prod.image)}" alt="${escapeHtml(prod.name)}"${imgDimsAttr(prod.image)} class="product-image" loading="lazy" decoding="async"></div>
               <div class="catalog-card-details">
                 <h3>${escapeHtml(prod.name)}</h3>
                 <p>${escapeHtml(prod.desc)}</p>
@@ -80,7 +135,7 @@ const productCard = prod => `
 
 const eventCard = event => `
             <div class="event-card">
-              <div class="event-card-img"><img src="${escapeHtml(event.image)}" alt="${escapeHtml(event.imageAlt || event.title)}" loading="lazy"></div>
+              <div class="event-card-img"><img src="${escapeHtml(event.image)}" alt="${escapeHtml(event.imageAlt || event.title)}"${imgDimsAttr(event.image)} loading="lazy" decoding="async"></div>
               <div class="event-card-body">
                 <h3 class="event-title">${escapeHtml(event.title)}</h3>
                 <p class="event-desc">${escapeHtml(event.desc)}</p>
@@ -113,23 +168,10 @@ const fillEvents = html => {
   return html
 }
 
-const SITEMAP_CONFIG = {
-  home: { changefreq: 'weekly', priority: '1.0' },
-  'cafe-fomo': { changefreq: 'weekly', priority: '0.9' },
-  products: { changefreq: 'weekly', priority: '0.9' },
-  about: { changefreq: 'monthly', priority: '0.8' },
-  events: { changefreq: 'weekly', priority: '0.8' },
-  privacy: { changefreq: 'yearly', priority: '0.3' }
-}
-
 const sitemapXml = () => {
   const today = new Date().toISOString().slice(0, 10)
-  const entries = ['home', 'cafe-fomo', ...Object.keys(PAGES)].map(view => {
-    const loc = `${SITE_URL}${pageMeta[view].path}`
-    const { changefreq, priority } = SITEMAP_CONFIG[view] || { changefreq: 'monthly', priority: '0.7' }
-    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`
-  })
-  entries.push(`  <url>\n    <loc>${SITE_URL}/privacy</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`)
+  const paths = [...['home', 'cafe-fomo', ...Object.keys(PAGES)].map(view => pageMeta[view].path), '/privacy']
+  const entries = paths.map(path => `  <url>\n    <loc>${SITE_URL}${path}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`)
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`
 }
 
@@ -149,6 +191,7 @@ const llmsTxt = () => {
     '## Pages',
     '',
     ...['home', 'cafe-fomo', ...Object.keys(PAGES)].map(view => `- [${pageMeta[view].title}](${SITE_URL}${pageMeta[view].path}): ${pageMeta[view].description}`),
+    `- [Privacy Policy & Terms of Use | Grabbo Store @ SNU](${SITE_URL}/privacy): Privacy policy and terms of use for Grabbo @ SNU at Shiv Nadar Institution of Eminence, Greater Noida.`,
     '',
     '## Products (prices in INR, available in store)',
   ]
@@ -157,9 +200,28 @@ const llmsTxt = () => {
     if (!items.length) continue
     lines.push('', `### ${label}`, '', ...items.map(prod => `- ${prod.name}${prod.price ? ` (${prod.price})` : ''}: ${prod.desc}`))
   }
+  lines.push(
+    '',
+    '## Café FOMO (Offline Café & Hangout Hub by Grabbo @ SNU)',
+    '',
+    '- Phone / Direct Order: +91 9205599102',
+    '- Location: Shopping Arcade, Shiv Nadar Institution of Eminence, Greater Noida',
+    '- Momo Delights (5 pcs / 10 pcs): Steamed Veg (₹60/₹120), Steamed Paneer (₹80/₹150), Steamed Cheese Corn (₹100/₹180), Crackling Cheese Corn (₹80/₹150), Crackling Veg (₹100/₹180), Crackling Paneer (₹120/₹200), Creamy Sauce Veg (₹100/₹160), Creamy Sauce Paneer (₹120/₹200), Creamy Sauce Cheese Corn (₹150/₹220)',
+    '- Sandwiches: Veg Grilled Sandwich (₹100), Cheese Corn Sandwich (₹120), Paneer Tikka Sandwich (₹150)',
+    '- Burgers: Aloo Tikki Burger (₹60), Iceland Burger (₹70), Veg Spicy Burger (₹70), Double Tikki Burger (₹90), Crispy Paneer Burger (₹90), Cheese Burger (₹100)',
+    '- Soups: Manchow Soup (₹50), Tomato Soup (₹50), Mix Veg Soup (₹70), Sweet Corn Soup (₹70)',
+    '- Hot Beverages: Chai (₹25), Kulhad Chai (₹30), Green Tea (₹25), Lemon Tea (₹25), Kadha Winter Special (₹25), Hot Coffee (₹40)',
+    '- Snacks with Tea & Maggi: Bun Maska (₹40), Plain Maggi (₹40), Veg Maggi (₹60), Veg Spicy Maggi (₹70), Cheese Maggi (₹80), Garlic Bread (₹100), French Fries (₹90), Peri Peri Fries (₹100), Cheese Loaded Fries (₹120)',
+    '- Mocktails: Virgin Mojito (₹90), Green Apple Mojito (₹90), Blue Lagoon (₹90), Pink Lady (₹90), Pinacolada (₹100), Kaala Khatta (₹90)',
+    '- Shakes & Coolers: Vanilla Shake (₹100), Chocolate Shake (₹100), Strawberry Shake (₹100), Black Currant Shake (₹100), Cold Coffee (₹100), Oreo Shake (₹120), Iced Tea (₹100)'
+  )
   const upcoming = events.filter(event => !isPastEvent(event))
+  const past = events.filter(event => isPastEvent(event))
   if (upcoming.length) {
     lines.push('', '## Upcoming events', '', ...upcoming.map(event => `- ${event.title} (${event.date}, ${event.location}): ${event.desc}`))
+  }
+  if (past.length) {
+    lines.push('', '## Past campus events', '', ...past.map(event => `- ${event.title} (${event.date}, ${event.location}): ${event.desc}`))
   }
   return lines.join('\n') + '\n'
 }
@@ -176,7 +238,7 @@ const prerenderPages = () => {
       const indexHtml = readFileSync(resolve(outDir, 'index.html'), 'utf8')
       for (const [view, viewId] of Object.entries(PAGES)) {
         let html = setPageHeading(showView(setPageMeta(indexHtml, view), viewId), viewId)
-        html = replaceOnce(html, /  <\/head>/, breadcrumbJsonLd(view), '</head>')
+        html = replaceOnce(html, /  <\/head>/, pageStructuredData(view), '</head>')
         if (view === 'products') html = fillProducts(html)
         if (view === 'events') html = fillEvents(html)
         mkdirSync(resolve(outDir, view), { recursive: true })
@@ -188,16 +250,22 @@ const prerenderPages = () => {
   }
 }
 
+const rewriteCleanUrls = (req, res, next) => {
+  const pathname = req.url.split('?')[0].split('#')[0]
+  if (['/cafe-fomo', '/products', '/about', '/events', '/privacy'].includes(pathname)) {
+    const query = req.url.includes('?') ? '?' + req.url.split('?')[1] : ''
+    req.url = `${pathname}/index.html${query}`
+  }
+  next()
+}
+
 const devServerMultiPageRewrite = () => ({
   name: 'grabbo-dev-multipage-rewrite',
   configureServer(server) {
-    server.middlewares.use((req, res, next) => {
-      const pathname = req.url.split('?')[0].split('#')[0];
-      if (pathname === '/cafe-fomo') {
-        req.url = '/cafe-fomo/index.html' + (req.url.includes('?') ? '?' + req.url.split('?')[1] : '');
-      }
-      next();
-    });
+    server.middlewares.use(rewriteCleanUrls)
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use(rewriteCleanUrls)
   }
 });
 

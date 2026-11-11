@@ -5,6 +5,41 @@
 // Product categories must match a catalog tab: precautions, beverages, bakery, coffee, snacks.
 // A product's "suggestion" (optional) shows as a badge on its photo.
 
+export const CATEGORY_LABELS = {
+  precautions: 'Precautions & Health',
+  beverages: 'Beverages & Shakes',
+  bakery: 'Bakery & Sweets',
+  coffee: 'Coffee & Pantry',
+  snacks: 'Snacks & Chips'
+};
+
+const IMAGE_DIMENSIONS = {
+  '/products/n95_mask.webp': [500, 500],
+  '/products/sanitizer.webp': [499, 600],
+  '/products/repellent.webp': [600, 530],
+  '/products/antiseptic.webp': [450, 600],
+  '/products/crocin.webp': [302, 480],
+  '/products/vicks.webp': [480, 600],
+  '/products/electral.webp': [480, 388],
+  '/products/thermometer.webp': [480, 518],
+  '/products/thumbs/antiseptic.webp': [180, 240],
+  '/products/thumbs/crocin.webp': [151, 240],
+  '/products/thumbs/electral.webp': [240, 194],
+  '/products/thumbs/repellent.webp': [240, 212],
+  '/products/thumbs/sanitizer.webp': [200, 240],
+  '/products/thumbs/thermometer.webp': [222, 240],
+  '/products/thumbs/vicks.webp': [192, 240],
+  '/events/jalsa_event_collage.jpg': [1024, 576]
+};
+
+/** Returns intrinsic [width, height] for product, thumb, or event images to prevent CLS. */
+export const getImageDimensions = (src) => {
+  if (IMAGE_DIMENSIONS[src]) return IMAGE_DIMENSIONS[src];
+  if (String(src).startsWith('/products/thumbs/')) return [240, 240];
+  if (String(src).startsWith('/products/')) return [600, 600];
+  return null;
+};
+
 export const products = [
   // --- Precautions & Health ---
   { category: "precautions", name: "N95 Face Mask", desc: "High filtration efficiency mask for protection against viruses & dust.", image: "/products/n95_mask.webp", price: "₹25", suggestion: "Protects against Covid & Viruses" },

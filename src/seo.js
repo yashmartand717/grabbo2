@@ -7,28 +7,28 @@ export const SITE_URL = 'https://www.grabbo.store';
 export const pageMeta = {
   home: {
     path: '/',
-    title: 'GRABBO',
-    description: 'Grabbo is the in-campus convenience store and café at the Shiv Nadar University Shopping Arcade, Greater Noida: snacks, beverages, coffee, bakery, health essentials and hostel delivery.'
+    title: 'GRABBO – Convenience Store & Café @ Shiv Nadar University',
+    description: 'Grabbo is the in-campus convenience store & café at Shiv Nadar University Shopping Arcade, Greater Noida: snacks, coffee, health essentials & hostel delivery.'
   },
   products: {
     path: '/products',
-    title: 'Products & Prices – Snacks, Drinks, Coffee & Health | Grabbo @ SNU',
+    title: 'Products & Prices – Snacks, Drinks & Health | Grabbo @ SNU',
     description: 'Browse what Grabbo stocks at the Shiv Nadar University Shopping Arcade: beverages, shakes, coffee, Maggi, bakery, snacks and health essentials, with prices.'
   },
   about: {
     path: '/about',
     title: 'About Grabbo – In-Campus Store & Experience Center at SNU',
-    description: 'Grabbo has served Shiv Nadar University since April 2021: a full departmental store, heat & eat café, Local Vocal lounge and hostel delivery at the Shopping Arcade.'
+    description: 'Grabbo has served Shiv Nadar University since April 2021: a full departmental store, heat & eat café, Local Vocal lounge & hostel delivery at Shopping Arcade.'
   },
   events: {
     path: '/events',
-    title: 'Events & Offers | Grabbo @ SNU',
-    description: 'Upcoming events, offers and past campus collaborations from Grabbo at Shiv Nadar University, including JALSA and TEDx.'
+    title: 'Campus Events, Fests & Offers @ SNU | Grabbo Store',
+    description: 'Discover upcoming campus events, offers and past student club collaborations from Grabbo at Shiv Nadar University, including JALSA 2.0 and Breeze fests.'
   },
   'cafe-fomo': {
     path: '/cafe-fomo',
-    title: 'CAFÉ FOMO – Feed Your FOMO | An Offline Hangout Venture by Grabbo',
-    description: 'CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe. Feed Your FOMO at our upcoming physical venture.'
+    title: 'CAFÉ FOMO – Feed Your FOMO | Offline Café by Grabbo @ SNU',
+    description: 'CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe at Shiv Nadar University Shopping Arcade. Feed Your FOMO.'
   }
 };
 

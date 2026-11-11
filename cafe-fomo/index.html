@@ -4,15 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CAFÉ FOMO – Feed Your FOMO | An Offline Hangout Venture by Grabbo</title>
+    <title>CAFÉ FOMO – Feed Your FOMO | Offline Café by Grabbo @ SNU</title>
     <meta name="description" content="CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe at Shiv Nadar University Shopping Arcade. Feed Your FOMO." />
     <link rel="canonical" href="https://www.grabbo.store/cafe-fomo" />
     <meta name="theme-color" content="#121110" />
-    <meta property="og:site_name" content="Grabbo" />
-    <meta property="og:title" content="CAFÉ FOMO – Feed Your FOMO | An Offline Hangout Venture by Grabbo" />
-    <meta property="og:description" content="CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe at Shiv Nadar University Shopping Arcade." />
+    <meta property="og:site_name" content="GRABBO" />
+    <meta property="og:title" content="CAFÉ FOMO – Feed Your FOMO | Offline Café by Grabbo @ SNU" />
+    <meta property="og:description" content="CAFÉ FOMO by Grabbo: Artisanal brews, cold coffees, loaded bites, and offline community hangout vibe at Shiv Nadar University Shopping Arcade. Feed Your FOMO." />
     <meta property="og:url" content="https://www.grabbo.store/cafe-fomo" />
     <meta property="og:image" content="https://www.grabbo.store/images/cafe-fomo-logo.png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="CAFÉ FOMO – Feed Your FOMO logo by Grabbo" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -20,33 +23,126 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "CafeOrCoffeeShop",
-        "@id": "https://www.grabbo.store/cafe-fomo#cafe",
-        "name": "CAFÉ FOMO",
-        "parentOrganization": {
-          "@type": "ConvenienceStore",
-          "name": "Grabbo",
-          "url": "https://www.grabbo.store/"
-        },
-        "description": "Artisanal brews, loaded comfort bites, momos, and offline community hangout hub by Grabbo at Shiv Nadar University.",
-        "url": "https://www.grabbo.store/cafe-fomo",
-        "telephone": "+91-9205599102",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Shopping Arcade, Shiv Nadar Institution of Eminence, G. T. Road, Dadri",
-          "addressLocality": "Greater Noida",
-          "addressRegion": "Uttar Pradesh",
-          "postalCode": "201314",
-          "addressCountry": "IN"
-        },
-        "currenciesAccepted": "INR"
+        "@graph": [
+          {
+            "@type": "CafeOrCoffeeShop",
+            "@id": "https://www.grabbo.store/cafe-fomo#cafe",
+            "name": "CAFÉ FOMO",
+            "parentOrganization": {
+              "@id": "https://www.grabbo.store/#store",
+              "@type": "Organization",
+              "name": "GRABBO",
+              "url": "https://www.grabbo.store/"
+            },
+            "description": "Artisanal brews, loaded comfort bites, momos, and offline community hangout hub by Grabbo at Shiv Nadar University.",
+            "url": "https://www.grabbo.store/cafe-fomo",
+            "image": "https://www.grabbo.store/images/cafe-fomo-logo.png",
+            "telephone": "+91-9205599102",
+            "priceRange": "₹25–₹220",
+            "servesCuisine": ["Coffee", "Tea", "Cafe", "Momos", "Burgers", "Sandwiches", "Mocktails", "Shakes"],
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Shopping Arcade, Shiv Nadar Institution of Eminence, G. T. Road, Dadri",
+              "addressLocality": "Greater Noida",
+              "addressRegion": "Uttar Pradesh",
+              "postalCode": "201314",
+              "addressCountry": "IN"
+            },
+            "currenciesAccepted": "INR",
+            "hasMenu": {
+              "@type": "Menu",
+              "name": "Official Café FOMO Menu",
+              "hasMenuSection": [
+                {
+                  "@type": "MenuSection",
+                  "name": "Momo Delights",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Steamed Momo – Veg", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 60 } },
+                    { "@type": "MenuItem", "name": "Steamed Momo – Paneer", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 80 } },
+                    { "@type": "MenuItem", "name": "Creamy Sauce Veg Momo", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 100 } },
+                    { "@type": "MenuItem", "name": "Creamy Sauce Momo – Cheese Corn", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 150 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Sandwiches",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Veg Grilled Sandwich", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 100 } },
+                    { "@type": "MenuItem", "name": "Cheese Corn Sandwich", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 120 } },
+                    { "@type": "MenuItem", "name": "Paneer Tikka Sandwich", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 150 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Burgers",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Aloo Tikki Burger", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 60 } },
+                    { "@type": "MenuItem", "name": "Crispy Paneer Burger", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 90 } },
+                    { "@type": "MenuItem", "name": "Cheese Burger", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 100 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Soups",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Manchow Soup", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 50 } },
+                    { "@type": "MenuItem", "name": "Sweet Corn Soup", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 70 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Hot Beverages",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Chai", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 25 } },
+                    { "@type": "MenuItem", "name": "Kulhad Chai", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 30 } },
+                    { "@type": "MenuItem", "name": "Hot Coffee", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 40 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Snacks with Tea & Maggi",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Bun Maska", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 40 } },
+                    { "@type": "MenuItem", "name": "Cheese Maggi", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 80 } },
+                    { "@type": "MenuItem", "name": "Cheese Loaded Fries", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 120 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Mocktails",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Virgin Mojito", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 90 } },
+                    { "@type": "MenuItem", "name": "Blue Lagoon", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 90 } },
+                    { "@type": "MenuItem", "name": "Pinacolada", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 100 } }
+                  ]
+                },
+                {
+                  "@type": "MenuSection",
+                  "name": "Shakes & Coolers",
+                  "hasMenuItem": [
+                    { "@type": "MenuItem", "name": "Cold Coffee", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 100 } },
+                    { "@type": "MenuItem", "name": "Oreo Shake", "offers": { "@type": "Offer", "priceCurrency": "INR", "price": 120 } }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.grabbo.store/" },
+              { "@type": "ListItem", "position": 2, "name": "CAFÉ FOMO", "item": "https://www.grabbo.store/cafe-fomo" }
+            ]
+          }
+        ]
       }
     </script>
 
-    <!-- Self-hosted fonts -->
+    <!-- Self-hosted fonts & hero logo -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-latin.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/playfair-display-normal-latin.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-normal-latin.woff2" crossorigin>
+    <link rel="preload" as="image" href="/images/cafe-fomo-logo.png" fetchpriority="high">
     <!-- Styles -->
     <link rel="stylesheet" href="/src/style.css">
     <meta name="referrer" content="strict-origin-when-cross-origin" />
@@ -107,9 +203,9 @@
           <div class="cafe-fomo-announcement">
             <span class="cafe-fomo-badge">Brewing Soon ☕</span>
             <div class="cafe-fomo-logo-wrap">
-              <img src="/images/cafe-fomo-logo.png" alt="CAFÉ FOMO - Feed Your FOMO" class="cafe-fomo-logo" width="300" height="300" loading="eager">
+              <img src="/images/cafe-fomo-logo.png" alt="CAFÉ FOMO - Feed Your FOMO" class="cafe-fomo-logo" width="300" height="300" loading="eager" fetchpriority="high" decoding="async">
             </div>
-            <h2 class="cafe-fomo-title">CAFÉ FOMO</h2>
+            <p class="cafe-fomo-title">CAFÉ FOMO</p>
             <p class="cafe-fomo-tagline">“Feed Your FOMO”</p>
             <p class="cafe-fomo-story">
               From late-night study crunches to mid-day chill sessions, <strong>CAFÉ FOMO</strong> is Grabbo’s brand-new physical venture—an immersive campus hangout hub where artisanal brews, bold café bites, vibrant campus culture, and spontaneous conversations come alive. No rush, no routine. Just good energy and unforgettable campus memories.
@@ -122,7 +218,7 @@
           <div class="cafe-fomo-showcase-section">
             <div style="text-align: center; margin-bottom: 24px;">
               <span class="cafe-fomo-section-label">WHAT TO EXPECT</span>
-              <h3 class="cafe-fomo-subheading">Signature Highlights</h3>
+              <h2 class="cafe-fomo-subheading">Signature Highlights</h2>
               <p class="cafe-fomo-subheading-desc">Crafted exclusively for our offline campus community. Taste, feel, and experience the vibe.</p>
             </div>
 
@@ -163,7 +259,7 @@
           <div class="cafe-fomo-menu-section" id="cafe-fomo-menu">
             <div style="text-align: center; margin-bottom: 28px;">
               <span class="cafe-fomo-section-label">FEED YOUR FOMO</span>
-              <h3 class="cafe-fomo-subheading">Official Café FOMO Menu</h3>
+              <h2 class="cafe-fomo-subheading">Official Café FOMO Menu</h2>
               <p class="cafe-fomo-subheading-desc">Freshly prepared comfort bites, steaming momos, loaded burgers, signature sips, and shakes.</p>
             </div>
 
@@ -187,7 +283,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Steamed &amp; Crispy</span>
-                    <h4>🥟 Momo Delights</h4>
+                    <h3>🥟 Momo Delights</h3>
                   </div>
                   <span class="cafe-menu-portion-hint">5 pcs / 10 pcs</span>
                 </div>
@@ -236,7 +332,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Grilled &amp; Toasted</span>
-                    <h4>🥪 Sandwiches</h4>
+                    <h3>🥪 Sandwiches</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -260,7 +356,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Big Buns</span>
-                    <h4>🍔 Burgers</h4>
+                    <h3>🍔 Burgers</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -296,7 +392,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Warm &amp; Hearty</span>
-                    <h4>🥣 Soups</h4>
+                    <h3>🥣 Soups</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -324,7 +420,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Dostea &amp; Brews</span>
-                    <h4>☕ Hot Beverages</h4>
+                    <h3>☕ Hot Beverages</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -360,7 +456,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Chai Paas Hai</span>
-                    <h4>🍟 Snacks with Tea &amp; Maggi</h4>
+                    <h3>🍟 Snacks with Tea &amp; Maggi</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -408,7 +504,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Chilled &amp; Fizzy</span>
-                    <h4>🍹 Mocktails</h4>
+                    <h3>🍹 Mocktails</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -444,7 +540,7 @@
                 <div class="cafe-menu-card-header">
                   <div class="cafe-menu-card-title-wrap">
                     <span class="cafe-menu-badge">Thick &amp; Creamy</span>
-                    <h4>🥤 Shakes &amp; Coolers</h4>
+                    <h3>🥤 Shakes &amp; Coolers</h3>
                   </div>
                 </div>
                 <div class="cafe-menu-items">
@@ -499,7 +595,7 @@
           <div class="cafe-fomo-gallery-section">
             <div style="text-align: center; margin-bottom: 24px;">
               <span class="cafe-fomo-section-label">ATMOSPHERE &amp; MOMENTS</span>
-              <h3 class="cafe-fomo-subheading">The CAFÉ FOMO Experience</h3>
+              <h2 class="cafe-fomo-subheading">The CAFÉ FOMO Experience</h2>
               <p class="cafe-fomo-subheading-desc">A sneak peek into the space, the sips, and the creative spirit brewing behind the scenes.</p>
             </div>
 
@@ -528,16 +624,16 @@
           <!-- Offline Visit / Footfall CTA Card -->
           <div class="cafe-fomo-visit">
             <div class="cafe-fomo-visit-badge">IRL EXPERIENCE</div>
-            <h3>Visit Us In Real Life</h3>
+            <h2>Visit Us In Real Life</h2>
             <p class="cafe-fomo-visit-lead">CAFÉ FOMO is designed strictly as an offline experiential destination. Drop by, unwind with friends, grab a fresh brew, and feed your curiosity.</p>
             
             <div class="cafe-fomo-visit-info">
               <div class="cafe-fomo-visit-block">
-                <h4>📍 Location</h4>
+                <h3>📍 Location</h3>
                 <p>Shopping Arcade, Shiv Nadar Institution of Eminence (SNU)<br>G.T. Road, Dadri, Greater Noida, U.P. 201314</p>
               </div>
               <div class="cafe-fomo-visit-block">
-                <h4>⏰ Opening Status</h4>
+                <h3>⏰ Opening Status</h3>
                 <p><strong>Brewing Soon!</strong><br>Opening dates, launch parties, and hours will be announced first on our campus channels.</p>
               </div>
             </div>
